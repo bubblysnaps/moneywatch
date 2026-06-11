@@ -124,14 +124,118 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
 .bcat-limit-inp{width:100%;font-family:var(--f);font-size:13px;font-weight:500;background:var(--surf);color:var(--tx);border:1.5px solid var(--bd);border-radius:8px;padding:6px 10px;outline:none;transition:border .18s,box-shadow .18s}
 .bcat-limit-inp:focus{border-color:var(--ac);box-shadow:0 0 0 3px var(--acbg)}
 .bcat-limit-inp::placeholder{color:var(--tx4);font-weight:400}
+
+/* ── APP LOCK SCREEN ──────────────────────────────────── */
+#app-lock{position:fixed;inset:0;z-index:9000;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--bg);transition:opacity .3s}
+#app-lock.hidden{opacity:0;pointer-events:none}
+.al-card{background:var(--surf);border:1px solid var(--bd);border-radius:24px;padding:36px 28px 28px;max-width:340px;width:100%;box-shadow:var(--sh2);text-align:center}
+.al-logo{width:64px;height:64px;background:linear-gradient(135deg,var(--ac),var(--ac2));border-radius:18px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:30px;margin:0 auto 20px;box-shadow:0 4px 16px rgba(91,106,240,.35)}
+.al-title{font-size:22px;font-weight:700;margin-bottom:4px}
+.al-sub{font-size:14px;color:var(--tx3);margin-bottom:24px;line-height:1.5}
+.al-dots{display:flex;justify-content:center;gap:14px;margin-bottom:18px}
+.al-dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--bd2);background:transparent;transition:all .18s}
+.al-dot.filled{background:var(--ac);border-color:var(--ac);transform:scale(1.1)}
+.al-dot.wrong{background:var(--dn);border-color:var(--dn)}
+.al-dot.shake{animation:alshake .4s ease}
+@keyframes alshake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+.al-err{font-size:13px;color:var(--dn);font-weight:500;min-height:18px;margin-bottom:10px}
+.al-att{font-size:12px;color:var(--wn);font-weight:500;min-height:16px;margin-bottom:6px}
+.al-panel{display:none}.al-panel.active{display:block}
+/* forgot / setup panels */
+.al-pp-wrap{position:relative;margin-bottom:12px}
+.al-pp-wrap input{text-align:center;font-size:15px;letter-spacing:.5px;padding-right:44px}
+.al-pp-eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:18px;color:var(--tx3)}
+.al-hint-box{background:var(--surf2);border:1px solid var(--bd);border-radius:10px;padding:11px 13px;margin-bottom:12px;text-align:left;font-size:13px;color:var(--tx2)}
+.al-hint-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--tx3);margin-bottom:4px}
+/* setup step badges */
+.al-step{background:var(--surf2);border:1px solid var(--bd);border-radius:12px;padding:14px;margin-bottom:10px}
+.al-step-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--tx3);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.al-badge{width:20px;height:20px;border-radius:50%;background:var(--ac);color:#fff;font-size:11px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.al-badge.done{background:var(--ok)}
+/* idle warning banner */
+#idle-warn{position:fixed;top:0;left:0;right:0;z-index:8999;background:var(--wn);color:#fff;font-size:13px;font-weight:600;text-align:center;padding:10px 16px;display:none;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+#idle-warn.show{display:flex;align-items:center;justify-content:center;gap:10px}
+.al-forgot{background:none;border:none;color:var(--ac);font-size:13px;font-family:var(--f);cursor:pointer;text-decoration:underline dotted;padding:4px 8px;border-radius:7px}
+.al-forgot:hover{background:var(--acbg)}
+/* lock icon in topbar */
+#topbar-lock{font-size:16px}
 </style>
 </head>
 <body>
+
+<!-- IDLE WARNING BANNER -->
+<div id="idle-warn">
+  <span>⏱ Locking in <span id="idle-countdown">60</span>s due to inactivity</span>
+  <button onclick="resetIdleTimer()" style="background:rgba(255,255,255,.25);border:none;color:#fff;font-size:12px;font-weight:600;font-family:var(--f);padding:4px 12px;border-radius:6px;cursor:pointer;margin-left:10px">Stay unlocked</button>
+</div>
+
+<!-- APP LOCK SCREEN -->
+<div id="app-lock">
+  <div class="al-card">
+    <div class="al-logo">💰</div>
+    <!-- Unlock panel -->
+    <div class="al-panel active" id="alp-unlock">
+      <div class="al-title">MoneyWatch</div>
+      <div class="al-sub" id="al-unlock-sub">Enter your PIN to continue.</div>
+      <div class="al-dots" id="al-dots"><div class="al-dot" id="ald0"></div><div class="al-dot" id="ald1"></div><div class="al-dot" id="ald2"></div><div class="al-dot" id="ald3"></div><div class="al-dot" id="ald4"></div><div class="al-dot" id="ald5"></div></div>
+      <div class="al-err" id="al-err"></div>
+      <div class="al-att" id="al-att"></div>
+      <div class="numpad" id="al-numpad"></div>
+      <button class="al-forgot" onclick="alShowPanel('alp-forgot')">Forgot PIN?</button>
+    </div>
+    <!-- Forgot / passphrase panel -->
+    <div class="al-panel" id="alp-forgot">
+      <div class="al-title">Recover access</div>
+      <div class="al-sub">Enter your passphrase to reset your PIN.</div>
+      <div class="al-hint-box" id="al-hint-box" style="display:none"><div class="al-hint-label">Your hint</div><div id="al-hint-text"></div></div>
+      <div class="al-pp-wrap"><input type="password" id="al-phrase-inp" placeholder="Secret passphrase" autocomplete="off"><button class="al-pp-eye" onclick="alTogEye('al-phrase-inp',this)">👁</button></div>
+      <div class="al-err" id="al-phrase-err"></div>
+      <div style="display:flex;gap:8px;justify-content:center;margin-bottom:10px">
+        <button class="btn bg2" style="font-size:13px;padding:8px 14px" onclick="alShowPanel('alp-unlock')">← Back</button>
+        <button class="btn bp" style="font-size:13px;padding:8px 14px" onclick="alVerifyPhrase()">Verify</button>
+      </div>
+    </div>
+    <!-- Set new PIN after passphrase verified -->
+    <div class="al-panel" id="alp-newpin">
+      <div class="al-title">Set new PIN</div>
+      <div class="al-sub" id="al-newpin-sub">Choose a new 6-digit PIN.</div>
+      <div class="al-dots" id="al-newpin-dots"><div class="al-dot" id="alnp0"></div><div class="al-dot" id="alnp1"></div><div class="al-dot" id="alnp2"></div><div class="al-dot" id="alnp3"></div><div class="al-dot" id="alnp4"></div><div class="al-dot" id="alnp5"></div></div>
+      <div class="al-err" id="al-newpin-err"></div>
+      <div class="numpad" id="al-newpin-numpad"></div>
+    </div>
+    <!-- First-time setup -->
+    <div class="al-panel" id="alp-setup">
+      <div class="al-title">Secure MoneyWatch</div>
+      <div class="al-sub">Set a 6-digit PIN and a passphrase to recover it.</div>
+      <div class="al-step" id="als1">
+        <div class="al-step-title"><span class="al-badge" id="als1-badge">1</span>Set your 6-digit PIN</div>
+        <div class="al-dots" id="als1-dots"><div class="al-dot" id="alsd0"></div><div class="al-dot" id="alsd1"></div><div class="al-dot" id="alsd2"></div><div class="al-dot" id="alsd3"></div><div class="al-dot" id="alsd4"></div><div class="al-dot" id="alsd5"></div></div>
+        <div class="al-err" id="als1-err"></div>
+        <div class="numpad" id="als1-numpad"></div>
+      </div>
+      <div class="al-step" id="als2" style="display:none">
+        <div class="al-step-title"><span class="al-badge" id="als2-badge">2</span>Confirm PIN</div>
+        <div class="al-dots" id="als2-dots"><div class="al-dot" id="alsc0"></div><div class="al-dot" id="alsc1"></div><div class="al-dot" id="alsc2"></div><div class="al-dot" id="alsc3"></div><div class="al-dot" id="alsc4"></div><div class="al-dot" id="alsc5"></div></div>
+        <div class="al-err" id="als2-err"></div>
+        <div class="numpad" id="als2-numpad"></div>
+      </div>
+      <div class="al-step" id="als3" style="display:none">
+        <div class="al-step-title"><span class="al-badge" id="als3-badge">3</span>Passphrase <span style="font-size:11px;font-weight:400;color:var(--tx3)">(recovery key)</span></div>
+        <div class="al-pp-wrap" style="margin-bottom:8px"><input type="password" id="als-phrase" placeholder="e.g. FirstPet_Colour_1990" autocomplete="new-password"><button class="al-pp-eye" onclick="alTogEye('als-phrase',this)">👁</button></div>
+        <div style="margin-bottom:8px"><label>Hint <span style="font-weight:400;color:var(--tx3);font-size:12px">(shown on forgot PIN screen)</span></label><input id="als-hint" placeholder="e.g. First pet + favourite colour + birth year"></div>
+        <div class="al-err" id="als3-err"></div>
+        <button class="btn bp" style="width:100%;justify-content:center;margin-top:4px" onclick="alFinishSetup()">🔒 Activate lock</button>
+      </div>
+      <button class="btn bg2" style="width:100%;justify-content:center;margin-top:6px;font-size:13px" onclick="alSkip()">Skip — use without PIN</button>
+    </div>
+  </div>
+</div>
+
 <div class="app" id="app">
 <div class="hero"><h1 id="hh">Good morning, <span class="hi" id="hname">friend</span> 👋</h1><p class="hero-sub" id="hsub">Your financial overview.</p></div>
 <div class="topbar">
   <div class="brand"><div class="logo">💰</div><div><div class="brand-name">MoneyWatch</div><div class="brand-tag">Personal finance tracker</div></div></div>
-  <div class="tbr"><span class="sflash" id="sfl">✓ Saved</span><span class="clk" id="clk"></span><button class="ib" id="load-btn" onclick="trigLoad()" title="Load / open file">📂</button><button class="ib" id="save-btn" onclick="saveFile()" title="Save to loaded file">💾</button><button class="ib on" id="pbtn" onclick="togPref()" title="Preferences">⚙</button></div>
+  <div class="tbr"><span class="sflash" id="sfl">✓ Saved</span><span class="clk" id="clk"></span><button class="ib" id="load-btn" onclick="trigLoad()" title="Load / open file">📂</button><button class="ib" id="save-btn" onclick="saveFile()" title="Save to loaded file">💾</button><button class="ib" id="topbar-lock" onclick="alLock()" title="Lock app">🔒</button><button class="ib on" id="pbtn" onclick="togPref()" title="Preferences">⚙</button></div>
 </div>
 <input type="file" id="fileinp" accept=".json" style="display:none" onchange="loadFile(event)">
 <!-- PREF MODAL (overlay) -->
@@ -153,6 +257,29 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
       <div class="divl"></div>
       <div class="pst" style="margin-top:0">Auto-save</div>
       <div class="tog-row"><label class="tw"><input type="checkbox" id="astog" onchange="togAS()"><span class="tt"></span></label><div><div style="font-size:14px;font-weight:500">Auto-save to browser</div><div style="font-size:12px;color:var(--tx3)">Saves every change automatically</div></div></div>
+      <div class="divl"></div>
+      <div class="pst" style="margin-top:0">App lock & security</div>
+      <div style="background:var(--surf2);border:1px solid var(--bd);border-radius:11px;padding:14px 16px;margin-bottom:10px">
+        <div class="fg2" style="margin-bottom:10px">
+          <div>
+            <label>Auto-lock after inactivity</label>
+            <select id="p-autolock">
+              <option value="0">Never</option>
+              <option value="1">1 minute</option>
+              <option value="2">2 minutes</option>
+              <option value="5">5 minutes</option>
+              <option value="10">10 minutes</option>
+              <option value="15" selected>15 minutes</option>
+              <option value="30">30 minutes</option>
+              <option value="60">1 hour</option>
+            </select>
+          </div>
+          <div style="display:flex;flex-direction:column;justify-content:flex-end">
+            <button class="btn bg2" style="font-size:13px;padding:8px 12px" onclick="alChangePIN()">🔑 Change PIN</button>
+          </div>
+        </div>
+        <button class="btn bg2" style="width:100%;justify-content:center;font-size:13px;color:var(--dn);border-color:var(--dn)" onclick="alRemoveLock()">🔓 Remove app lock</button>
+      </div>
       <div class="divl"></div>
       <div class="pst" style="margin-top:0">Income PIN lock</div>
       <div class="tog-row"><label class="tw"><input type="checkbox" id="sltog" onchange="togIncLock()"><span class="tt"></span></label><div><div style="font-size:14px;font-weight:500">Protect income with 6-digit PIN</div><div style="font-size:12px;color:var(--tx3)">Hides income on Home and locks the Income tab</div></div></div>
@@ -989,7 +1116,7 @@ function saveSrcModal(){const name=document.getElementById('src-name').value.tri
 function delSrc(id){if(!confirm('Remove this income source?'))return;const m=getIM(VY,VM);m.sources=m.sources.filter(s=>s.id!==id);persist();renderIncome();}
 
 // PREFS
-function applyPrefs(){const p=S.prefs,a=document.getElementById('app');const th=THEMES.find(t=>t.id===p.themeId)||THEMES[0];const c=p.cc||{};if(th.dark)a.setAttribute('data-dk','');else a.removeAttribute('data-dk');const set=(k,v)=>a.style.setProperty('--'+k,v);set('ac',c.ac||th.ac);set('ac2',th.ac2);set('bg',c.bg||th.bg);set('surf',c.surf||th.surf);set('surf2',c.surf2||th.surf2);set('surf3',th.surf3||'');set('tx',c.tx||th.tx);set('tx2',th.tx2);set('bd',c.bd||th.bd);set('f',p.font);set('fw',p.fw||'400');set('fs',p.fs||'15px');document.body.style.fontFamily=p.font;document.body.style.fontSize=p.fs;document.getElementById('pn').value=p.name||'';document.getElementById('pc').value=p.currency||'₱';document.getElementById('ptz').value=p.tz||'Asia/Manila';document.getElementById('pcf').value=p.cf||'12';document.getElementById('pfw').value=p.fw||'400';document.getElementById('pfs').value=p.fs||'15px';document.getElementById('astog').checked=!!p.autosave;document.getElementById('sltog').checked=!!p.incLock;document.getElementById('pin-setup-area').classList.toggle('show',!!p.incLock);renderTGrid();renderFGrid();renderCCols();updateHero();}
+function applyPrefs(){const p=S.prefs,a=document.getElementById('app');const th=THEMES.find(t=>t.id===p.themeId)||THEMES[0];const c=p.cc||{};if(th.dark)a.setAttribute('data-dk','');else a.removeAttribute('data-dk');const set=(k,v)=>a.style.setProperty('--'+k,v);set('ac',c.ac||th.ac);set('ac2',th.ac2);set('bg',c.bg||th.bg);set('surf',c.surf||th.surf);set('surf2',c.surf2||th.surf2);set('surf3',th.surf3||'');set('tx',c.tx||th.tx);set('tx2',th.tx2);set('bd',c.bd||th.bd);set('f',p.font);set('fw',p.fw||'400');set('fs',p.fs||'15px');document.body.style.fontFamily=p.font;document.body.style.fontSize=p.fs;document.getElementById('pn').value=p.name||'';document.getElementById('pc').value=p.currency||'₱';document.getElementById('ptz').value=p.tz||'Asia/Manila';document.getElementById('pcf').value=p.cf||'12';document.getElementById('pfw').value=p.fw||'400';document.getElementById('pfs').value=p.fs||'15px';document.getElementById('astog').checked=!!p.autosave;document.getElementById('sltog').checked=!!p.incLock;document.getElementById('pin-setup-area').classList.toggle('show',!!p.incLock);const alSel=document.getElementById('p-autolock');if(alSel)alSel.value=String(alData.autoLockMin||15);renderTGrid();renderFGrid();renderCCols();updateHero();}
 function renderTGrid(){document.getElementById('tgrid').innerHTML=THEMES.map(t=>`<div class="tp ${S.prefs.themeId===t.id?'on':''}" onclick="pickTheme('${t.id}')"><div class="tp-prev"><div class="tp-dot" style="background:${t.bg};border:1px solid #ccc"></div><div class="tp-dot" style="background:${t.surf};border:1px solid #ccc"></div><div class="tp-dot" style="background:${t.ac}"></div></div><div class="tp-lbl">${t.label}</div></div>`).join('');}
 function pickTheme(id){S.prefs.themeId=id;S.prefs.cc={};persist();applyPrefs();}
 function renderCCols(){const th=THEMES.find(t=>t.id===S.prefs.themeId)||THEMES[0];document.getElementById('ccrow').innerHTML=CCOLS.map(c=>{const def=S.prefs.cc[c.id]||(c.id==='ac'?th.ac:c.id==='bg'?th.bg:c.id==='surf'?th.surf:c.id==='tx'?th.tx:th.bd);return`<div class="cpick"><input type="color" value="${def}" oninput="setCC('${c.id}',this.value)"><label>${c.l}</label></div>`;}).join('');}
@@ -1024,8 +1151,229 @@ function shiftM(d){VM+=d;if(VM>11){VM=0;VY++;}if(VM<0){VM=11;VY--;}calSelectedDa
 function dlCSV(){const exps=exm(VY,VM);if(!exps.length){showMsg('dmsg','No expenses.',false);return;}const rows=[['Date','Shop','Description','Category','Budget Category','Amount'],...exps.map(e=>{const bc=e.budgetCat?bcById(e.budgetCat)?.name||'':'';return[e.date,`"${e.shop||''}"`,`"${e.description||''}"`,e.category,bc,e.amount.toFixed(2)];})];const blob=new Blob([rows.map(r=>r.join(',')).join('\n')],{type:'text/csv'});const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download='mw_'+fm(VY,VM).replace(/\s/g,'_')+'.csv';a.click();URL.revokeObjectURL(u);showMsg('dmsg','Downloaded!',true);}
 function dlPDF(){const exps=exm(VY,VM);const ct={};S.categories.forEach(c=>ct[c]=0);exps.forEach(e=>ct[e.category]=(ct[e.category]||0)+e.amount);const total=exps.reduce((s,e)=>s+e.amount,0);const bcT=S.budgetCats.map(bc=>({bc,spent:bcTotal(bc.id,VY,VM)})).filter(x=>x.spent>0);const win=window.open('','_blank');if(!win){showMsg('dmsg','Allow pop-ups.',false);return;}win.document.write(`<!DOCTYPE html><html><head><title>MoneyWatch Report</title><style>body{font-family:Arial,sans-serif;max-width:740px;margin:40px auto;color:#111;font-size:15px;line-height:1.6}h1{font-size:26px;font-weight:700}h2{font-size:17px;font-weight:600;margin:22px 0 10px;border-bottom:2px solid #eee;padding-bottom:5px}.meta{font-size:13px;color:#666;margin-bottom:18px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-bottom:18px}.box{background:#f5f7ff;border-radius:9px;padding:12px 14px}.bl{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:#888;margin-bottom:3px}.bv{font-size:20px;font-weight:700}table{width:100%;border-collapse:collapse;font-size:14px}th{background:#f5f7ff;padding:8px 11px;text-align:left;font-weight:600;border-bottom:2px solid #ddd}td{padding:7px 11px;border-bottom:1px solid #eee}.tr{font-weight:700;background:#eef0ff}.ft{margin-top:28px;font-size:11px;color:#aaa;text-align:center}@media print{body{margin:20px}}</style></head><body><h1>💰 MoneyWatch Report</h1><div class="meta"><b>${fm(VY,VM)}</b> | ${S.prefs.name||'User'} | ${new Date().toLocaleDateString()}</div>${bcT.length?`<h2>Budget categories</h2><div class="grid">${bcT.map(x=>`<div class="box"><div class="bl">${x.bc.icon} ${x.bc.name}</div><div class="bv">${fa(x.spent)}</div><div style="font-size:12px;color:#888">${x.bc.limit?'limit: '+fa(x.bc.limit):''}</div></div>`).join('')}</div>`:''}<h2>By expense category</h2><table><thead><tr><th>Category</th><th>Amount</th><th>%</th></tr></thead><tbody>${S.categories.filter(c=>ct[c]>0).sort((a,b)=>ct[b]-ct[a]).map(c=>`<tr><td>${c}</td><td>${fa(ct[c])}</td><td>${total>0?((ct[c]/total)*100).toFixed(1)+'%':'0%'}</td></tr>`).join('')}<tr class="tr"><td><b>Total</b></td><td><b>${fa(total)}</b></td><td>100%</td></tr></tbody></table><h2>Transactions</h2><table><thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Budget Cat.</th><th>Amount</th></tr></thead><tbody>${exps.sort((a,b)=>b.date.localeCompare(a.date)).map(e=>`<tr><td>${e.date}</td><td>${e.description}</td><td>${e.category}</td><td>${e.budgetCat?bcById(e.budgetCat)?.name||'—':'—'}</td><td>${fa(e.amount)}</td></tr>`).join('')}</tbody></table><div class="ft">MoneyWatch — Generated ${new Date().toLocaleString()}</div><script>setTimeout(()=>window.print(),350);<\/script></body></html>`);win.document.close();}
 
+// ══════════════════════════════════════════════════════
+// APP LOCK SYSTEM
+// ══════════════════════════════════════════════════════
+const AL_KEY='mw_applock';
+let alData={active:false,pin:'',phrase:'',hint:'',autoLockMin:15};
+let alUnlocked=false;
+let alAttempts=0;
+const AL_MAX=5;
+// idle timer
+let idleTimer=null,idleWarnTimer=null,idleCountInterval=null;
+
+// ── helpers ─────────────────────────────────────────────
+function alHash(s){let v=0;for(let i=0;i<s.length;i++){v=(Math.imul(31,v)+s.charCodeAt(i))|0;}return(v>>>0).toString(36);}
+function alLoadData(){try{const d=JSON.parse(localStorage.getItem(AL_KEY)||'{}');if(d.active!==undefined)alData=Object.assign(alData,d);}catch(e){}}
+function alSaveData(){try{localStorage.setItem(AL_KEY,JSON.stringify(alData));}catch(e){}}
+function alShowPanel(id){document.querySelectorAll('.al-panel').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');}
+function alTogEye(inputId,btn){const el=document.getElementById(inputId);el.type=el.type==='password'?'text':'password';btn.textContent=el.type==='password'?'👁':'🙈';}
+
+// ── dot helpers ─────────────────────────────────────────
+function alSetDots(prefix,buf,n=6){for(let i=0;i<n;i++){const d=document.getElementById(prefix+i);if(d){d.classList.toggle('filled',i<buf.length);d.classList.remove('wrong','shake');}}}
+function alShakeDots(prefix,n=6){for(let i=0;i<n;i++){const d=document.getElementById(prefix+i);if(d){d.classList.add('wrong','shake');setTimeout(()=>d.classList.remove('wrong','shake'),500);}}}
+
+// ── numpad builder ───────────────────────────────────────
+function alBuildNP(cid,onDigit,onDel){
+  const el=document.getElementById(cid);if(!el)return;el.innerHTML='';
+  [1,2,3,4,5,6,7,8,9,'','0','⌫'].forEach(k=>{
+    const b=document.createElement('button');b.className='npk'+(k==='⌫'?' dk':'');
+    b.textContent=k===''?'':String(k);
+    if(k===''){b.disabled=true;b.style.visibility='hidden';}
+    else if(k==='⌫')b.onclick=onDel;
+    else b.onclick=()=>onDigit(String(k));
+    el.appendChild(b);
+  });
+}
+
+// ── BOOT ────────────────────────────────────────────────
+function alBoot(){
+  alLoadData();
+  // Show hint if set
+  if(alData.hint){document.getElementById('al-hint-box').style.display='block';document.getElementById('al-hint-text').textContent=alData.hint;}
+  if(alData.active&&alData.pin){
+    alShowPanel('alp-unlock');alInitUnlock();
+  } else {
+    // First time — show setup
+    alShowPanel('alp-setup');alInitSetup();
+  }
+  // Apply autolock setting to preferences dropdown if open
+  const sel=document.getElementById('p-autolock');if(sel)sel.value=String(alData.autoLockMin||15);
+}
+
+// ── UNLOCK ───────────────────────────────────────────────
+let alUnlockBuf='';
+function alInitUnlock(){
+  alUnlockBuf='';alAttempts=0;
+  document.getElementById('al-err').textContent='';document.getElementById('al-att').textContent='';
+  alSetDots('ald',alUnlockBuf);
+  // disable numpad if previously locked out (refresh clears this, intentionally)
+  alBuildNP('al-numpad',d=>{
+    if(alAttempts>=AL_MAX)return;
+    if(alUnlockBuf.length>=6)return;
+    alUnlockBuf+=d;alSetDots('ald',alUnlockBuf);
+    if(alUnlockBuf.length===6)setTimeout(alCheckUnlock,160);
+  },()=>{if(alUnlockBuf.length>0){alUnlockBuf=alUnlockBuf.slice(0,-1);alSetDots('ald',alUnlockBuf);}});
+}
+function alCheckUnlock(){
+  if(alHash(alUnlockBuf)===alData.pin){
+    // Correct — hide lock screen
+    alUnlocked=true;alAttempts=0;
+    document.getElementById('app-lock').classList.add('hidden');
+    setTimeout(()=>{document.getElementById('app-lock').style.display='none';},300);
+    startIdleTimer();
+    // Continue to session picker
+    showSessionPicker();
+  } else {
+    alAttempts++;alShakeDots('ald');
+    document.getElementById('al-err').textContent='Incorrect PIN.';
+    const left=AL_MAX-alAttempts;
+    if(left>0){document.getElementById('al-att').textContent=left+' attempt'+(left!==1?'s':'')+' remaining.';}
+    else{document.getElementById('al-err').textContent='Too many attempts. Use passphrase to recover.';document.querySelectorAll('#al-numpad .npk').forEach(b=>{b.disabled=true;b.style.opacity='.35';});}
+    setTimeout(()=>{alUnlockBuf='';alSetDots('ald',alUnlockBuf);},700);
+  }
+}
+
+// ── FORGOT / PASSPHRASE ──────────────────────────────────
+function alVerifyPhrase(){
+  const phrase=document.getElementById('al-phrase-inp').value.trim();
+  if(!phrase){document.getElementById('al-phrase-err').textContent='Enter your passphrase.';return;}
+  if(alHash(phrase)!==alData.phrase){document.getElementById('al-phrase-err').textContent='Incorrect passphrase.';document.getElementById('al-phrase-inp').value='';return;}
+  document.getElementById('al-phrase-err').textContent='';
+  alInitNewPin();alShowPanel('alp-newpin');
+}
+let alNewPinBuf='',alNewPinStep='new',alNewPinFirst='';
+function alInitNewPin(){
+  alNewPinBuf='';alNewPinStep='new';alNewPinFirst='';
+  document.getElementById('al-newpin-sub').textContent='Choose a new 6-digit PIN.';
+  alSetDots('alnp',alNewPinBuf);document.getElementById('al-newpin-err').textContent='';
+  alBuildNP('al-newpin-numpad',d=>{
+    if(alNewPinBuf.length>=6)return;alNewPinBuf+=d;alSetDots('alnp',alNewPinBuf);
+    if(alNewPinBuf.length===6){setTimeout(()=>{
+      if(alNewPinStep==='new'){alNewPinFirst=alNewPinBuf;alNewPinBuf='';alNewPinStep='confirm';document.getElementById('al-newpin-sub').textContent='Confirm your new PIN.';alSetDots('alnp',alNewPinBuf);}
+      else if(alNewPinBuf===alNewPinFirst){alData.pin=alHash(alNewPinBuf);alSaveData();alUnlocked=true;document.getElementById('app-lock').classList.add('hidden');setTimeout(()=>{document.getElementById('app-lock').style.display='none';},300);startIdleTimer();showSessionPicker();}
+      else{document.getElementById('al-newpin-err').textContent='PINs do not match. Try again.';alShakeDots('alnp');setTimeout(()=>{alNewPinBuf='';alNewPinFirst='';alNewPinStep='new';document.getElementById('al-newpin-sub').textContent='Choose a new 6-digit PIN.';alSetDots('alnp',alNewPinBuf);},700);}
+    },160);}
+  },()=>{if(alNewPinBuf.length>0){alNewPinBuf=alNewPinBuf.slice(0,-1);alSetDots('alnp',alNewPinBuf);}});
+}
+
+// ── FIRST-TIME SETUP ─────────────────────────────────────
+let alsStep1Buf='',alsStep2Buf='',alsPin1='';
+function alInitSetup(){
+  alsStep1Buf='';alsStep2Buf='';alsPin1='';
+  document.getElementById('als1').style.display='block';document.getElementById('als2').style.display='none';document.getElementById('als3').style.display='none';
+  alSetDots('alsd',alsStep1Buf);document.getElementById('als1-err').textContent='';
+  alBuildNP('als1-numpad',d=>{
+    if(alsStep1Buf.length>=6)return;alsStep1Buf+=d;alSetDots('alsd',alsStep1Buf);
+    if(alsStep1Buf.length===6){setTimeout(()=>{alsPin1=alsStep1Buf;alsStep1Buf='';document.getElementById('als1-badge').classList.add('done');document.getElementById('als1-badge').textContent='✓';document.getElementById('als2').style.display='block';alSetDots('alsc',alsStep2Buf);document.getElementById('als2-err').textContent='';},160);}
+  },()=>{if(alsStep1Buf.length>0){alsStep1Buf=alsStep1Buf.slice(0,-1);alSetDots('alsd',alsStep1Buf);}});
+  alBuildNP('als2-numpad',d=>{
+    if(alsStep2Buf.length>=6)return;alsStep2Buf+=d;alSetDots('alsc',alsStep2Buf);
+    if(alsStep2Buf.length===6){setTimeout(()=>{
+      if(alsStep2Buf===alsPin1){document.getElementById('als2-badge').classList.add('done');document.getElementById('als2-badge').textContent='✓';document.getElementById('als3').style.display='block';}
+      else{document.getElementById('als2-err').textContent='PINs do not match. Try again.';alShakeDots('alsc');setTimeout(()=>{alsStep2Buf='';alsStep1Buf='';alsPin1='';document.getElementById('als1-badge').classList.remove('done');document.getElementById('als1-badge').textContent='1';document.getElementById('als2').style.display='none';alSetDots('alsd',alsStep1Buf);alSetDots('alsc',alsStep2Buf);},700);}
+    },160);}
+  },()=>{if(alsStep2Buf.length>0){alsStep2Buf=alsStep2Buf.slice(0,-1);alSetDots('alsc',alsStep2Buf);}});
+}
+function alFinishSetup(){
+  const phrase=document.getElementById('als-phrase').value.trim();const hint=document.getElementById('als-hint').value.trim();
+  if(!phrase){document.getElementById('als3-err').textContent='Enter a passphrase (min 6 chars).';return;}
+  if(phrase.length<6){document.getElementById('als3-err').textContent='Passphrase must be at least 6 characters.';return;}
+  alData={active:true,pin:alHash(alsPin1),phrase:alHash(phrase),hint,autoLockMin:15};alSaveData();
+  alUnlocked=true;document.getElementById('app-lock').classList.add('hidden');setTimeout(()=>{document.getElementById('app-lock').style.display='none';},300);
+  startIdleTimer();showSessionPicker();
+}
+function alSkip(){
+  alData={active:false,pin:'',phrase:'',hint:'',autoLockMin:0};alSaveData();
+  alUnlocked=true;document.getElementById('app-lock').classList.add('hidden');setTimeout(()=>{document.getElementById('app-lock').style.display='none';},300);
+  showSessionPicker();
+}
+
+// ── LOCK (manual or idle) ────────────────────────────────
+function alLock(){
+  if(!alData.active||!alData.pin)return;// no PIN set — nothing to lock
+  stopIdleTimer();alUnlocked=false;
+  document.getElementById('app-lock').style.display='flex';
+  requestAnimationFrame(()=>document.getElementById('app-lock').classList.remove('hidden'));
+  alAttempts=0;alUnlockBuf='';document.getElementById('al-err').textContent='';document.getElementById('al-att').textContent='';
+  document.querySelectorAll('#al-numpad .npk').forEach(b=>{b.disabled=false;b.style.opacity='1';});
+  alShowPanel('alp-unlock');alInitUnlock();
+  document.getElementById('al-phrase-inp').value='';document.getElementById('al-phrase-err').textContent='';
+}
+
+// ── CHANGE PIN FROM PREFS ────────────────────────────────
+function alChangePIN(){
+  if(!alData.active){showMsg('pmsg','No app lock set up yet.',false);return;}
+  // Show passphrase-verify panel on the lock screen then flow to new pin
+  closePref();
+  document.getElementById('app-lock').style.display='flex';
+  requestAnimationFrame(()=>document.getElementById('app-lock').classList.remove('hidden'));
+  alShowPanel('alp-forgot');
+  document.getElementById('al-phrase-inp').value='';document.getElementById('al-phrase-err').textContent='';
+}
+function alRemoveLock(){
+  if(!confirm('Remove the app lock PIN? Anyone can then open MoneyWatch without a PIN.'))return;
+  alData={active:false,pin:'',phrase:'',hint:'',autoLockMin:0};alSaveData();
+  showMsg('pmsg','App lock removed.',true);stopIdleTimer();
+  const sel=document.getElementById('p-autolock');if(sel)sel.value='0';
+}
+
+// ── IDLE TIMER ───────────────────────────────────────────
+const IDLE_EVENTS=['mousemove','mousedown','keydown','touchstart','scroll','click'];
+function startIdleTimer(){
+  stopIdleTimer();
+  const min=alData.autoLockMin||0;if(!alData.active||!alData.pin||min===0)return;
+  const totalMs=min*60*1000;const warnMs=Math.max(totalMs-60000,totalMs*0.9);// warn 60s before or at 90%
+  idleTimer=setTimeout(()=>alLock(),totalMs);
+  idleWarnTimer=setTimeout(()=>showIdleWarn(Math.round((totalMs-warnMs)/1000)),warnMs);
+  IDLE_EVENTS.forEach(ev=>document.addEventListener(ev,resetIdleTimer,{passive:true}));
+}
+function stopIdleTimer(){
+  clearTimeout(idleTimer);clearTimeout(idleWarnTimer);clearInterval(idleCountInterval);
+  idleTimer=null;idleWarnTimer=null;
+  IDLE_EVENTS.forEach(ev=>document.removeEventListener(ev,resetIdleTimer));
+  hideIdleWarn();
+}
+function resetIdleTimer(){stopIdleTimer();startIdleTimer();}
+function showIdleWarn(secs){
+  const warn=document.getElementById('idle-warn');const cd=document.getElementById('idle-countdown');
+  let remaining=secs;cd.textContent=remaining;warn.classList.add('show');
+  clearInterval(idleCountInterval);
+  idleCountInterval=setInterval(()=>{remaining--;cd.textContent=remaining;if(remaining<=0){clearInterval(idleCountInterval);hideIdleWarn();}},1000);
+}
+function hideIdleWarn(){const w=document.getElementById('idle-warn');if(w)w.classList.remove('show');clearInterval(idleCountInterval);}
+
+// ── SESSION PICKER (called after unlock) ─────────────────
+function showSessionPicker(){
+  const has=!!localStorage.getItem('mw_v2');
+  const btn=document.getElementById('sopt-cont');
+  if(!has){btn.style.opacity='.45';btn.style.cursor='not-allowed';btn.onclick=null;document.getElementById('sopt-desc').textContent='No previous session found';}
+  else{try{const p=JSON.parse(localStorage.getItem('mw_v2')||'{}');const nm=(p.prefs&&p.prefs.name)?p.prefs.name:'';const cnt=(p.expenses||[]).length;document.getElementById('sopt-desc').textContent=(nm?nm+' · ':'')+cnt+' expense'+(cnt!==1?'s':'')+' stored';}catch(e){}}
+  document.getElementById('sess-overlay').classList.add('show');
+}
+
+// ── SAVE AUTOLOCK SETTING ────────────────────────────────
+function saveAutoLock(){
+  const min=parseInt(document.getElementById('p-autolock').value)||0;
+  alData.autoLockMin=min;alSaveData();
+  if(alUnlocked){stopIdleTimer();if(min>0)startIdleTimer();}
+}
+
+// ── Override savePrefs to also save autolock ─────────────
+const _origSavePrefs=savePrefs;
+savePrefs=function(){
+  _origSavePrefs();
+  saveAutoLock();
+};
+
 // INIT
 document.getElementById('wdate').value=new Date().toISOString().slice(0,10);
-initSess();
+// Override initSess — don't call it directly; boot through app lock instead
+function initSess(){
+  // This is now called AFTER unlock via showSessionPicker()
+  // kept for backward compat but session picker shown by alBoot→showSessionPicker
+}
+alBoot();// ← single entry point: handles lock screen, then session picker
+
 </script>
 </body></html>
