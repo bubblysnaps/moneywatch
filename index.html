@@ -11,9 +11,9 @@
 [data-dk]{--bg:#0d1018;--surf:#161b2e;--surf2:#1c2240;--surf3:#232b52;--tx:#eaedf8;--tx2:#8890c8;--tx3:#4a527a;--tx4:#2e3558;--bd:#252e58;--bd2:#36407a;--acbg:#1a2050;--ok:#22c55e;--okbg:#052e16;--okdk:#4ade80;--dn:#f87171;--dnbg:#2d0a0a;--dndk:#fca5a5;--wn:#fbbf24;--wnbg:#2a1800;--sh:0 1px 12px rgba(0,0,0,.4);--sh2:0 4px 28px rgba(0,0,0,.55);}
 html,body{font-family:var(--f);background:var(--bg);color:var(--tx);font-size:var(--fs);font-weight:var(--fw);line-height:1.6;min-height:100vh}
 .app{max-width:880px;margin:0 auto;padding:20px 16px 120px}
-.hero{padding:24px 2px 18px}.hero h1{font-size:clamp(22px,4vw,32px);font-weight:700;letter-spacing:-.5px}.hero h1 .hi{color:var(--ac)}.hero-sub{font-size:14px;color:var(--tx3);margin-top:5px}
+.hero{padding:16px 2px 14px}.hero h2{font-size:clamp(17px,3.5vw,22px);font-weight:600;letter-spacing:-.2px;color:var(--tx2)}.hero h2 .hi{color:var(--ac)}.hero-sub{font-size:13px;color:var(--tx3);margin-top:4px}
 .topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 0 16px;border-top:1px solid var(--bd);margin-top:16px;flex-wrap:wrap;gap:10px}
-.brand{display:flex;align-items:center;gap:11px}.logo{width:38px;height:38px;background:linear-gradient(135deg,var(--ac),var(--ac2));border-radius:11px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;flex-shrink:0;box-shadow:var(--sh)}.brand-name{font-size:20px;font-weight:700;letter-spacing:-.3px}.brand-tag{font-size:11px;color:var(--tx3)}
+.brand{display:flex;align-items:center;gap:11px}.logo{width:38px;height:38px;background:linear-gradient(135deg,var(--ac),var(--ac2));border-radius:11px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;flex-shrink:0;box-shadow:var(--sh)}.brand-name{font-size:20px;font-weight:700;letter-spacing:-.3px;margin:0;line-height:1.2;color:var(--tx)}.brand-tag{font-size:11px;color:var(--tx3);margin-top:1px;font-style:italic}
 .tbr{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.clk{font-size:12px;color:var(--tx3);padding:5px 10px;background:var(--surf2);border-radius:8px;border:1px solid var(--bd);font-variant-numeric:tabular-nums}
 .ib{width:36px;height:36px;border-radius:10px;border:1px solid var(--bd);background:var(--surf);color:var(--tx2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;transition:all .18s;box-shadow:var(--sh)}.ib:hover{background:var(--surf2);border-color:var(--ac);color:var(--ac);transform:translateY(-1px)}.ib.on{border-color:var(--ac);color:var(--ac);background:var(--acbg)}
 .sflash{font-size:11px;color:var(--ok);opacity:0;transition:opacity .4s;font-weight:500}.sflash.show{opacity:1}
@@ -35,8 +35,8 @@ html,body{font-family:var(--f);background:var(--bg);color:var(--tx);font-size:va
 .card{background:var(--surf);border:1px solid var(--bd);border-radius:var(--rl);padding:20px;margin-bottom:15px;box-shadow:var(--sh)}
 .ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px}.ct{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--tx3)}
 .mets{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:16px}@media(min-width:540px){.mets.f4{grid-template-columns:repeat(4,1fr)}.mets.f3{grid-template-columns:repeat(3,1fr)}}
-.met{background:var(--surf2);border-radius:11px;padding:14px 15px;border:1px solid var(--bd);transition:transform .15s}.met:hover{transform:translateY(-2px)}.met.ok{background:var(--okbg);border-color:rgba(22,163,74,.25)}.met.dn{background:var(--dnbg);border-color:rgba(220,38,38,.25)}.met.ac{background:var(--acbg);border-color:rgba(91,106,240,.25)}
-.ml{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--tx3);margin-bottom:5px}.mv{font-size:21px;font-weight:700;color:var(--tx);line-height:1.2}.ms{font-size:12px;color:var(--tx3);margin-top:3px}
+.met{background:var(--surf2);border-radius:11px;padding:14px 15px;border:1px solid var(--bd);transition:transform .15s}.met:hover{transform:translateY(-2px)}.met.ok{background:var(--surf2);border-color:var(--bd)}.met.dn{background:var(--surf2);border-color:var(--bd)}.met.ac{background:var(--surf2);border-color:var(--bd)}
+.ml{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--tx3);margin-bottom:5px;text-align:center}.mv{font-size:21px;font-weight:700;color:var(--tx);line-height:1.2;text-align:center}.ms{font-size:12px;color:var(--tx3);margin-top:3px;text-align:center}
 label{font-size:13px;font-weight:500;color:var(--tx2);display:block;margin-bottom:4px}
 input,select,textarea{width:100%;font-family:var(--f);font-size:14px;font-weight:var(--fw);background:var(--surf2);color:var(--tx);border:1.5px solid var(--bd);border-radius:10px;padding:9px 12px;outline:none;transition:border .18s,box-shadow .18s;-webkit-appearance:none}
 input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 3px var(--acbg)}select option{background:var(--surf);color:var(--tx)}input[type=color]{padding:3px;cursor:pointer}
@@ -266,9 +266,9 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
 </div>
 
 <div class="app" id="app">
-<div class="hero"><h1 id="hh">Good morning, <span class="hi" id="hname">friend</span> 👋</h1><p class="hero-sub" id="hsub">Your financial overview.</p></div>
+<div class="hero"><h2 id="hh">Good morning, <span class="hi" id="hname">friend</span> 👋</h2><p class="hero-sub" id="hsub">Your financial overview.</p></div>
 <div class="topbar">
-  <div class="brand"><div class="logo">💰</div><div><div class="brand-name">MoneyWatch</div><div class="brand-tag">Personal finance tracker</div></div></div>
+  <div class="brand"><div class="logo">💰</div><div><h1 class="brand-name">MoneyWatch</h1><div class="brand-tag">Your money is watching you.</div></div></div>
   <div class="tbr"><span class="sflash" id="sfl">✓ Saved</span><span class="clk" id="clk"></span><button class="ib" id="load-btn" onclick="trigLoad()" title="Load / open file">📂</button><button class="ib" id="save-btn" onclick="saveFile()" title="Save to loaded file">💾</button><button class="ib" id="topbar-lock" onclick="alLock()" title="Lock app">🔒</button><button class="ib on" id="pbtn" onclick="togPref()" title="Preferences">⚙</button></div>
 </div>
 <input type="file" id="fileinp" accept=".json" style="display:none" onchange="loadFile(event)">
@@ -628,6 +628,7 @@ const DEFBC=[
 const DS={expenses:[],categories:['Credit card','Grocery','School','Utilities','Transport'],budgetCats:JSON.parse(JSON.stringify(DEFBC)),savings:[],incomeData:{},prefs:{name:'',currency:'₱',themeId:'indigo',cc:{},font:"'Inter',system-ui,sans-serif",fw:'400',fs:'15px',tz:'Asia/Manila',cf:'12',autosave:true,incLock:false,incPIN:''}};
 let S=JSON.parse(JSON.stringify(DS));
 let AT='home',SV='overview',VY=new Date().getFullYear(),VM=new Date().getMonth();
+let svCatGroup='default'; // 'default' | 'category' | 'date'
 let incUnlocked=false;
 const CHS={};
 let pinBuf='',pinCB=null,setupBuf='',setupStep='new',pinNew='';
@@ -877,37 +878,110 @@ function renderBudget(){
   if(unassigned>0)grid.innerHTML+=`<div class="bcat-card" style="border-style:dashed;opacity:.7"><div class="bcat-top"><div class="bcat-name">📌 Unassigned</div></div><div class="bcat-amount">${fa(unassigned)}</div><div class="bcat-sub">${allE.filter(e=>!e.budgetCat).length} expenses not linked to any budget category</div></div>`;
 }
 
-function openBcatDetail(id){
-  const bc=bcById(id);if(!bc)return;
-  document.getElementById('bgt-ov').style.display='none';document.getElementById('bgt-det').style.display='block';
-  const spent=bcTotal(id,VY,VM);const lim=bc.limit||0;const pct=lim>0?Math.min((spent/lim)*100,100):0;const pc=pct>=90?'#ef4444':pct>=70?'#f59e0b':bc.color;
+let bcatDetGroup='default';
+let bcatDetId=null;
+
+function openBcatDetail(id){bcatDetId=id;bcatDetGroup='default';_renderBcatDet();}
+function setBcatDetGroup(g){bcatDetGroup=g;_renderBcatDet();}
+
+function _renderBcatDet(){
+  const id=bcatDetId;const bc=bcById(id);if(!bc)return;
+  document.getElementById('bgt-ov').style.display='none';
+  document.getElementById('bgt-det').style.display='block';
+  const spent=bcTotal(id,VY,VM);const lim=bc.limit||0;
+  const pct=lim>0?Math.min((spent/lim)*100,100):0;const pc=pct>=90?'#ef4444':pct>=70?'#f59e0b':bc.color;
   const exps=bcExps(id,VY,VM).sort((a,b)=>b.date.localeCompare(a.date));
-  const byC={};exps.forEach(e=>byC[e.category]=(byC[e.category]||0)+e.amount);const mxC=Math.max(...Object.values(byC),1);
-  document.getElementById('bgt-det').innerHTML=`
-    <button class="back-btn" onclick="closeBcatDet()">← Back to categories</button>
-    <div class="detail-header">
-      <div class="detail-icon" style="background:${bc.color}20;border:1.5px solid ${bc.color}50">${bc.icon}</div>
-      <div><div class="detail-name">${bc.name}</div><div class="detail-sub">${bc.desc||''} ${lim>0?'· Budget: '+fa(lim):''}</div></div>
-      <button class="btn bp" style="margin-left:auto;font-size:13px;padding:8px 14px" onclick="openRpt('${id}')">📊 Report</button>
-    </div>
-    <div class="mets f4" style="margin-bottom:15px">
-      <div class="met ac"><div class="ml">Total spent</div><div class="mv">${fa(spent)}</div><div class="ms">${exps.length} transactions</div></div>
-      ${lim>0?`<div class="met ${(lim-spent)>=0?'ok':'dn'}"><div class="ml">Remaining</div><div class="mv">${fa(lim-spent)}</div><div class="ms">${pct.toFixed(1)}% used</div></div>`:''}
-      <div class="met"><div class="ml">Month</div><div class="mv" style="font-size:14px">${fm(VY,VM)}</div></div>
-    </div>
-    ${lim>0?`<div class="card" style="margin-bottom:15px"><div class="ch"><span class="ct">Budget utilisation</span></div><div class="prog"><div class="progf" style="width:${pct.toFixed(1)}%;background:${pc}"></div></div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--tx3);margin-top:4px"><span>0</span><span>${pct.toFixed(1)}%</span><span>${fa(lim)}</span></div></div>`:''}
-    <div class="card" style="margin-bottom:15px">
-      <div class="ch"><span class="ct">By expense category</span></div>
-      ${Object.keys(byC).length?Object.entries(byC).sort((a,b)=>b[1]-a[1]).map(([c,v])=>`<div class="br"><div class="bl">${c}</div><div class="bt"><div class="bf" style="width:${(v/mxC*100).toFixed(1)}%;background:${catC(c)}"></div></div><div class="bv">${fa(v)}</div></div>`).join(''):'<div class="empty" style="padding:1rem">No spending yet.</div>'}
-    </div>
-    <div class="card">
-      <div class="ch"><span class="ct">Transactions</span><span style="font-size:12px;color:var(--tx3)">${exps.length} item${exps.length!==1?'s':''}</span></div>
-      <div class="elist">
-        ${exps.length?exps.map(e=>{const ri=S.expenses.indexOf(e);const label=e.shop||e.description||e.category;const sub=(e.shop&&e.description)?e.description:'';return`<div class="ei"><span class="edot" style="background:${catC(e.category)}"></span><div class="einfo"><div class="edesc">${label}</div><div class="emeta">${new Date(e.date+'T00:00:00').toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'})}${sub?' · '+sub:''}</div></div><div class="er2"><span class="eamt" style="color:var(--dn)">-${fa(e.amount)}</span><span class="cpill">${e.category}</span></div><button class="btn bg2 bico" style="font-size:13px" onclick="openEditExp(${ri})" title="Edit">✏️</button><button class="bdel" onclick="delExp(${ri})">🗑</button></div>`;}).join(''):'<div class="empty">📭 No expenses in this category this month.</div>'}
-      </div>
-    </div>`;
+  const byC={};exps.forEach(e=>byC[e.category]=(byC[e.category]||0)+e.amount);
+  const mxC=Math.max(...Object.values(byC),1);
+
+  const txRow=e=>{
+    const ri=S.expenses.indexOf(e);
+    const label=e.shop||e.description||e.category;
+    const sub=(e.shop&&e.description)?e.description:'';
+    return'<div class="ei">'+
+      '<span class="edot" style="background:'+catC(e.category)+'"></span>'+
+      '<div class="einfo">'+
+        '<div class="edesc">'+label+'</div>'+
+        '<div class="emeta">'+new Date(e.date+'T00:00:00').toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'})+(sub?' · '+sub:'')+'</div>'+
+        '<div class="emeta" style="margin-top:2px"><span class="cpill">'+e.category+'</span></div>'+
+      '</div>'+
+      '<div class="er2"><span class="eamt" style="color:var(--dn)">-'+fa(e.amount)+'</span></div>'+
+      '<button class="btn bg2 bico" style="font-size:13px" onclick="openEditExp('+ri+')" title="Edit">✏️</button>'+
+      '<button class="bdel" onclick="delBcatExp('+ri+')">🗑</button>'+
+    '</div>';
+  };
+
+  const groupBtns=
+    '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px">'+
+    '<span style="font-size:11px;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.5px">Group by:</span>'+
+    '<button class="ft'+(bcatDetGroup==='default'?' on':'')+'" onclick="setBcatDetGroup(&apos;default&apos;)" style="padding:5px 13px;font-size:12px">Default</button>'+
+    '<button class="ft'+(bcatDetGroup==='category'?' on':'')+'" onclick="setBcatDetGroup(&apos;category&apos;)" style="padding:5px 13px;font-size:12px">Expense category</button>'+
+    '<button class="ft'+(bcatDetGroup==='date'?' on':'')+'" onclick="setBcatDetGroup(&apos;date&apos;)" style="padding:5px 13px;font-size:12px">Date</button>'+
+    (bcatDetGroup!=='default'?'<button class="btn bg2" onclick="setBcatDetGroup(&apos;default&apos;)" style="font-size:11px;padding:4px 10px;height:auto;border-radius:7px;color:var(--tx3)">↺ Reset</button>':'')+
+    '</div>';
+
+  let txHtml='';
+  if(!exps.length){
+    txHtml='<div class="empty">📭 No expenses in this category this month.</div>';
+  } else if(bcatDetGroup==='default'){
+    txHtml=exps.map(txRow).join('');
+  } else if(bcatDetGroup==='category'){
+    const cats=Object.keys(byC).sort((a,b)=>byC[b]-byC[a]);
+    txHtml=cats.map(cat=>{
+      const catExps=exps.filter(e=>e.category===cat);
+      const catTot=catExps.reduce((s,e)=>s+e.amount,0);
+      return '<div style="margin-bottom:16px">'+
+        '<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:2px solid '+catC(cat)+'40;margin-bottom:8px">'+
+          '<span style="width:10px;height:10px;border-radius:50%;background:'+catC(cat)+';flex-shrink:0"></span>'+
+          '<span style="font-size:14px;font-weight:700;flex:1">'+cat+'</span>'+
+          '<span style="font-size:12px;color:var(--tx3)">'+catExps.length+' item'+(catExps.length!==1?'s':'')+'</span>'+
+          '<span style="font-size:14px;font-weight:700;color:var(--dn)">-'+fa(catTot)+'</span>'+
+        '</div>'+
+        catExps.map(txRow).join('')+
+      '</div>';
+    }).join('');
+  } else if(bcatDetGroup==='date'){
+    const dateMap={};exps.forEach(e=>{if(!dateMap[e.date])dateMap[e.date]=[];dateMap[e.date].push(e);});
+    const dates=Object.keys(dateMap).sort((a,b)=>b.localeCompare(a));
+    txHtml=dates.map(d=>{
+      const dayExps=dateMap[d];const dayTot=dayExps.reduce((s,e)=>s+e.amount,0);
+      const dateLabel=new Date(d+'T00:00:00').toLocaleDateString('en-PH',{weekday:'short',month:'long',day:'numeric',year:'numeric'});
+      return '<div style="margin-bottom:16px">'+
+        '<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:2px solid var(--bd);margin-bottom:8px">'+
+          '<span style="font-size:14px;font-weight:700;flex:1">📅 '+dateLabel+'</span>'+
+          '<span style="font-size:12px;color:var(--tx3)">'+dayExps.length+' item'+(dayExps.length!==1?'s':'')+'</span>'+
+          '<span style="font-size:14px;font-weight:700;color:var(--dn)">-'+fa(dayTot)+'</span>'+
+        '</div>'+
+        dayExps.map(txRow).join('')+
+      '</div>';
+    }).join('');
+  }
+
+  document.getElementById('bgt-det').innerHTML=
+    '<button class="back-btn" onclick="closeBcatDet()">← Back to categories</button>'+
+    '<div class="detail-header">'+
+      '<div class="detail-icon" style="background:'+bc.color+'20;border:1.5px solid '+bc.color+'50">'+bc.icon+'</div>'+
+      '<div><div class="detail-name">'+bc.name+'</div><div class="detail-sub">'+(bc.desc||'')+' '+(lim>0?'· Budget: '+fa(lim):'')+'</div></div>'+
+      '<button class="btn bp" style="margin-left:auto;font-size:13px;padding:8px 14px" onclick="openRpt(&apos;'+id+'&apos;)">'+'📊 Report</button>'+
+    '</div>'+
+    '<div class="mets f4" style="margin-bottom:15px">'+
+      '<div class="met"><div class="ml">Total spent</div><div class="mv">'+fa(spent)+'</div><div class="ms">'+exps.length+' transactions</div></div>'+
+      (lim>0?'<div class="met"><div class="ml">Remaining</div><div class="mv">'+fa(lim-spent)+'</div><div class="ms">'+pct.toFixed(1)+'% used</div></div>':'')+
+      '<div class="met"><div class="ml">Month</div><div class="mv" style="font-size:14px">'+fm(VY,VM)+'</div></div>'+
+    '</div>'+
+    (lim>0?'<div class="card" style="margin-bottom:15px"><div class="ch"><span class="ct">Budget utilisation</span></div><div class="prog"><div class="progf" style="width:'+pct.toFixed(1)+'%;background:'+pc+'"></div></div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--tx3);margin-top:4px"><span>0</span><span>'+pct.toFixed(1)+'%</span><span>'+fa(lim)+'</span></div></div>':'')+
+    '<div class="card" style="margin-bottom:15px">'+
+      '<div class="ch"><span class="ct">By expense category</span></div>'+
+      (Object.keys(byC).length?Object.entries(byC).sort((a,b)=>b[1]-a[1]).map(([c,v])=>'<div class="br"><div class="bl">'+c+'</div><div class="bt"><div class="bf" style="width:'+(v/mxC*100).toFixed(1)+'%;background:'+catC(c)+'"></div></div><div class="bv">'+fa(v)+'</div></div>').join(''):'<div class="empty" style="padding:1rem">No spending yet.</div>')+
+    '</div>'+
+    '<div class="card">'+
+      '<div class="ch"><span class="ct">Transactions</span><span style="font-size:12px;color:var(--tx3)">'+exps.length+' item'+(exps.length!==1?'s':'')+' · '+fa(spent)+'</span></div>'+
+      groupBtns+
+      '<div class="elist" style="max-height:none">'+txHtml+'</div>'+
+    '</div>';
 }
-function closeBcatDet(){document.getElementById('bgt-ov').style.display='block';document.getElementById('bgt-det').style.display='none';}
+function delBcatExp(i){S.expenses.splice(i,1);persist();_renderBcatDet();renderBudget();}
+function closeBcatDet(){document.getElementById('bgt-ov').style.display='block';document.getElementById('bgt-det').style.display='none';bcatDetId=null;bcatDetGroup='default';}
 
 // BUDGET REPORT MODAL
 function openRpt(bcid){
@@ -1018,12 +1092,7 @@ function renderSavings(){
 function renderHome(){
   const ny=new Date().getFullYear(),nm=new Date().getMonth();
   const exps=exm(ny,nm);const tot=exps.reduce((s,e)=>s+e.amount,0);const tod=new Date().toISOString().slice(0,10);const tt=exps.filter(e=>e.date===tod).reduce((s,e)=>s+e.amount,0);const days=new Date().getDate();const avg=days>0?tot/days:0;
-  const gross=tGross(ny,nm);const ded=tDed(ny,nm);const net=gross-ded;const locked=S.prefs.incLock&&S.prefs.incPIN;
-  let incC='';
-  if(!gross)incC=`<div class="met ac"><div class="ml">Net income left</div><div class="mv" style="font-size:15px;color:var(--tx3)">—</div><div class="ms">Set in Income tab</div></div>`;
-  else if(locked&&!incUnlocked)incC=`<div class="sal-lm" onclick="revIncHome()"><div class="sal-badge">🔒</div><div class="ml">Net income left</div><div class="sal-blur">₱••••••</div><div class="sal-hint">👁 Tap to reveal</div></div>`;
-  else incC=`<div class="met ac"><div class="ml">Net income left</div><div class="mv">${fa(net)}</div><div class="ms">${fa(ded)} deducted</div></div>`;
-  document.getElementById('hm').innerHTML=incC+`<div class="met"><div class="ml">Month expenses</div><div class="mv">${fa(tot)}</div><div class="ms">${exps.length} transactions</div></div><div class="met"><div class="ml">Today</div><div class="mv">${fa(tt)}</div><div class="ms">${new Date().toLocaleDateString('en-PH',{month:'short',day:'numeric'})}</div></div><div class="met"><div class="ml">Daily avg</div><div class="mv">${fa(avg)}</div><div class="ms">over ${days} days</div></div>`;
+  document.getElementById('hm').innerHTML=`<div class="met"><div class="ml">Month expenses</div><div class="mv">${fa(tot)}</div><div class="ms">${exps.length} transactions</div></div><div class="met"><div class="ml">Today</div><div class="mv">${fa(tt)}</div><div class="ms">${new Date().toLocaleDateString('en-PH',{month:'short',day:'numeric'})}</div></div><div class="met"><div class="ml">Daily avg</div><div class="mv">${fa(avg)}</div><div class="ms">over ${days} days</div></div>`;
   const ct={};S.categories.forEach(c=>ct[c]=0);exps.forEach(e=>ct[e.category]=(ct[e.category]||0)+e.amount);const mx=Math.max(...Object.values(ct),1);
   document.getElementById('hbars').innerHTML=S.categories.filter(c=>ct[c]>0).sort((a,b)=>ct[b]-ct[a]).map(c=>`<div class="br"><div class="bl">${c}</div><div class="bt"><div class="bf" style="width:${(ct[c]/mx*100).toFixed(1)}%;background:${catC(c)}"></div></div><div class="bv">${fa(ct[c])}</div></div>`).join('')||'<div class="empty" style="padding:1.2rem">No expenses yet this month.</div>';
   const rec=S.expenses.slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
@@ -1106,6 +1175,8 @@ function delExp(i){S.expenses.splice(i,1);persist();renderList();renderBudget();
 // SUMMARY
 function setSV(v){SV=v;document.querySelectorAll('#svtabs .ft').forEach((t,i)=>t.classList.toggle('on',['overview','categories','daily','vs','income'][i]===v));['overview','categories','daily','vs','income'].forEach(n=>{const el=document.getElementById('sv-'+n);if(el)el.style.display=n===v?'block':'none';});renderSV(v);}
 function renderSummary(){setSV(SV);}
+function setCatGroup(g){svCatGroup=g;renderSV('categories');}
+function delSummaryExp(i){S.expenses.splice(i,1);persist();renderSV('categories');}
 function renderSV(v){
   document.getElementById('sml').textContent=fm(VY,VM);
   const exps=exm(VY,VM);const total=exps.reduce((s,e)=>s+e.amount,0);const ct={};S.categories.forEach(c=>ct[c]=0);exps.forEach(e=>ct[e.category]=(ct[e.category]||0)+e.amount);
@@ -1117,7 +1188,108 @@ function renderSV(v){
       <div class="mets f4"><div class="met"><div class="ml">Total</div><div class="mv">${fa(total)}</div><div class="ms">${exps.length} items</div></div><div class="met"><div class="ml">Daily avg</div><div class="mv">${fa(avg)}</div><div class="ms">over ${days} days</div></div><div class="met"><div class="ml">Top category</div><div class="mv" style="font-size:15px">${top?top[0]:'—'}</div><div class="ms">${top?fa(top[1]):''}</div></div></div>
       <div class="card"><div class="ch"><span class="ct">By expense category</span></div>${S.categories.filter(c=>ct[c]>0).sort((a,b)=>ct[b]-ct[a]).map(c=>`<div class="br"><div class="bl">${c}</div><div class="bt"><div class="bf" style="width:${(ct[c]/mx*100).toFixed(1)}%;background:${catC(c)}"></div></div><div class="bv">${fa(ct[c])}</div></div>`).join('')||'<div class="empty" style="padding:1rem">No data.</div>'}</div>
       ${bcTots.length?`<div class="card"><div class="ch"><span class="ct">By budget category</span></div>${bcTots.map(x=>`<div class="br"><div class="bl">${x.bc.icon} ${x.bc.name}</div><div class="bt"><div class="bf" style="width:${(x.spent/mxbc*100).toFixed(1)}%;background:${x.bc.color}"></div></div><div class="bv">${fa(x.spent)}</div></div>`).join('')}</div>`:''}`;}
-  if(v==='categories'){const acc=S.categories.filter(c=>ct[c]>0);document.getElementById('sv-categories').innerHTML=`<div class="card"><div class="ch"><span class="ct">Category split</span></div><div class="leg" id="dleg"></div><div style="position:relative;width:100%;height:210px"><canvas id="dc"></canvas></div></div><div class="card">${acc.sort((a,b)=>ct[b]-ct[a]).map(c=>`<div style="display:flex;align-items:center;gap:10px;padding:9px 11px;background:var(--surf2);border-radius:10px;margin-bottom:7px;border:1px solid var(--bd)"><span style="width:10px;height:10px;border-radius:50%;background:${catC(c)};flex-shrink:0"></span><span style="flex:1;font-size:14px;font-weight:500">${c}</span><span style="font-size:12px;color:var(--tx3)">${((ct[c]/total||0)*100).toFixed(1)}%</span><span style="font-size:14px;font-weight:700">${fa(ct[c])}</span></div>`).join('')}</div>`;document.getElementById('dleg').innerHTML=acc.map(c=>`<span class="li"><span class="lsw" style="background:${catC(c)}"></span>${c}</span>`).join('');dkc('donut');if(acc.length){CHS.donut=new Chart(document.getElementById('dc'),{type:'doughnut',data:{labels:acc,datasets:[{data:acc.map(c=>ct[c]),backgroundColor:acc.map(catC),borderWidth:3,borderColor:cco.b}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${fa(ctx.raw)}`}}},cutout:'63%'}});}}
+  if(v==='categories'){
+    const acc=S.categories.filter(c=>ct[c]>0);
+    const monthExps=exm(VY,VM).sort((a,b)=>b.date.localeCompare(a.date));
+
+    // ── Group toggle controls ─────────────────────────
+    const groupBtns=`
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+        <span style="font-size:12px;font-weight:600;color:var(--tx3);text-transform:uppercase;letter-spacing:.5px">Group by:</span>
+        <button class="ft${svCatGroup==='default'?' on':''}" onclick="setCatGroup('default')" style="padding:5px 14px;font-size:12px">Default</button>
+        <button class="ft${svCatGroup==='category'?' on':''}" onclick="setCatGroup('category')" style="padding:5px 14px;font-size:12px">Expense category</button>
+        <button class="ft${svCatGroup==='date'?' on':''}" onclick="setCatGroup('date')" style="padding:5px 14px;font-size:12px">Date</button>
+        ${svCatGroup!=='default'?`<button class="btn bg2" onclick="setCatGroup('default')" style="font-size:11px;padding:4px 10px;height:auto;border-radius:7px;color:var(--tx3)">↺ Reset</button>`:''}
+      </div>`;
+
+    // ── Transaction list builder ──────────────────────
+    function txRow(e){
+      const ri=S.expenses.indexOf(e);
+      const bc=e.budgetCat?bcById(e.budgetCat):null;
+      const label=e.shop||e.description||e.category;
+      const sub=(e.shop&&e.description)?e.description:'';
+      return`<div class="ei">
+        <span class="edot" style="background:${catC(e.category)}"></span>
+        <div class="einfo">
+          <div class="edesc">${label}</div>
+          <div class="emeta">${new Date(e.date+'T00:00:00').toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'})}${sub?' · '+sub:''}</div>
+          <div class="emeta" style="margin-top:2px">${bc?`<span class="bcat-pill" style="background:${bc.color}22;color:${bc.color};margin-right:4px">${bc.icon} ${bc.name}</span>`:''}<span class="cpill">${e.category}</span></div>
+        </div>
+        <div class="er2">
+          <span class="eamt" style="color:var(--dn)">-${fa(e.amount)}</span>
+        </div>
+        <button class="btn bg2 bico" style="font-size:13px" onclick="openEditExp(${ri})" title="Edit">✏️</button>
+        <button class="bdel" onclick="delSummaryExp(${ri})">🗑</button>
+      </div>`;
+    }
+
+    let txHtml='';
+    if(svCatGroup==='default'){
+      // All transactions sorted by date desc
+      txHtml=monthExps.length
+        ?monthExps.map(txRow).join('')
+        :'<div class="empty">📭 No transactions this month.</div>';
+    } else if(svCatGroup==='category'){
+      // Group by expense category, sorted by total desc
+      const groups=acc.slice().sort((a,b)=>ct[b]-ct[a]);
+      txHtml=groups.map(cat=>{
+        const catExps=monthExps.filter(e=>e.category===cat);
+        const catTot=catExps.reduce((s,e)=>s+e.amount,0);
+        return`<div style="margin-bottom:18px">
+          <div style="display:flex;align-items:center;gap:8px;padding:8px 0 8px;border-bottom:2px solid ${catC(cat)}30;margin-bottom:8px">
+            <span style="width:11px;height:11px;border-radius:50%;background:${catC(cat)};flex-shrink:0"></span>
+            <span style="font-size:14px;font-weight:700;flex:1">${cat}</span>
+            <span style="font-size:13px;font-weight:600;color:var(--tx2)">${catExps.length} item${catExps.length!==1?'s':''}</span>
+            <span style="font-size:15px;font-weight:700;color:var(--dn)">-${fa(catTot)}</span>
+          </div>
+          ${catExps.map(txRow).join('')}
+        </div>`;
+      }).join('');
+    } else if(svCatGroup==='date'){
+      // Group by date, sorted by date desc
+      const dateMap={};
+      monthExps.forEach(e=>{(dateMap[e.date]=dateMap[e.date]||[]).push(e);});
+      const dates=Object.keys(dateMap).sort((a,b)=>b.localeCompare(a));
+      txHtml=dates.map(d=>{
+        const dayExps=dateMap[d];const dayTot=dayExps.reduce((s,e)=>s+e.amount,0);
+        const dateLabel=new Date(d+'T00:00:00').toLocaleDateString('en-PH',{weekday:'short',month:'long',day:'numeric',year:'numeric'});
+        return`<div style="margin-bottom:18px">
+          <div style="display:flex;align-items:center;gap:8px;padding:8px 0 8px;border-bottom:2px solid var(--bd);margin-bottom:8px">
+            <span style="font-size:14px;font-weight:700;flex:1">📅 ${dateLabel}</span>
+            <span style="font-size:13px;font-weight:600;color:var(--tx2)">${dayExps.length} item${dayExps.length!==1?'s':''}</span>
+            <span style="font-size:15px;font-weight:700;color:var(--dn)">-${fa(dayTot)}</span>
+          </div>
+          ${dayExps.map(txRow).join('')}
+        </div>`;
+      }).join('');
+    }
+
+    // ── Render ─────────────────────────────────────────
+    document.getElementById('sv-categories').innerHTML=`
+      <div class="card">
+        <div class="ch"><span class="ct">Category split</span></div>
+        <div class="leg" id="dleg"></div>
+        <div style="position:relative;width:100%;height:210px"><canvas id="dc"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="ch">
+          <span class="ct">Transactions — ${fm(VY,VM)}</span>
+          <span style="font-size:12px;color:var(--tx3)">${monthExps.length} item${monthExps.length!==1?'s':''} · ${fa(total)}</span>
+        </div>
+        ${groupBtns}
+        <div class="elist" style="max-height:none">${txHtml}</div>
+      </div>`;
+
+    document.getElementById('dleg').innerHTML=acc.map(c=>`<span class="li"><span class="lsw" style="background:${catC(c)}"></span>${c}</span>`).join('');
+    dkc('donut');
+    if(acc.length){
+      CHS.donut=new Chart(document.getElementById('dc'),{
+        type:'doughnut',
+        data:{labels:acc,datasets:[{data:acc.map(c=>ct[c]),backgroundColor:acc.map(catC),borderWidth:3,borderColor:cco.b}]},
+        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${fa(ctx.raw)}`}}},cutout:'63%'}
+      });
+    }
+  }
   if(v==='daily'){const dim=new Date(VY,VM+1,0).getDate();const dm={};exps.forEach(e=>{dm[e.date]=(dm[e.date]||0)+e.amount;});const dl=[],dv=[],dcv=[];let cum=0;for(let d=1;d<=dim;d++){const k=`${VY}-${String(VM+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;dl.push(d);const val=+(dm[k]||0).toFixed(2);dv.push(val);cum+=val;dcv.push(+cum.toFixed(2));}document.getElementById('sv-daily').innerHTML=`<div class="card"><div class="ch"><span class="ct">Daily spending</span></div><div style="position:relative;width:100%;height:175px"><canvas id="dyc"></canvas></div></div><div class="card"><div class="ch"><span class="ct">Cumulative</span></div><div style="position:relative;width:100%;height:165px"><canvas id="cmc"></canvas></div></div>`;dkc('dy');dkc('cu');CHS.dy=new Chart(document.getElementById('dyc'),{type:'bar',data:{labels:dl,datasets:[{data:dv,backgroundColor:ac+'cc',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:cco.t,font:{size:10},maxTicksLimit:12}},y:{ticks:{color:cco.t,font:{size:10},callback:vv=>S.prefs.currency+vv.toLocaleString()},grid:{color:cco.g}}}}});CHS.cu=new Chart(document.getElementById('cmc'),{type:'line',data:{labels:dl,datasets:[{data:dcv,borderColor:ac,backgroundColor:ac+'22',fill:true,tension:.4,pointRadius:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:cco.t,font:{size:10},maxTicksLimit:12}},y:{ticks:{color:cco.t,font:{size:10},callback:vv=>S.prefs.currency+vv.toLocaleString()},grid:{color:cco.g}}}}});}
   if(v==='vs'){
     const bcData=S.budgetCats.map(bc=>({bc,spent:bcTotal(bc.id,VY,VM),lim:bc.limit||0}));
@@ -1179,7 +1351,7 @@ function go(tab){
   AT=tab;document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));const btn=document.getElementById('nb-'+tab);if(btn)btn.classList.add('on');document.querySelectorAll('.sec').forEach(s=>s.classList.remove('vis'));const sec=document.getElementById('sec-'+tab);if(sec)sec.classList.add('vis');
   if(tab==='home')renderHome();else if(tab==='list')renderList();else if(tab==='budget')renderBudget();else if(tab==='savings')renderSavings();else if(tab==='summary')renderSummary();else if(tab==='compare')renderCompare();else if(tab==='cats')renderCats();else if(tab==='income')renderIncome();
 }
-function shiftM(d){VM+=d;if(VM>11){VM=0;VY++;}if(VM<0){VM=11;VY--;}calSelectedDate=null;if(AT==='list'){document.getElementById('cal-day-panel').style.display='none';renderList();}else if(AT==='budget')renderBudget();else if(AT==='summary')renderSummary();else if(AT==='income')renderIncome();}
+function shiftM(d){VM+=d;if(VM>11){VM=0;VY++;}if(VM<0){VM=11;VY--;}calSelectedDate=null;svCatGroup='default';if(AT==='list'){document.getElementById('cal-day-panel').style.display='none';renderList();}else if(AT==='budget')renderBudget();else if(AT==='summary')renderSummary();else if(AT==='income')renderIncome();}
 
 // EXPORT
 function dlCSV(){const exps=exm(VY,VM);if(!exps.length){showMsg('dmsg','No expenses.',false);return;}const rows=[['Date','Shop','Description','Category','Budget Category','Amount'],...exps.map(e=>{const bc=e.budgetCat?bcById(e.budgetCat)?.name||'':'';return[e.date,`"${e.shop||''}"`,`"${e.description||''}"`,e.category,bc,e.amount.toFixed(2)];})];const blob=new Blob([rows.map(r=>r.join(',')).join('\n')],{type:'text/csv'});const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download='mw_'+fm(VY,VM).replace(/\s/g,'_')+'.csv';a.click();URL.revokeObjectURL(u);showMsg('dmsg','Downloaded!',true);}
