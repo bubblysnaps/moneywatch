@@ -126,39 +126,56 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
 .bcat-limit-inp::placeholder{color:var(--tx4);font-weight:400}
 
 /* ── APP LOCK SCREEN ──────────────────────────────────── */
-#app-lock{position:fixed;inset:0;z-index:9000;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--bg);transition:opacity .3s}
+#app-lock{
+  position:fixed;inset:0;z-index:9000;
+  display:flex;align-items:flex-start;justify-content:center;
+  background:var(--bg);
+  overflow-y:auto;          /* entire screen scrolls on small devices */
+  -webkit-overflow-scrolling:touch;
+  padding:env(safe-area-inset-top,16px) 16px env(safe-area-inset-bottom,16px);
+  transition:opacity .3s;
+}
 #app-lock.hidden{opacity:0;pointer-events:none}
-.al-card{background:var(--surf);border:1px solid var(--bd);border-radius:24px;padding:36px 28px 28px;max-width:340px;width:100%;box-shadow:var(--sh2);text-align:center}
-.al-logo{width:64px;height:64px;background:linear-gradient(135deg,var(--ac),var(--ac2));border-radius:18px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:30px;margin:0 auto 20px;box-shadow:0 4px 16px rgba(91,106,240,.35)}
-.al-title{font-size:22px;font-weight:700;margin-bottom:4px}
-.al-sub{font-size:14px;color:var(--tx3);margin-bottom:24px;line-height:1.5}
-.al-dots{display:flex;justify-content:center;gap:14px;margin-bottom:18px}
-.al-dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--bd2);background:transparent;transition:all .18s}
+.al-card{
+  background:var(--surf);border:1px solid var(--bd);border-radius:20px;
+  padding:24px 20px 20px;
+  width:100%;max-width:340px;
+  box-shadow:var(--sh2);text-align:center;
+  margin:auto;              /* vertically centres when content fits */
+}
+.al-logo{width:48px;height:48px;background:linear-gradient(135deg,var(--ac),var(--ac2));border-radius:14px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px;margin:0 auto 14px;box-shadow:0 3px 12px rgba(91,106,240,.35)}
+.al-title{font-size:19px;font-weight:700;margin-bottom:3px}
+.al-sub{font-size:13px;color:var(--tx3);margin-bottom:16px;line-height:1.45}
+/* PIN dots — compact */
+.al-dots{display:flex;justify-content:center;gap:12px;margin-bottom:12px}
+.al-dot{width:16px;height:16px;border-radius:50%;border:2px solid var(--bd2);background:transparent;transition:all .18s}
 .al-dot.filled{background:var(--ac);border-color:var(--ac);transform:scale(1.1)}
 .al-dot.wrong{background:var(--dn);border-color:var(--dn)}
 .al-dot.shake{animation:alshake .4s ease}
-@keyframes alshake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
-.al-err{font-size:13px;color:var(--dn);font-weight:500;min-height:18px;margin-bottom:10px}
-.al-att{font-size:12px;color:var(--wn);font-weight:500;min-height:16px;margin-bottom:6px}
+@keyframes alshake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.al-err{font-size:12px;color:var(--dn);font-weight:500;min-height:16px;margin-bottom:6px}
+.al-att{font-size:12px;color:var(--wn);font-weight:500;min-height:14px;margin-bottom:4px}
+/* Numpad — smaller keys on mobile */
+.al-numpad-wrap .numpad{gap:8px;margin-bottom:10px}
+.al-numpad-wrap .npk{height:48px;font-size:18px;border-radius:10px}
 .al-panel{display:none}.al-panel.active{display:block}
-/* forgot / setup panels */
-.al-pp-wrap{position:relative;margin-bottom:12px}
-.al-pp-wrap input{text-align:center;font-size:15px;letter-spacing:.5px;padding-right:44px}
-.al-pp-eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:18px;color:var(--tx3)}
-.al-hint-box{background:var(--surf2);border:1px solid var(--bd);border-radius:10px;padding:11px 13px;margin-bottom:12px;text-align:left;font-size:13px;color:var(--tx2)}
-.al-hint-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--tx3);margin-bottom:4px}
-/* setup step badges */
-.al-step{background:var(--surf2);border:1px solid var(--bd);border-radius:12px;padding:14px;margin-bottom:10px}
-.al-step-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--tx3);margin-bottom:10px;display:flex;align-items:center;gap:6px}
-.al-badge{width:20px;height:20px;border-radius:50%;background:var(--ac);color:#fff;font-size:11px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
-.al-badge.done{background:var(--ok)}
-/* idle warning banner */
-#idle-warn{position:fixed;top:0;left:0;right:0;z-index:8999;background:var(--wn);color:#fff;font-size:13px;font-weight:600;text-align:center;padding:10px 16px;display:none;box-shadow:0 2px 8px rgba(0,0,0,.2)}
-#idle-warn.show{display:flex;align-items:center;justify-content:center;gap:10px}
-.al-forgot{background:none;border:none;color:var(--ac);font-size:13px;font-family:var(--f);cursor:pointer;text-decoration:underline dotted;padding:4px 8px;border-radius:7px}
+/* step indicator (wizard) */
+.al-steps-indicator{display:flex;justify-content:center;gap:6px;margin-bottom:14px}
+.al-step-dot{width:8px;height:8px;border-radius:50%;background:var(--bd2);transition:all .2s}
+.al-step-dot.active{background:var(--ac);transform:scale(1.2)}
+.al-step-dot.done{background:var(--ok)}
+.al-step-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--tx3);margin-bottom:10px}
+/* passphrase */
+.al-pp-wrap{position:relative;margin-bottom:10px}
+.al-pp-wrap input{text-align:left;font-size:14px;padding-right:44px}
+.al-pp-eye{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px;color:var(--tx3);padding:4px}
+.al-hint-box{background:var(--surf2);border:1px solid var(--bd);border-radius:9px;padding:10px 12px;margin-bottom:10px;text-align:left;font-size:13px;color:var(--tx2)}
+.al-hint-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--tx3);margin-bottom:3px}
+.al-forgot{background:none;border:none;color:var(--ac);font-size:13px;font-family:var(--f);cursor:pointer;text-decoration:underline dotted;padding:4px 8px;border-radius:7px;display:inline-block;margin-top:4px}
 .al-forgot:hover{background:var(--acbg)}
-/* lock icon in topbar */
-#topbar-lock{font-size:16px}
+/* idle warning banner */
+#idle-warn{position:fixed;top:0;left:0;right:0;z-index:8999;background:var(--wn);color:#fff;font-size:13px;font-weight:600;text-align:center;padding:10px 16px;display:none;box-shadow:0 2px 8px rgba(0,0,0,.2);align-items:center;justify-content:center;gap:10px}
+#idle-warn.show{display:flex}
 </style>
 </head>
 <body>
@@ -173,61 +190,78 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
 <div id="app-lock">
   <div class="al-card">
     <div class="al-logo">💰</div>
-    <!-- Unlock panel -->
+
+    <!-- Panel: UNLOCK -->
     <div class="al-panel active" id="alp-unlock">
       <div class="al-title">MoneyWatch</div>
       <div class="al-sub" id="al-unlock-sub">Enter your PIN to continue.</div>
       <div class="al-dots" id="al-dots"><div class="al-dot" id="ald0"></div><div class="al-dot" id="ald1"></div><div class="al-dot" id="ald2"></div><div class="al-dot" id="ald3"></div><div class="al-dot" id="ald4"></div><div class="al-dot" id="ald5"></div></div>
       <div class="al-err" id="al-err"></div>
       <div class="al-att" id="al-att"></div>
-      <div class="numpad" id="al-numpad"></div>
+      <div class="al-numpad-wrap"><div class="numpad" id="al-numpad"></div></div>
       <button class="al-forgot" onclick="alShowPanel('alp-forgot')">Forgot PIN?</button>
     </div>
-    <!-- Forgot / passphrase panel -->
+
+    <!-- Panel: FORGOT passphrase -->
     <div class="al-panel" id="alp-forgot">
       <div class="al-title">Recover access</div>
       <div class="al-sub">Enter your passphrase to reset your PIN.</div>
       <div class="al-hint-box" id="al-hint-box" style="display:none"><div class="al-hint-label">Your hint</div><div id="al-hint-text"></div></div>
       <div class="al-pp-wrap"><input type="password" id="al-phrase-inp" placeholder="Secret passphrase" autocomplete="off"><button class="al-pp-eye" onclick="alTogEye('al-phrase-inp',this)">👁</button></div>
       <div class="al-err" id="al-phrase-err"></div>
-      <div style="display:flex;gap:8px;justify-content:center;margin-bottom:10px">
+      <div style="display:flex;gap:8px;justify-content:center;margin-bottom:8px">
         <button class="btn bg2" style="font-size:13px;padding:8px 14px" onclick="alShowPanel('alp-unlock')">← Back</button>
         <button class="btn bp" style="font-size:13px;padding:8px 14px" onclick="alVerifyPhrase()">Verify</button>
       </div>
     </div>
-    <!-- Set new PIN after passphrase verified -->
+
+    <!-- Panel: SET NEW PIN (after passphrase) -->
     <div class="al-panel" id="alp-newpin">
       <div class="al-title">Set new PIN</div>
       <div class="al-sub" id="al-newpin-sub">Choose a new 6-digit PIN.</div>
       <div class="al-dots" id="al-newpin-dots"><div class="al-dot" id="alnp0"></div><div class="al-dot" id="alnp1"></div><div class="al-dot" id="alnp2"></div><div class="al-dot" id="alnp3"></div><div class="al-dot" id="alnp4"></div><div class="al-dot" id="alnp5"></div></div>
       <div class="al-err" id="al-newpin-err"></div>
-      <div class="numpad" id="al-newpin-numpad"></div>
+      <div class="al-numpad-wrap"><div class="numpad" id="al-newpin-numpad"></div></div>
     </div>
-    <!-- First-time setup -->
+
+    <!-- Panel: FIRST-TIME SETUP (single-step wizard, one numpad) -->
     <div class="al-panel" id="alp-setup">
-      <div class="al-title">Secure MoneyWatch</div>
-      <div class="al-sub">Set a 6-digit PIN and a passphrase to recover it.</div>
-      <div class="al-step" id="als1">
-        <div class="al-step-title"><span class="al-badge" id="als1-badge">1</span>Set your 6-digit PIN</div>
+      <!-- Step indicator dots -->
+      <div class="al-steps-indicator">
+        <div class="al-step-dot active" id="asdot0"></div>
+        <div class="al-step-dot" id="asdot1"></div>
+        <div class="al-step-dot" id="asdot2"></div>
+      </div>
+
+      <!-- Step 1: Enter PIN -->
+      <div id="asw1">
+        <div class="al-step-label">Step 1 of 3 — Set your PIN</div>
         <div class="al-dots" id="als1-dots"><div class="al-dot" id="alsd0"></div><div class="al-dot" id="alsd1"></div><div class="al-dot" id="alsd2"></div><div class="al-dot" id="alsd3"></div><div class="al-dot" id="alsd4"></div><div class="al-dot" id="alsd5"></div></div>
         <div class="al-err" id="als1-err"></div>
-        <div class="numpad" id="als1-numpad"></div>
+        <div class="al-numpad-wrap"><div class="numpad" id="als1-numpad"></div></div>
       </div>
-      <div class="al-step" id="als2" style="display:none">
-        <div class="al-step-title"><span class="al-badge" id="als2-badge">2</span>Confirm PIN</div>
+
+      <!-- Step 2: Confirm PIN -->
+      <div id="asw2" style="display:none">
+        <div class="al-step-label">Step 2 of 3 — Confirm PIN</div>
         <div class="al-dots" id="als2-dots"><div class="al-dot" id="alsc0"></div><div class="al-dot" id="alsc1"></div><div class="al-dot" id="alsc2"></div><div class="al-dot" id="alsc3"></div><div class="al-dot" id="alsc4"></div><div class="al-dot" id="alsc5"></div></div>
         <div class="al-err" id="als2-err"></div>
-        <div class="numpad" id="als2-numpad"></div>
+        <div class="al-numpad-wrap"><div class="numpad" id="als2-numpad"></div></div>
       </div>
-      <div class="al-step" id="als3" style="display:none">
-        <div class="al-step-title"><span class="al-badge" id="als3-badge">3</span>Passphrase <span style="font-size:11px;font-weight:400;color:var(--tx3)">(recovery key)</span></div>
-        <div class="al-pp-wrap" style="margin-bottom:8px"><input type="password" id="als-phrase" placeholder="e.g. FirstPet_Colour_1990" autocomplete="new-password"><button class="al-pp-eye" onclick="alTogEye('als-phrase',this)">👁</button></div>
-        <div style="margin-bottom:8px"><label>Hint <span style="font-weight:400;color:var(--tx3);font-size:12px">(shown on forgot PIN screen)</span></label><input id="als-hint" placeholder="e.g. First pet + favourite colour + birth year"></div>
+
+      <!-- Step 3: Passphrase -->
+      <div id="asw3" style="display:none">
+        <div class="al-step-label">Step 3 of 3 — Recovery passphrase</div>
+        <div class="al-sub" style="font-size:12px;margin-bottom:10px">Used to reset your PIN if forgotten.</div>
+        <div class="al-pp-wrap"><input type="password" id="als-phrase" placeholder="e.g. FirstPet_Colour_1990" autocomplete="new-password"><button class="al-pp-eye" onclick="alTogEye('als-phrase',this)">👁</button></div>
+        <div style="margin-bottom:10px"><label style="font-size:12px">Hint <span style="font-weight:400;color:var(--tx3)">(shown on forgot PIN screen)</span></label><input id="als-hint" placeholder="e.g. First pet + colour + birth year" style="font-size:13px"></div>
         <div class="al-err" id="als3-err"></div>
-        <button class="btn bp" style="width:100%;justify-content:center;margin-top:4px" onclick="alFinishSetup()">🔒 Activate lock</button>
+        <button class="btn bp" style="width:100%;justify-content:center" onclick="alFinishSetup()">🔒 Activate lock</button>
       </div>
-      <button class="btn bg2" style="width:100%;justify-content:center;margin-top:6px;font-size:13px" onclick="alSkip()">Skip — use without PIN</button>
+
+      <button class="btn bg2" style="width:100%;justify-content:center;margin-top:10px;font-size:13px" onclick="alSkip()">Skip — use without PIN</button>
     </div>
+
   </div>
 </div>
 
@@ -1166,7 +1200,7 @@ let idleTimer=null,idleWarnTimer=null,idleCountInterval=null;
 function alHash(s){let v=0;for(let i=0;i<s.length;i++){v=(Math.imul(31,v)+s.charCodeAt(i))|0;}return(v>>>0).toString(36);}
 function alLoadData(){try{const d=JSON.parse(localStorage.getItem(AL_KEY)||'{}');if(d.active!==undefined)alData=Object.assign(alData,d);}catch(e){}}
 function alSaveData(){try{localStorage.setItem(AL_KEY,JSON.stringify(alData));}catch(e){}}
-function alShowPanel(id){document.querySelectorAll('.al-panel').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');}
+function alShowPanel(id){document.querySelectorAll('.al-panel').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');const lock=document.getElementById('app-lock');if(lock)lock.scrollTop=0;}
 function alTogEye(inputId,btn){const el=document.getElementById(inputId);el.type=el.type==='password'?'text':'password';btn.textContent=el.type==='password'?'👁':'🙈';}
 
 // ── dot helpers ─────────────────────────────────────────
@@ -1257,21 +1291,50 @@ function alInitNewPin(){
   },()=>{if(alNewPinBuf.length>0){alNewPinBuf=alNewPinBuf.slice(0,-1);alSetDots('alnp',alNewPinBuf);}});
 }
 
-// ── FIRST-TIME SETUP ─────────────────────────────────────
+// ── FIRST-TIME SETUP (wizard: one step visible at a time) ─
 let alsStep1Buf='',alsStep2Buf='',alsPin1='';
+function alSetStepIndicator(step){// step 0,1,2
+  for(let i=0;i<3;i++){const d=document.getElementById('asdot'+i);if(!d)return;d.classList.remove('active','done');if(i<step)d.classList.add('done');else if(i===step)d.classList.add('active');}
+}
 function alInitSetup(){
   alsStep1Buf='';alsStep2Buf='';alsPin1='';
-  document.getElementById('als1').style.display='block';document.getElementById('als2').style.display='none';document.getElementById('als3').style.display='none';
+  document.getElementById('asw1').style.display='block';
+  document.getElementById('asw2').style.display='none';
+  document.getElementById('asw3').style.display='none';
+  alSetStepIndicator(0);
   alSetDots('alsd',alsStep1Buf);document.getElementById('als1-err').textContent='';
   alBuildNP('als1-numpad',d=>{
     if(alsStep1Buf.length>=6)return;alsStep1Buf+=d;alSetDots('alsd',alsStep1Buf);
-    if(alsStep1Buf.length===6){setTimeout(()=>{alsPin1=alsStep1Buf;alsStep1Buf='';document.getElementById('als1-badge').classList.add('done');document.getElementById('als1-badge').textContent='✓';document.getElementById('als2').style.display='block';alSetDots('alsc',alsStep2Buf);document.getElementById('als2-err').textContent='';},160);}
+    if(alsStep1Buf.length===6){setTimeout(()=>{
+      alsPin1=alsStep1Buf;alsStep1Buf='';
+      document.getElementById('asw1').style.display='none';
+      document.getElementById('asw2').style.display='block';
+      alSetDots('alsc',alsStep2Buf);document.getElementById('als2-err').textContent='';
+      alSetStepIndicator(1);
+      document.getElementById('app-lock').scrollTop=0;
+    },160);}
   },()=>{if(alsStep1Buf.length>0){alsStep1Buf=alsStep1Buf.slice(0,-1);alSetDots('alsd',alsStep1Buf);}});
   alBuildNP('als2-numpad',d=>{
     if(alsStep2Buf.length>=6)return;alsStep2Buf+=d;alSetDots('alsc',alsStep2Buf);
     if(alsStep2Buf.length===6){setTimeout(()=>{
-      if(alsStep2Buf===alsPin1){document.getElementById('als2-badge').classList.add('done');document.getElementById('als2-badge').textContent='✓';document.getElementById('als3').style.display='block';}
-      else{document.getElementById('als2-err').textContent='PINs do not match. Try again.';alShakeDots('alsc');setTimeout(()=>{alsStep2Buf='';alsStep1Buf='';alsPin1='';document.getElementById('als1-badge').classList.remove('done');document.getElementById('als1-badge').textContent='1';document.getElementById('als2').style.display='none';alSetDots('alsd',alsStep1Buf);alSetDots('alsc',alsStep2Buf);},700);}
+      if(alsStep2Buf===alsPin1){
+        document.getElementById('asw2').style.display='none';
+        document.getElementById('asw3').style.display='block';
+        alSetStepIndicator(2);
+        document.getElementById('app-lock').scrollTop=0;
+        setTimeout(()=>document.getElementById('als-phrase').focus(),200);
+      } else {
+        document.getElementById('als2-err').textContent='PINs do not match. Try again.';
+        alShakeDots('alsc');
+        setTimeout(()=>{
+          alsStep2Buf='';alsPin1='';alsStep1Buf='';
+          document.getElementById('asw2').style.display='none';
+          document.getElementById('asw1').style.display='block';
+          alSetDots('alsd',alsStep1Buf);document.getElementById('als1-err').textContent='';
+          alSetStepIndicator(0);
+          document.getElementById('app-lock').scrollTop=0;
+        },700);
+      }
     },160);}
   },()=>{if(alsStep2Buf.length>0){alsStep2Buf=alsStep2Buf.slice(0,-1);alSetDots('alsc',alsStep2Buf);}});
 }
