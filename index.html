@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>MoneyWatch v10</title>
+<title>MoneyWatch v10.1</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&family=Poppins:wght@300;400;500;600&family=Nunito:wght@300;400;600;700&family=Manrope:wght@300;400;500;600&family=Figtree:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Sora:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&family=Lato:wght@300;400;700&family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;500;600&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
@@ -282,7 +282,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
 <div class="hero"><h2 id="hh">Good morning, <span class="hi" id="hname">friend</span> 👋</h2><p class="hero-sub" id="hsub">Your financial overview.</p></div>
 <div class="topbar">
   <div class="brand"><div class="logo">💰</div><div><h1 class="brand-name">MoneyWatch</h1><div class="brand-tag">Your money is watching you.</div></div></div>
-  <div class="tbr"><span class="sflash" id="sfl">✓ Saved</span><span id="drive-status" style="display:none"></span><span class="clk" id="clk"></span><button class="ib" id="load-btn" onclick="trigLoad()" title="Open from Google Drive or local file">📂</button><button class="ib" id="save-btn" onclick="saveFile()" title="Save">💾</button><button class="ib" id="topbar-lock" onclick="alLock()" title="Lock app">🔒</button><button class="ib on" id="pbtn" onclick="togPref()" title="Preferences">⚙</button></div>
+  <div class="tbr"><span class="sflash" id="sfl">✓ Saved</span><span id="drive-status" style="display:none"></span><span class="clk" id="clk"></span><button class="ib" id="load-btn" onclick="trigLoad()" title="Open from Google Drive or local file">📂</button><button class="ib" id="save-btn" onclick="saveFile()" title="Save">💾</button><button class="ib" id="drive-retry-btn" onclick="gdRetry()" title="Retry Google Drive connection" style="display:none">🔄</button><button class="ib" id="topbar-lock" onclick="alLock()" title="Lock app">🔒</button><button class="ib on" id="pbtn" onclick="togPref()" title="Preferences">⚙</button></div>
 </div>
 <input type="file" id="fileinp" accept=".json" style="display:none" onchange="loadFile(event)">
 <!-- PREF MODAL (overlay) -->
@@ -873,9 +873,16 @@ function gdSignOut(){
 }
 
 // ── Drive status indicator ────────────────────────────
+function gdRetry(){
+  _gdBlockReason='';gdReady=false;gdSignedIn=false;
+  const btn=document.getElementById('drive-retry-btn');
+  if(btn){btn.style.display='none';}
+  _initGoogleAPIs();
+}
+
 function setDriveStatus(state,name){
   const el=document.getElementById('drive-status');
-  if(!el)return;
+  const retryBtn=document.getElementById('drive-retry-btn');
   const map={
     loading: '⏳ Drive loading…',
     ready:   '☁ Drive ready',
@@ -888,19 +895,31 @@ function setDriveStatus(state,name){
     '':      null
   };
   const text=state in map?map[state]:state;
-  if(!text){el.style.display='none';el.textContent='';return;}
-  el.textContent=text;el.style.display='inline';
-  // Colour the badge
-  el.style.color=state==='blocked'||state==='error'?'var(--dn)':
-                 state==='saved'||state==='connected'||state==='file'?'var(--ok)':
-                 'var(--tx3)';
-  // Also update pref panel status if open
+  if(!text){
+    if(el){el.style.display='none';el.textContent='';}
+    if(retryBtn)retryBtn.style.display='none';
+    return;
+  }
+  if(el){
+    el.textContent=text;el.style.display='inline';
+    el.style.color=state==='blocked'||state==='error'?'var(--dn)':
+                   state==='saved'||state==='connected'||state==='file'?'var(--ok)':
+                   'var(--tx3)';
+  }
+  // Show retry button when blocked, loading (stuck), or error
+  if(retryBtn){
+    retryBtn.style.display=(state==='blocked'||state==='error'||state==='loading')?'flex':'none';
+    retryBtn.title=state==='blocked'?'Retry Google Drive connection':
+                   state==='error'?'Retry Drive save':
+                   'Retry loading Google APIs';
+  }
+  // Update pref panel status
   const pel=document.getElementById('pref-drive-status');
   if(pel){
     if(state==='blocked'){
       const reason=_gdBlockReason||'Google scripts could not be loaded.';
       pel.innerHTML=`<div style="color:var(--dn);line-height:1.5;margin-bottom:8px">⚠ ${reason}</div>`+
-        `<button class="btn bg2" style="font-size:12px;padding:6px 12px" onclick="_gdBlockReason='';_initGoogleAPIs()">↺ Retry</button>`;
+        `<button class="btn bg2" style="font-size:12px;padding:6px 12px" onclick="gdRetry()">↺ Retry</button>`;
     }
     else if(state==='connected'||state==='ready'){pel.innerHTML='<span style="color:var(--ok)">✓ Google Drive connected</span>';}
     else if(state==='file'){pel.innerHTML='<span style="color:var(--ok)">✓ Active file: '+(name||gdFileName||'')+'</span>';}
@@ -1952,6 +1971,8 @@ function initSess(){}
 alBoot();
 // Load Google APIs dynamically after app boot (non-blocking)
 setTimeout(()=>_initGoogleAPIs(),1000);
+// If still loading after 15s show retry button
+setTimeout(()=>{if(!gdReady){const b=document.getElementById('drive-retry-btn');if(b)b.style.display='flex';}},15000);
 
 </script>
 </body></html>
