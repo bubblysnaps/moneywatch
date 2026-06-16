@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>MoneyWatch</title>
+<title>MoneyWatch v10</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&family=Poppins:wght@300;400;500;600&family=Nunito:wght@300;400;600;700&family=Manrope:wght@300;400;500;600&family=Figtree:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Sora:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&family=Lato:wght@300;400;700&family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;500;600&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
@@ -768,38 +768,65 @@ let _gapiReady=false,_gisReady=false;
 
 function _loadScript(src){
   return new Promise((resolve,reject)=>{
+    // Check if already loaded
+    if(document.querySelector(`script[src="${src}"]`)){resolve();return;}
     const s=document.createElement('script');
     s.src=src;s.async=true;
     s.onload=()=>resolve();
-    s.onerror=()=>reject(new Error('Failed to load: '+src));
+    s.onerror=(e)=>reject(new Error('Failed to load: '+src));
     document.head.appendChild(s);
   });
 }
 
 async function _initGoogleAPIs(){
+  // ── Check protocol ──────────────────────────────────
+  const proto=location.protocol;
+  if(proto==='file:'){
+    _gdBlockReason='Drive requires a web server (HTTPS). Open the app via GitHub Pages, Netlify, or localhost — not as a local file.';
+    setDriveStatus('blocked');return;
+  }
+  if(proto==='http:'&&location.hostname!=='localhost'&&location.hostname!=='127.0.0.1'){
+    _gdBlockReason='Drive requires HTTPS. Deploy to GitHub Pages or Netlify to use Drive sync.';
+    setDriveStatus('blocked');return;
+  }
+
   setDriveStatus('loading');
+
+  // ── Load scripts ────────────────────────────────────
   try{
-    await _loadScript('https://apis.google.com/js/api.js');
-    await _loadScript('https://accounts.google.com/gsi/client');
+    await Promise.all([
+      _loadScript('https://apis.google.com/js/api.js'),
+      _loadScript('https://accounts.google.com/gsi/client')
+    ]);
   }catch(e){
+    _gdBlockReason='Could not load Google scripts ('+e.message+'). An ad blocker or network restriction may be blocking apis.google.com or accounts.google.com.';
     console.warn('Google script load failed:',e.message);
     setDriveStatus('blocked');return;
   }
-  // Poll briefly for globals to become available after script parse
+
+  // ── Wait for globals ─────────────────────────────────
   let tries=0;
   await new Promise(resolve=>{
     const poll=()=>{
       if(typeof gapi!=='undefined'&&typeof google!=='undefined'&&typeof google.accounts!=='undefined')return resolve();
-      if(++tries>20)return resolve();// give up after 10s
+      if(++tries>20)return resolve();
       setTimeout(poll,500);
     };poll();
   });
-  if(typeof gapi==='undefined'||typeof google==='undefined'){
-    console.warn('gapi/google globals unavailable after load');
+
+  if(typeof gapi==='undefined'){
+    _gdBlockReason='gapi global not found after script load. Check browser console for errors from apis.google.com.';
     setDriveStatus('blocked');return;
   }
+  if(typeof google==='undefined'||typeof google.accounts==='undefined'){
+    _gdBlockReason='google.accounts not found after script load. Check browser console for errors from accounts.google.com.';
+    setDriveStatus('blocked');return;
+  }
+
   gdInit();
 }
+
+let _gdBlockReason='';
 
 function gdInit(){
   gapi.load('client',async()=>{
@@ -870,7 +897,11 @@ function setDriveStatus(state,name){
   // Also update pref panel status if open
   const pel=document.getElementById('pref-drive-status');
   if(pel){
-    if(state==='blocked'){pel.innerHTML='<span style="color:var(--dn)">⚠ Google scripts could not load. This is usually caused by an ad blocker or browser privacy extension blocking <code>apis.google.com</code>. Disable it for this page and reload.</span>';}
+    if(state==='blocked'){
+      const reason=_gdBlockReason||'Google scripts could not be loaded.';
+      pel.innerHTML=`<div style="color:var(--dn);line-height:1.5;margin-bottom:8px">⚠ ${reason}</div>`+
+        `<button class="btn bg2" style="font-size:12px;padding:6px 12px" onclick="_gdBlockReason='';_initGoogleAPIs()">↺ Retry</button>`;
+    }
     else if(state==='connected'||state==='ready'){pel.innerHTML='<span style="color:var(--ok)">✓ Google Drive connected</span>';}
     else if(state==='file'){pel.innerHTML='<span style="color:var(--ok)">✓ Active file: '+(name||gdFileName||'')+'</span>';}
     else{pel.textContent=text;}
@@ -985,13 +1016,26 @@ function openSrcPick(mode){
   _srcPickMode=mode;
   document.getElementById('src-pick-title').textContent=mode==='session'?'Open saved file':'Open file';
   document.getElementById('src-pick-sub').textContent='Choose where to open from:';
-  // Update Drive button desc based on sign-in state
   const drvDesc=document.getElementById('src-pick-drive-desc');
-  if(drvDesc)drvDesc.textContent=gdSignedIn?'Pick a file from your Drive':'Sign in to Google, then pick a file';
+  if(drvDesc){
+    if(_gdBlockReason)drvDesc.textContent='⚠ Unavailable — tap to see why';
+    else if(gdReady&&gdSignedIn)drvDesc.textContent='Signed in — pick a file from Drive';
+    else if(gdReady)drvDesc.textContent='Sign in to Google, then pick a file';
+    else drvDesc.textContent='Loading Google APIs…';
+  }
   document.getElementById('src-pick-overlay').classList.add('show');
 }
 function closeSrcPick(){document.getElementById('src-pick-overlay').classList.remove('show');}
 function srcPickDrive(){
+  if(!gdReady&&_gdBlockReason){
+    closeSrcPick();
+    // Show reason in a friendly way
+    const msg=_gdBlockReason;
+    showMsg('pmsg',msg,false);
+    // Also open prefs to Drive section
+    togPref();
+    return;
+  }
   closeSrcPick();
   if(_srcPickMode==='session'){document.getElementById('sess-overlay').classList.remove('show');}
   gdLoadPickerThenOpen();
