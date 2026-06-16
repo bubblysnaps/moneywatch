@@ -176,7 +176,13 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
 /* idle warning banner */
 #idle-warn{position:fixed;top:0;left:0;right:0;z-index:8999;background:var(--wn);color:#fff;font-size:13px;font-weight:600;text-align:center;padding:10px 16px;display:none;box-shadow:0 2px 8px rgba(0,0,0,.2);align-items:center;justify-content:center;gap:10px}
 #idle-warn.show{display:flex}
-/* ── COLLAPSIBLE GROUPS ───────────────────────────────── */
+/* ── GOOGLE DRIVE INDICATOR ──────────────────────────── */
+.drive-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:100px;background:#e8f0fe;color:#1a73e8;border:1px solid #c5d8fb;margin-left:6px;vertical-align:middle}
+[data-dk] .drive-badge{background:#1a2a4a;color:#7baaf7;border-color:#2a4080}
+.drive-badge.connected{background:#e6f4ea;color:#1e8e3e;border-color:#a8d5b0}
+[data-dk] .drive-badge.connected{background:#0d2a18;color:#34a853;border-color:#1a5c30}
+#drive-status{font-size:11px;color:var(--tx3);padding:3px 8px;background:var(--surf2);border-radius:6px;border:1px solid var(--bd);white-space:nowrap;max-width:160px;overflow:hidden;text-overflow:ellipsis}
+</style>
 .grp-header{display:flex;align-items:center;gap:8px;padding:8px 0 8px;cursor:pointer;user-select:none;margin-bottom:0}
 .grp-header:hover .grp-chevron{color:var(--ac)}
 .grp-chevron{font-size:10px;color:var(--tx3);transition:transform .2s;flex-shrink:0;margin-right:2px}
@@ -276,7 +282,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
 <div class="hero"><h2 id="hh">Good morning, <span class="hi" id="hname">friend</span> 👋</h2><p class="hero-sub" id="hsub">Your financial overview.</p></div>
 <div class="topbar">
   <div class="brand"><div class="logo">💰</div><div><h1 class="brand-name">MoneyWatch</h1><div class="brand-tag">Your money is watching you.</div></div></div>
-  <div class="tbr"><span class="sflash" id="sfl">✓ Saved</span><span class="clk" id="clk"></span><button class="ib" id="load-btn" onclick="trigLoad()" title="Load / open file">📂</button><button class="ib" id="save-btn" onclick="saveFile()" title="Save to loaded file">💾</button><button class="ib" id="topbar-lock" onclick="alLock()" title="Lock app">🔒</button><button class="ib on" id="pbtn" onclick="togPref()" title="Preferences">⚙</button></div>
+  <div class="tbr"><span class="sflash" id="sfl">✓ Saved</span><span id="drive-status" style="display:none"></span><span class="clk" id="clk"></span><button class="ib" id="load-btn" onclick="trigLoad()" title="Open from Google Drive or local file">📂</button><button class="ib" id="save-btn" onclick="saveFile()" title="Save">💾</button><button class="ib" id="topbar-lock" onclick="alLock()" title="Lock app">🔒</button><button class="ib on" id="pbtn" onclick="togPref()" title="Preferences">⚙</button></div>
 </div>
 <input type="file" id="fileinp" accept=".json" style="display:none" onchange="loadFile(event)">
 <!-- PREF MODAL (overlay) -->
@@ -298,6 +304,16 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
       <div class="divl"></div>
       <div class="pst" style="margin-top:0">Auto-save</div>
       <div class="tog-row"><label class="tw"><input type="checkbox" id="astog" onchange="togAS()"><span class="tt"></span></label><div><div style="font-size:14px;font-weight:500">Auto-save to browser</div><div style="font-size:12px;color:var(--tx3)">Saves every change automatically</div></div></div>
+      <div class="pst" style="margin-top:0">Google Drive sync</div>
+      <div style="background:var(--surf2);border:1px solid var(--bd);border-radius:11px;padding:14px 16px;margin-bottom:10px">
+        <div style="font-size:13px;color:var(--tx2);margin-bottom:12px;line-height:1.5">Connect to Google Drive to load and auto-save your data file in the cloud.</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn bp" style="font-size:13px;padding:8px 14px" onclick="closePref();gdLoadPickerThenOpen()">📂 Open Drive file</button>
+          <button class="btn bg2" style="font-size:13px;padding:8px 14px" onclick="closePref();gdCreateNew()">➕ Create new in Drive</button>
+          <button class="btn bg2" style="font-size:13px;padding:8px 14px;color:var(--dn);border-color:var(--dn)" onclick="gdSignOut()">🔓 Sign out Drive</button>
+        </div>
+        <div id="pref-drive-status" style="font-size:12px;color:var(--tx3);margin-top:10px"></div>
+      </div>
       <div class="divl"></div>
       <div class="pst" style="margin-top:0">App lock & security</div>
       <div style="background:var(--surf2);border:1px solid var(--bd);border-radius:11px;padding:14px 16px;margin-bottom:10px">
@@ -581,6 +597,28 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
     <div class="perr" id="pin-err"></div><div class="numpad" id="pin-numpad"></div><button class="pcancel" onclick="closePin()">Cancel</button>
   </div>
 </div>
+<!-- SOURCE PICKER MODAL (Drive vs Local) -->
+<div class="overlay" id="src-pick-overlay">
+  <div class="sbox" style="max-width:380px">
+    <div style="font-size:28px;margin-bottom:12px">📂</div>
+    <div class="stit" id="src-pick-title">Open file</div>
+    <div class="ssub" id="src-pick-sub">Choose where to open from:</div>
+    <div class="sopts">
+      <div class="sopt" id="src-pick-drive" onclick="srcPickDrive()">
+        <div class="soico" style="background:#e8f0fe;color:#1a73e8;font-size:22px">
+          <svg width="22" height="22" viewBox="0 0 87.3 78" xmlns="http://www.w3.org/2000/svg"><path d="m6.6 66.85 3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8h-27.5c0 1.55.4 3.1 1.2 4.5z" fill="#0066da"/><path d="m43.65 25-13.75-23.8c-1.35.8-2.5 1.9-3.3 3.3l-25.4 44a9.06 9.06 0 0 0 -1.2 4.5h27.5z" fill="#00ac47"/><path d="m73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5h-27.502l5.852 11.5z" fill="#ea4335"/><path d="m43.65 25 13.75-23.8c-1.35-.8-2.9-1.2-4.5-1.2h-18.5c-1.6 0-3.15.45-4.5 1.2z" fill="#00832d"/><path d="m59.8 53h-32.3l-13.75 23.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z" fill="#2684fc"/><path d="m73.4 26.5-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3l-13.75 23.8 16.15 28h27.45c0-1.55-.4-3.1-1.2-4.5z" fill="#ffba00"/></svg>
+        </div>
+        <div><div class="sotit">Google Drive</div><div class="sodesc" id="src-pick-drive-desc">Sign in and pick a file from Drive</div></div>
+      </div>
+      <div class="sopt" onclick="srcPickLocal()">
+        <div class="soico amber">💾</div>
+        <div><div class="sotit">Local file</div><div class="sodesc">Open a .json file from this device</div></div>
+      </div>
+    </div>
+    <button class="btn bg2" style="width:100%;justify-content:center;margin-top:12px;font-size:13px" onclick="closeSrcPick()">Cancel</button>
+  </div>
+</div>
+
 <!-- SESSION MODAL -->
 <div class="overlay" id="sess-overlay">
   <div class="sbox">
@@ -593,6 +631,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
     <div class="snote">Your data is stored only in this browser.</div>
   </div>
 </div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
 const PAL=['#5b6af0','#22c55e','#ef4444','#f59e0b','#8b5cf6','#06b6d4','#f97316','#ec4899','#10b981','#6366f1'];
@@ -663,14 +702,14 @@ function sessNew(){S=JSON.parse(JSON.stringify(DS));document.getElementById('ses
 function sessCont(){if(!localStorage.getItem('mw_v2'))return;try{const p=JSON.parse(localStorage.getItem('mw_v2')||'{}');['expenses','categories','budgetCats','savings','incomeData'].forEach(k=>{if(p[k])S[k]=p[k];});if(p.prefs)S.prefs=Object.assign(S.prefs,p.prefs);}catch(e){}document.getElementById('sess-overlay').classList.remove('show');finishInit();}
 function finishInit(){applyPrefs();go('home');if(S.prefs.incLock&&S.prefs.incPIN)buildSetupNP();}
 
-// PERSIST — always saves to localStorage; also writes to file if handle is active
+// PERSIST — always saves to localStorage; also writes to file/Drive
 let _saveTimer=null;
 function persist(){
-  // 1. Always save to localStorage immediately (reliable fallback)
   try{localStorage.setItem('mw_v2',JSON.stringify(S));}catch(e){}
-  // 2. Debounce file writes to avoid hammering the file system
-  if(activeFileHandle){
-    clearTimeout(_saveTimer);
+  clearTimeout(_saveTimer);
+  if(gdSignedIn&&gdFileId){
+    _saveTimer=setTimeout(()=>gdSave().then(ok=>{if(ok)flash();}),600);
+  } else if(activeFileHandle){
     _saveTimer=setTimeout(()=>_writeToFile(),300);
   } else {
     flash();
@@ -711,52 +750,321 @@ function showFileStatus(msg,warn){
 
 function flash(){const e=document.getElementById('sfl');if(!e)return;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),1800);}
 
-// ── FILE HANDLE (File System Access API) ──────────────────
+// ══════════════════════════════════════════════════════
+// GOOGLE DRIVE INTEGRATION
+// ══════════════════════════════════════════════════════
+const GD_API_KEY  = 'AIzaSyChSFM6VvSYg_kMoY1xY2WLWANQb-BpvRs';
+const GD_CLIENT_ID= '225056616792-vj7j5tpbb788m7u6ud0muire7fa5fepo.apps.googleusercontent.com';
+const GD_SCOPES   = 'https://www.googleapis.com/auth/drive.file';
+const GD_DISC_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
+const GD_MIME     = 'application/json';
+const GD_FILENAME = 'moneywatch_data.json';
+
+let gdReady=false,gdSignedIn=false,gdFileId=null,gdFileName=null,gdTokenClient=null;
+
+// ── Init Google APIs ─────────────────────────────────
+// ── Dynamic Google API loader ────────────────────────────
+let _gapiReady=false,_gisReady=false;
+
+function _loadScript(src){
+  return new Promise((resolve,reject)=>{
+    const s=document.createElement('script');
+    s.src=src;s.async=true;
+    s.onload=()=>resolve();
+    s.onerror=()=>reject(new Error('Failed to load: '+src));
+    document.head.appendChild(s);
+  });
+}
+
+async function _initGoogleAPIs(){
+  setDriveStatus('loading');
+  try{
+    await _loadScript('https://apis.google.com/js/api.js');
+    await _loadScript('https://accounts.google.com/gsi/client');
+  }catch(e){
+    console.warn('Google script load failed:',e.message);
+    setDriveStatus('blocked');return;
+  }
+  // Poll briefly for globals to become available after script parse
+  let tries=0;
+  await new Promise(resolve=>{
+    const poll=()=>{
+      if(typeof gapi!=='undefined'&&typeof google!=='undefined'&&typeof google.accounts!=='undefined')return resolve();
+      if(++tries>20)return resolve();// give up after 10s
+      setTimeout(poll,500);
+    };poll();
+  });
+  if(typeof gapi==='undefined'||typeof google==='undefined'){
+    console.warn('gapi/google globals unavailable after load');
+    setDriveStatus('blocked');return;
+  }
+  gdInit();
+}
+
+function gdInit(){
+  gapi.load('client',async()=>{
+    try{
+      await gapi.client.init({apiKey:GD_API_KEY,discoveryDocs:[GD_DISC_DOC]});
+    }catch(e){console.warn('gapi client init error',e);setDriveStatus('blocked');return;}
+    gdReady=true;
+    gdTokenClient=google.accounts.oauth2.initTokenClient({
+      client_id:GD_CLIENT_ID,scope:GD_SCOPES,
+      callback:async(resp)=>{
+        if(resp.error){
+          console.warn('GD token error',resp);
+          if(resp.error==='popup_blocked_by_browser')showMsg('pmsg','Pop-up blocked — please allow pop-ups for this site.',false);
+          return;
+        }
+        gdSignedIn=true;setDriveStatus('connected');
+        if(_gdPendingAction){const a=_gdPendingAction;_gdPendingAction=null;a();}
+      }
+    });
+    const tok=gapi.client.getToken();
+    if(tok&&tok.access_token){gdSignedIn=true;}
+    setDriveStatus(gdSignedIn?'connected':'ready');
+    gdReconnect();
+  });
+}
+// dummy callbacks in case any stray onload fires
+function gapiScriptLoaded(){}
+function gisScriptLoaded(){}
+let _gdPendingAction=null;
+function gdEnsureAuth(then){
+  if(!gdReady){
+    showMsg('pmsg','Google Drive is not available. Check that apis.google.com is not blocked.',false);
+    return;
+  }
+  if(gdSignedIn){then();return;}
+  _gdPendingAction=then;
+  gdTokenClient.requestAccessToken({prompt:''});
+}
+function gdSignOut(){
+  const tok=gapi.client.getToken();
+  if(tok){google.accounts.oauth2.revoke(tok.access_token,()=>{});gapi.client.setToken(null);}
+  gdSignedIn=false;gdFileId=null;gdFileName=null;setDriveStatus('');
+  setFileHandle(null);showMsg('pmsg','Signed out of Google Drive.',true);
+}
+
+// ── Drive status indicator ────────────────────────────
+function setDriveStatus(state,name){
+  const el=document.getElementById('drive-status');
+  if(!el)return;
+  const map={
+    loading: '⏳ Drive loading…',
+    ready:   '☁ Drive ready',
+    connected:'🟢 Drive ready',
+    file:    '📄 '+(name||gdFileName||'Drive file'),
+    saving:  '⏳ Saving…',
+    saved:   '✅ Saved to Drive',
+    error:   '⚠ Drive save error',
+    blocked: '⚠ Drive unavailable',
+    '':      null
+  };
+  const text=state in map?map[state]:state;
+  if(!text){el.style.display='none';el.textContent='';return;}
+  el.textContent=text;el.style.display='inline';
+  // Colour the badge
+  el.style.color=state==='blocked'||state==='error'?'var(--dn)':
+                 state==='saved'||state==='connected'||state==='file'?'var(--ok)':
+                 'var(--tx3)';
+  // Also update pref panel status if open
+  const pel=document.getElementById('pref-drive-status');
+  if(pel){
+    if(state==='blocked'){pel.innerHTML='<span style="color:var(--dn)">⚠ Google scripts could not load. This is usually caused by an ad blocker or browser privacy extension blocking <code>apis.google.com</code>. Disable it for this page and reload.</span>';}
+    else if(state==='connected'||state==='ready'){pel.innerHTML='<span style="color:var(--ok)">✓ Google Drive connected</span>';}
+    else if(state==='file'){pel.innerHTML='<span style="color:var(--ok)">✓ Active file: '+(name||gdFileName||'')+'</span>';}
+    else{pel.textContent=text;}
+  }
+}
+
+// ── OPEN (Picker) ─────────────────────────────────────
+function gdOpenPicker(){
+  gdEnsureAuth(()=>{
+    const tok=gapi.client.getToken();
+    const picker=new google.picker.PickerBuilder()
+      .addView(new google.picker.DocsView(google.picker.ViewId.DOCS)
+        .setMimeTypes(GD_MIME).setMode(google.picker.DocsViewMode.LIST))
+      .addView(new google.picker.DocsUploadView().setMimeTypes(GD_MIME))
+      .setOAuthToken(tok.access_token)
+      .setDeveloperKey(GD_API_KEY)
+      .setTitle('Select your MoneyWatch data file')
+      .setCallback(async data=>{
+        if(data.action===google.picker.Action.PICKED){
+          const doc=data.docs[0];
+          gdFileId=doc.id;gdFileName=doc.name;
+          try{
+            const resp=await gapi.client.drive.files.get({fileId:gdFileId,alt:'media'});
+            _applyLoadedData(JSON.parse(resp.body));
+            setFileHandle(null);// drive handles saving, not FSAPI
+            incUnlocked=false;
+            try{localStorage.setItem('mw_v2',JSON.stringify(S));}catch(e){}
+            localStorage.setItem('mw_gdfileid',gdFileId);
+            localStorage.setItem('mw_gdfilename',gdFileName);
+            setDriveStatus('file',gdFileName);
+            applyPrefs();go(AT);showMsg('pmsg','Loaded from Drive: '+gdFileName,true);
+          }catch(err){showMsg('pmsg','Could not read file: '+err.message,false);}
+        } else if(data.action===google.picker.Action.CANCEL){
+          // user cancelled — no-op
+        }
+      })
+      .build();
+    // load picker API if not loaded
+    if(typeof google.picker==='undefined'){
+      gapi.load('picker',()=>picker.setVisible(true));
+    } else {picker.setVisible(true);}
+  });
+}
+
+// ── SAVE TO DRIVE ─────────────────────────────────────
+async function gdSave(){
+  if(!gdSignedIn||!gdFileId)return false;
+  const json=JSON.stringify(S,null,2);
+  try{
+    setDriveStatus('saving');
+    await gapi.client.request({
+      path:`/upload/drive/v3/files/${gdFileId}`,
+      method:'PATCH',
+      params:{uploadType:'media'},
+      headers:{'Content-Type':GD_MIME},
+      body:json
+    });
+    setDriveStatus('saved',gdFileName);
+    setTimeout(()=>setDriveStatus('file',gdFileName),2500);
+    return true;
+  }catch(err){
+    console.warn('Drive save error:',err);
+    setDriveStatus('error');
+    setTimeout(()=>setDriveStatus('file',gdFileName),3000);
+    return false;
+  }
+}
+
+// ── CREATE NEW FILE IN DRIVE ──────────────────────────
+async function gdCreateNew(){
+  gdEnsureAuth(async()=>{
+    try{
+      const json=JSON.stringify(S,null,2);
+      // Step 1: create metadata
+      const meta=await gapi.client.drive.files.create({resource:{name:GD_FILENAME,mimeType:GD_MIME},fields:'id,name'});
+      gdFileId=meta.result.id;gdFileName=meta.result.name;
+      // Step 2: upload content
+      await gapi.client.request({
+        path:`/upload/drive/v3/files/${gdFileId}`,
+        method:'PATCH',params:{uploadType:'media'},
+        headers:{'Content-Type':GD_MIME},body:json
+      });
+      localStorage.setItem('mw_gdfileid',gdFileId);
+      localStorage.setItem('mw_gdfilename',gdFileName);
+      setDriveStatus('file',gdFileName);
+      showMsg('pmsg','Saved new file to Drive: '+gdFileName,true);
+    }catch(err){showMsg('pmsg','Drive error: '+err.message,false);}
+  });
+}
+
+// ── RECONNECT SAVED FILE ID ───────────────────────────
+function gdReconnect(){
+  const id=localStorage.getItem('mw_gdfileid');const name=localStorage.getItem('mw_gdfilename');
+  if(id&&name){gdFileId=id;gdFileName=name;if(gdSignedIn)setDriveStatus('file',name);}
+}
+
+// ── LOAD PICKER API LAZILY ────────────────────────────
+function gdLoadPickerThenOpen(){
+  if(!gdReady){showMsg('pmsg','Google Drive is not available — check that apis.google.com is not blocked.',false);return;}
+  if(typeof google.picker==='undefined'){
+    gapi.load('picker',()=>gdOpenPicker());
+  } else {gdOpenPicker();}
+}
+
+// ══════════════════════════════════════════════════════
+// SOURCE PICKER (Drive vs Local)
+// ══════════════════════════════════════════════════════
+let _srcPickMode='load';// 'load' | 'session'
+let _srcPickResolve=null;
+
+function openSrcPick(mode){
+  _srcPickMode=mode;
+  document.getElementById('src-pick-title').textContent=mode==='session'?'Open saved file':'Open file';
+  document.getElementById('src-pick-sub').textContent='Choose where to open from:';
+  // Update Drive button desc based on sign-in state
+  const drvDesc=document.getElementById('src-pick-drive-desc');
+  if(drvDesc)drvDesc.textContent=gdSignedIn?'Pick a file from your Drive':'Sign in to Google, then pick a file';
+  document.getElementById('src-pick-overlay').classList.add('show');
+}
+function closeSrcPick(){document.getElementById('src-pick-overlay').classList.remove('show');}
+function srcPickDrive(){
+  closeSrcPick();
+  if(_srcPickMode==='session'){document.getElementById('sess-overlay').classList.remove('show');}
+  gdLoadPickerThenOpen();
+}
+function srcPickLocal(){
+  closeSrcPick();
+  if(_srcPickMode==='session'){
+    // Session load local
+    if(hasFileApi()){
+      window.showOpenFilePicker({types:[{description:'MoneyWatch data',accept:{'application/json':['.json']}}],multiple:false})
+        .then(async([handle])=>{
+          const perm=await handle.requestPermission({mode:'readwrite'});
+          const file=await handle.getFile();const text=await file.text();
+          _applyLoadedData(JSON.parse(text));setFileHandle(perm==='granted'?handle:null);
+          gdFileId=null;gdFileName=null;localStorage.removeItem('mw_gdfileid');
+          finishInit();
+        }).catch(e=>{if(e.name!=='AbortError')initSess();else initSess();});
+    } else {
+      const inp=document.createElement('input');inp.type='file';inp.accept='.json';
+      inp.onchange=e=>{const f=e.target.files[0];if(!f){initSess();return;}const r=new FileReader();r.onload=ev=>{try{_applyLoadedData(JSON.parse(ev.target.result));setFileHandle(null);}catch(err){}finishInit();};r.readAsText(f);};
+      inp.oncancel=()=>initSess();inp.click();
+    }
+  } else {
+    // Mid-session load local
+    if(hasFileApi()){
+      window.showOpenFilePicker({types:[{description:'MoneyWatch data',accept:{'application/json':['.json']}}],multiple:false})
+        .then(async([handle])=>{
+          const perm=await handle.requestPermission({mode:'readwrite'});
+          const file=await handle.getFile();const text=await file.text();
+          _applyLoadedData(JSON.parse(text));setFileHandle(perm==='granted'?handle:null);
+          gdFileId=null;gdFileName=null;localStorage.removeItem('mw_gdfileid');
+          incUnlocked=false;persist();applyPrefs();go(AT);showMsg('pmsg','Loaded: '+handle.name,true);
+        }).catch(()=>{});
+    } else {document.getElementById('fileinp').click();}
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// FILE HANDLE (File System Access API — local files)
+// ══════════════════════════════════════════════════════
 let activeFileHandle=null;
 function hasFileApi(){return'showOpenFilePicker'in window;}
 function setFileHandle(handle){
   activeFileHandle=handle;
   const btn=document.getElementById('save-btn');
   if(btn){
-    btn.title=handle?'Save to: '+handle.name:'Save (no file loaded)';
-    btn.style.color=handle?'var(--ok)':'';
-    btn.style.borderColor=handle?'var(--ok)':'';
+    if(handle){btn.title='Save to: '+handle.name;btn.style.color='var(--ok)';btn.style.borderColor='var(--ok)';}
+    else if(!gdFileId){btn.title='Save file';btn.style.color='';btn.style.borderColor='';}
   }
 }
 
 async function saveFile(){
-  if(activeFileHandle){
-    // Force immediate write (bypasses debounce)
+  // Priority: Drive file > local FSAPI handle > download
+  if(gdSignedIn&&gdFileId){
     clearTimeout(_saveTimer);
-    await _writeToFile();
-    return;
+    await gdSave();flash();return;
   }
-  // No file loaded — just download
+  if(activeFileHandle){clearTimeout(_saveTimer);await _writeToFile();return;}
+  // No file — download
   const b=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
   const u=URL.createObjectURL(b);const a=document.createElement('a');
   a.href=u;a.download='moneywatch_'+new Date().toISOString().slice(0,10)+'.json';
   a.click();URL.revokeObjectURL(u);flash();
 }
 
-async function trigLoad(){
-  if(hasFileApi()){
-    try{
-      const [handle]=await window.showOpenFilePicker({types:[{description:'MoneyWatch data',accept:{'application/json':['.json']}}],multiple:false});
-      const perm=await handle.requestPermission({mode:'readwrite'});
-      if(perm!=='granted'){showMsg('pmsg','Read-write permission needed to save back to this file.',false);return;}
-      const file=await handle.getFile();const text=await file.text();
-      _applyLoadedData(JSON.parse(text));setFileHandle(handle);incUnlocked=false;
-      try{localStorage.setItem('mw_v2',JSON.stringify(S));}catch(e){}
-      applyPrefs();go(AT);showMsg('pmsg','Loaded: '+handle.name,true);return;
-    }catch(e){if(e.name==='AbortError')return;}
-  }
-  // Fallback: classic file input
-  document.getElementById('fileinp').click();
-}
+async function trigLoad(){openSrcPick('load');}
+
 function loadFile(e){
   const f=e.target.files[0];if(!f)return;
   const r=new FileReader();r.onload=ev=>{
-    try{_applyLoadedData(JSON.parse(ev.target.result));setFileHandle(null);incUnlocked=false;persist();applyPrefs();go(AT);showMsg('pmsg','Data loaded!',true);}
+    try{_applyLoadedData(JSON.parse(ev.target.result));setFileHandle(null);
+      gdFileId=null;gdFileName=null;localStorage.removeItem('mw_gdfileid');
+      incUnlocked=false;persist();applyPrefs();go(AT);showMsg('pmsg','Data loaded!',true);}
     catch(err){showMsg('pmsg','Invalid file.',false);}
   };r.readAsText(f);e.target.value='';
 }
@@ -764,21 +1072,7 @@ function _applyLoadedData(d){['expenses','categories','budgetCats','savings','in
 
 async function sessLoad(){
   document.getElementById('sess-overlay').classList.remove('show');
-  if(hasFileApi()){
-    try{
-      const [handle]=await window.showOpenFilePicker({types:[{description:'MoneyWatch data',accept:{'application/json':['.json']}}],multiple:false});
-      // Request read-write so we can save back later
-      const perm=await handle.requestPermission({mode:'readwrite'});
-      const file=await handle.getFile();const text=await file.text();
-      _applyLoadedData(JSON.parse(text));
-      setFileHandle(perm==='granted'?handle:null);
-      finishInit();return;
-    }catch(e){if(e.name==='AbortError'){initSess();return;}}
-  }
-  // Fallback
-  const inp=document.createElement('input');inp.type='file';inp.accept='.json';
-  inp.onchange=e=>{const f=e.target.files[0];if(!f){initSess();return;}const r=new FileReader();r.onload=ev=>{try{_applyLoadedData(JSON.parse(ev.target.result));setFileHandle(null);}catch(err){}finishInit();};r.readAsText(f);};
-  inp.oncancel=()=>initSess();inp.click();
+  openSrcPick('session');
 }
 
 // HELPERS
@@ -1610,12 +1904,11 @@ savePrefs=function(){
 
 // INIT
 document.getElementById('wdate').value=new Date().toISOString().slice(0,10);
-// Override initSess — don't call it directly; boot through app lock instead
-function initSess(){
-  // This is now called AFTER unlock via showSessionPicker()
-  // kept for backward compat but session picker shown by alBoot→showSessionPicker
-}
-alBoot();// ← single entry point: handles lock screen, then session picker
+function initSess(){}
+alBoot();
+// Load Google APIs dynamically after app boot (non-blocking)
+setTimeout(()=>_initGoogleAPIs(),1000);
 
 </script>
 </body></html>
+
