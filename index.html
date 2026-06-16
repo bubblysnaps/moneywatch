@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>MoneyWatch v10.1</title>
+<title>MoneyWatch v10.2</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&family=Poppins:wght@300;400;500;600&family=Nunito:wght@300;400;600;700&family=Manrope:wght@300;400;500;600&family=Figtree:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Sora:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&family=Lato:wght@300;400;700&family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;500;600&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
@@ -282,7 +282,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
 <div class="hero"><h2 id="hh">Good morning, <span class="hi" id="hname">friend</span> 👋</h2><p class="hero-sub" id="hsub">Your financial overview.</p></div>
 <div class="topbar">
   <div class="brand"><div class="logo">💰</div><div><h1 class="brand-name">MoneyWatch</h1><div class="brand-tag">Your money is watching you.</div></div></div>
-  <div class="tbr"><span class="sflash" id="sfl">✓ Saved</span><span id="drive-status" style="display:none"></span><span class="clk" id="clk"></span><button class="ib" id="load-btn" onclick="trigLoad()" title="Open from Google Drive or local file">📂</button><button class="ib" id="save-btn" onclick="saveFile()" title="Save">💾</button><button class="ib" id="drive-retry-btn" onclick="gdRetry()" title="Retry Google Drive connection" style="display:none">🔄</button><button class="ib" id="topbar-lock" onclick="alLock()" title="Lock app">🔒</button><button class="ib on" id="pbtn" onclick="togPref()" title="Preferences">⚙</button></div>
+  <div class="tbr"><span class="sflash" id="sfl">✓ Saved</span><span id="drive-status" style="display:none"></span><span class="clk" id="clk"></span><button class="ib" id="load-btn" onclick="trigLoad()" title="Open from Google Drive or local file">📂</button><button class="ib" id="save-btn" onclick="saveFile()" title="Save">💾</button><button class="ib" onclick="location.reload()" title="Refresh page">🔃</button><button class="ib" id="topbar-lock" onclick="alLock()" title="Lock app">🔒</button><button class="ib on" id="pbtn" onclick="togPref()" title="Preferences">⚙</button></div>
 </div>
 <input type="file" id="fileinp" accept=".json" style="display:none" onchange="loadFile(event)">
 <!-- PREF MODAL (overlay) -->
