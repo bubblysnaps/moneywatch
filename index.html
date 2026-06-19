@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>MoneyWatch v12</title>
+<title>MoneyWatch v13</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&family=Poppins:wght@300;400;500;600&family=Nunito:wght@300;400;600;700&family=Manrope:wght@300;400;500;600&family=Figtree:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Sora:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&family=Lato:wght@300;400;700&family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;500;600&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
@@ -228,6 +228,12 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
 .drag-handle:hover{color:var(--ac)}
 .bcat-card.drag-over{border-top:3px solid var(--ac)!important}
 .bcat-card.dragging{opacity:.35}
+/* ── HIDDEN AMOUNT REVEAL ─────────────────────────────── */
+.amt-hidden{display:inline-flex;align-items:center;gap:5px;cursor:pointer;user-select:none}
+.amt-blur{filter:blur(6px);transition:filter .25s;font-size:21px;font-weight:700;color:var(--tx);line-height:1.2;letter-spacing:1px}
+.amt-blur.revealed{filter:none}
+.amt-eye{font-size:13px;color:var(--tx3);transition:opacity .2s;flex-shrink:0}
+.amt-hidden:hover .amt-eye{opacity:1;color:var(--ac)}
 </style>
 <body>
 
@@ -799,6 +805,7 @@ const DS={expenses:[],categories:['Credit card','Grocery','School','Utilities','
 let S=JSON.parse(JSON.stringify(DS));
 let AT='home',SV='overview',VY=new Date().getFullYear(),VM=new Date().getMonth();
 let svCatGroup='default'; // 'default' | 'category' | 'date'
+let _hmRevealed={}; // tracks which home metric amounts are revealed: {tot,tt,avg}
 let incUnlocked=false;
 const CHS={};
 let pinBuf='',pinCB=null,setupBuf='',setupStep='new',pinNew='';
@@ -1565,10 +1572,30 @@ function renderSavings(){
 }
 
 // HOME
+function toggleHmAmt(key){
+  _hmRevealed[key]=!_hmRevealed[key];
+  const el=document.getElementById('hma-'+key);const eye=document.getElementById('hme-'+key);
+  if(el)el.classList.toggle('revealed',!!_hmRevealed[key]);
+  if(eye)eye.textContent=_hmRevealed[key]?'🙈':'👁';
+}
+function _hmAmt(key,value){
+  const rev=!!_hmRevealed[key];
+  return`<div class="amt-hidden" onclick="toggleHmAmt('${key}')">
+    <span class="amt-blur${rev?' revealed':''}" id="hma-${key}">${value}</span>
+    <span class="amt-eye" id="hme-${key}">${rev?'🙈':'👁'}</span>
+  </div>`;
+}
+
 function renderHome(){
   const ny=new Date().getFullYear(),nm=new Date().getMonth();
-  const exps=exm(ny,nm);const tot=exps.reduce((s,e)=>s+e.amount,0);const tod=new Date().toISOString().slice(0,10);const tt=exps.filter(e=>e.date===tod).reduce((s,e)=>s+e.amount,0);const days=new Date().getDate();const avg=days>0?tot/days:0;
-  document.getElementById('hm').innerHTML=`<div class="met"><div class="ml">Month expenses</div><div class="mv">${fa(tot)}</div><div class="ms">${exps.length} transactions</div></div><div class="met"><div class="ml">Today</div><div class="mv">${fa(tt)}</div><div class="ms">${new Date().toLocaleDateString('en-PH',{month:'short',day:'numeric'})}</div></div><div class="met"><div class="ml">Daily avg</div><div class="mv">${fa(avg)}</div><div class="ms">over ${days} days</div></div>`;
+  const exps=exm(ny,nm);const tot=exps.reduce((s,e)=>s+e.amount,0);
+  const tod=new Date().toISOString().slice(0,10);
+  const tt=exps.filter(e=>e.date===tod).reduce((s,e)=>s+e.amount,0);
+  const days=new Date().getDate();const avg=days>0?tot/days:0;
+  document.getElementById('hm').innerHTML=`
+    <div class="met"><div class="ml">Month expenses</div><div class="mv">${_hmAmt('tot',fa(tot))}</div><div class="ms">${exps.length} transactions</div></div>
+    <div class="met"><div class="ml">Today</div><div class="mv">${_hmAmt('tt',fa(tt))}</div><div class="ms">${new Date().toLocaleDateString('en-PH',{month:'short',day:'numeric'})}</div></div>
+    <div class="met"><div class="ml">Daily avg</div><div class="mv">${_hmAmt('avg',fa(avg))}</div><div class="ms">over ${days} days</div></div>`;
   const ct={};S.categories.forEach(c=>ct[c]=0);exps.forEach(e=>ct[e.category]=(ct[e.category]||0)+e.amount);const mx=Math.max(...Object.values(ct),1);
   document.getElementById('hbars').innerHTML=S.categories.filter(c=>ct[c]>0).sort((a,b)=>ct[b]-ct[a]).map(c=>`<div class="br"><div class="bl">${c}</div><div class="bt"><div class="bf" style="width:${(ct[c]/mx*100).toFixed(1)}%;background:${catC(c)}"></div></div><div class="bv">${fa(ct[c])}</div></div>`).join('')||'<div class="empty" style="padding:1.2rem">No expenses yet this month.</div>';
   const rec=S.expenses.slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
