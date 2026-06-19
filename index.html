@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>MoneyWatch v10.2</title>
+<title>MoneyWatch v12</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&family=Poppins:wght@300;400;500;600&family=Nunito:wght@300;400;600;700&family=Manrope:wght@300;400;500;600&family=Figtree:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Sora:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&family=Lato:wght@300;400;700&family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;500;600&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
@@ -182,6 +182,34 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
 .drive-badge.connected{background:#e6f4ea;color:#1e8e3e;border-color:#a8d5b0}
 [data-dk] .drive-badge.connected{background:#0d2a18;color:#34a853;border-color:#1a5c30}
 #drive-status{font-size:11px;color:var(--tx3);padding:3px 8px;background:var(--surf2);border-radius:6px;border:1px solid var(--bd);white-space:nowrap;max-width:160px;overflow:hidden;text-overflow:ellipsis}
+/* ── WISHLIST ──────────────────────────────────────────── */
+.wl-list-card{background:var(--surf);border:1.5px solid var(--bd);border-radius:var(--rl);padding:18px;box-shadow:var(--sh);margin-bottom:14px;transition:all .18s}
+.wl-list-card:hover{box-shadow:var(--sh2)}
+.wl-list-card.wl-done{opacity:.6}
+.wl-card-header{display:flex;align-items:flex-start;gap:11px;margin-bottom:12px}
+.wl-card-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.wl-card-meta{flex:1;min-width:0}
+.wl-card-title{font-size:16px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wl-card-sub{font-size:12px;color:var(--tx3);margin-top:2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.wl-card-actions{display:flex;gap:4px;flex-shrink:0}
+.wl-progress{height:6px;background:var(--surf3);border-radius:100px;overflow:hidden;margin-bottom:12px}
+.wl-progressf{height:100%;border-radius:100px;transition:width .5s}
+.wl-items{display:flex;flex-direction:column;gap:6px}
+.wl-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surf2);border-radius:10px;border:1.5px solid var(--bd);transition:all .18s}
+.wl-item:hover{border-color:var(--bd2)}
+.wl-item.wl-item-bought{background:var(--okbg);border-color:rgba(22,163,74,.25)}
+.wl-item.wl-item-bought .wl-item-name{text-decoration:line-through;color:var(--tx3)}
+.wl-cb{width:20px;height:20px;border-radius:6px;border:2px solid var(--bd2);background:var(--surf);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .18s;font-size:12px}
+.wl-cb:hover{border-color:var(--ok)}
+.wl-cb.checked{background:var(--ok);border-color:var(--ok);color:#fff}
+.wl-item-info{flex:1;min-width:0}
+.wl-item-name{font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wl-item-meta{font-size:11px;color:var(--tx3);margin-top:1px}
+.wl-item-price{font-size:14px;font-weight:700;color:var(--tx);flex-shrink:0}
+.wl-item-actions{display:flex;gap:3px;flex-shrink:0}
+.wl-add-item-row{display:flex;gap:8px;align-items:flex-end;margin-top:10px;padding-top:10px;border-top:1px solid var(--bd);flex-wrap:wrap}
+.wl-add-item-row input,.wl-add-item-row select{flex:1;min-width:120px}
+.wl-bought-badge{font-size:10px;font-weight:600;padding:1px 7px;border-radius:100px;background:var(--okbg);color:var(--okdk);border:1px solid rgba(22,163,74,.2)}
 /* ── COLLAPSIBLE GROUPS ───────────────────────────────── */
 .grp-header{display:flex;align-items:center;gap:8px;padding:8px 0 8px;cursor:pointer;user-select:none;margin-bottom:0}
 .grp-header:hover .grp-chevron{color:var(--ac)}
@@ -189,8 +217,18 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
 .grp-chevron.open{transform:rotate(90deg)}
 .grp-body{display:flex;flex-direction:column;gap:7px;padding-bottom:8px}
 .grp-body.collapsed{display:none}
+/* ── DRAG & DROP SORTABLE ─────────────────────────────── */
+.catsort-row{display:flex;align-items:center;gap:9px;padding:10px 13px;background:var(--surf2);border-radius:11px;border:1.5px solid var(--bd);margin-bottom:7px;transition:border .15s,opacity .15s}
+.catsort-row:hover{border-color:var(--bd2)}
+.catsort-row.dragging{opacity:.35}
+.catsort-row.drag-over{border-top:2.5px solid var(--ac)}
+.catsort-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0}
+.catsort-name{flex:1;font-size:14px;font-weight:500}
+.drag-handle{color:var(--tx4);font-size:16px;padding:0 2px;cursor:grab;flex-shrink:0;user-select:none;line-height:1}
+.drag-handle:hover{color:var(--ac)}
+.bcat-card.drag-over{border-top:3px solid var(--ac)!important}
+.bcat-card.dragging{opacity:.35}
 </style>
-</head>
 <body>
 
 <!-- IDLE WARNING BANNER -->
@@ -398,6 +436,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
     <button class="nb" id="nb-compare" onclick="go('compare')"><span class="ico">📈</span>Compare</button>
     <button class="nb" id="nb-cats" onclick="go('cats')"><span class="ico">🏷</span>Categories</button>
     <button class="nb" id="nb-income" onclick="go('income')" style="border-left:1px solid var(--bd);margin-left:2px;padding-left:6px"><span class="ico">💵</span>Income</button>
+    <button class="nb" id="nb-wishlist" onclick="go('wishlist')"><span class="ico">🛒</span>Wishlist</button>
   </nav>
   <div class="add-fab-row"><button class="add-fab" onclick="openAddModal()" title="Add expense">＋</button></div>
 </div>
@@ -466,10 +505,35 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
   <div class="card"><div class="ch"><span class="ct">Avg daily spend</span></div><div style="position:relative;width:100%;height:185px"><canvas id="adc"></canvas></div></div>
   <div class="card"><div class="ch"><span class="ct">Category trends</span></div><div class="leg" id="tleg"></div><div style="position:relative;width:100%;height:195px"><canvas id="tc"></canvas></div></div>
 </div>
-<!-- CATS -->
+<!-- WISHLIST -->
+<div id="sec-wishlist" class="sec">
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px">
+    <div>
+      <h2 style="font-size:20px;font-weight:700">🛒 Wishlist</h2>
+      <div style="font-size:13px;color:var(--tx3);margin-top:2px">Track items to buy across your budget categories</div>
+    </div>
+    <button class="btn bp" onclick="openWlModal()">＋ Add wishlist</button>
+  </div>
+  <div class="mets f3" id="wl-mets" style="margin-bottom:18px"></div>
+  <!-- Filter bar -->
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center">
+    <span style="font-size:12px;font-weight:600;color:var(--tx3);text-transform:uppercase;letter-spacing:.5px">Filter:</span>
+    <button class="ft on" id="wlf-all"   onclick="setWlFilter('all')"   style="padding:4px 13px;font-size:12px">All</button>
+    <button class="ft"    id="wlf-open"  onclick="setWlFilter('open')"  style="padding:4px 13px;font-size:12px">Open</button>
+    <button class="ft"    id="wlf-done"  onclick="setWlFilter('done')"  style="padding:4px 13px;font-size:12px">Completed</button>
+  </div>
+  <div id="wl-lists"></div>
+</div>
 <div id="sec-cats" class="sec">
-  <div class="card"><div class="ch"><span class="ct">Add expense category</span></div><div style="display:flex;gap:9px;align-items:flex-end"><div style="flex:1"><label>Name</label><input id="cin" placeholder="e.g. Transportation"></div><button class="btn bp" onclick="addCat()">＋ Add</button></div><div id="cmsg" class="msg"></div></div>
-  <div class="card"><div class="ch"><span class="ct">All categories</span></div><div class="ctlist" id="ctlist"></div></div>
+  <div class="card">
+    <div class="ch"><span class="ct">Add expense category</span></div>
+    <div style="display:flex;gap:9px;align-items:flex-end"><div style="flex:1"><label>Name</label><input id="cin" placeholder="e.g. Transportation"></div><button class="btn bp" onclick="addCat()">＋ Add</button></div>
+    <div id="cmsg" class="msg"></div>
+  </div>
+  <div class="card">
+    <div class="ch"><span class="ct">Expense categories</span><span style="font-size:12px;color:var(--tx3)">Drag ⠿ to reorder</span></div>
+    <div id="ctlist"></div>
+  </div>
 </div>
 <!-- INCOME -->
 <div id="sec-income" class="sec">
@@ -597,6 +661,66 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
     <div class="perr" id="pin-err"></div><div class="numpad" id="pin-numpad"></div><button class="pcancel" onclick="closePin()">Cancel</button>
   </div>
 </div>
+<!-- CREATE / EDIT WISHLIST MODAL -->
+<div class="overlay" id="wl-overlay">
+  <div class="modal-box" style="max-width:460px">
+    <div class="modal-header"><div class="modal-title" id="wlm-title">🛒 New wishlist</div><button class="modal-close" onclick="closeWlModal()">✕</button></div>
+    <input type="hidden" id="wlm-id">
+    <div class="fg2">
+      <div><label>List name</label><input id="wlm-name" placeholder="e.g. Monthly groceries, Birthday gifts"></div>
+      <div><label>Emoji / icon</label><input id="wlm-icon" placeholder="🛒" maxlength="4" style="font-size:22px;text-align:center"></div>
+    </div>
+    <div class="fg2">
+      <div><label>Budget category</label><select id="wlm-bcat"></select></div>
+      <div><label>Date created</label><input type="date" id="wlm-date"></div>
+    </div>
+    <div style="margin-bottom:16px"><label>Notes (optional)</label><input id="wlm-notes" placeholder="e.g. For the month of July"></div>
+    <div style="display:flex;justify-content:flex-end;gap:9px"><button class="btn bg2" onclick="closeWlModal()">Cancel</button><button class="btn bp" onclick="saveWlModal()">✓ Save</button></div>
+    <div id="wlm-msg" class="msg"></div>
+  </div>
+</div>
+
+<!-- ADD / EDIT ITEM MODAL -->
+<div class="overlay" id="wli-overlay">
+  <div class="modal-box" style="max-width:460px">
+    <div class="modal-header"><div class="modal-title" id="wlim-title">Add item</div><button class="modal-close" onclick="closeWliModal()">✕</button></div>
+    <input type="hidden" id="wlim-listid">
+    <input type="hidden" id="wlim-itemid">
+    <div style="margin-bottom:12px"><label>Item name</label><input id="wlim-name" placeholder="e.g. Laundry detergent, Headphones"></div>
+    <div class="fg2">
+      <div><label>Estimated price</label><input type="number" id="wlim-price" placeholder="0.00" min="0" step="0.01"></div>
+      <div><label>Expense category</label><select id="wlim-cat"></select></div>
+    </div>
+    <div class="fg2">
+      <div><label>Shop / Store</label><input id="wlim-shop" placeholder="e.g. SM, Lazada" list="shop-list" autocomplete="off"></div>
+      <div><label>Qty</label><input type="number" id="wlim-qty" placeholder="1" min="1" step="1" value="1"></div>
+    </div>
+    <div style="margin-bottom:16px"><label>Description</label><input id="wlim-desc" placeholder="Optional details"></div>
+    <div style="display:flex;justify-content:flex-end;gap:9px"><button class="btn bg2" onclick="closeWliModal()">Cancel</button><button class="btn bp" onclick="saveWliModal()">✓ Save item</button></div>
+    <div id="wlim-msg" class="msg"></div>
+  </div>
+</div>
+
+<!-- CONFIRM PURCHASE MODAL -->
+<div class="overlay" id="wlbuy-overlay">
+  <div class="modal-box" style="max-width:420px">
+    <div class="modal-header"><div class="modal-title">✅ Mark as purchased</div><button class="modal-close" onclick="closeWlBuy()">✕</button></div>
+    <input type="hidden" id="wlbuy-listid">
+    <input type="hidden" id="wlbuy-itemid">
+    <div style="background:var(--surf2);border:1px solid var(--bd);border-radius:11px;padding:14px;margin-bottom:16px">
+      <div style="font-size:13px;color:var(--tx2);margin-bottom:4px">This will add an expense entry for:</div>
+      <div id="wlbuy-summary" style="font-size:15px;font-weight:600;color:var(--tx)"></div>
+    </div>
+    <div class="fg2">
+      <div><label>Date purchased</label><input type="date" id="wlbuy-date"></div>
+      <div><label>Actual amount paid</label><input type="number" id="wlbuy-amt" placeholder="0.00" min="0" step="0.01"></div>
+    </div>
+    <div style="margin-bottom:16px"><label>Shop / Store</label><input id="wlbuy-shop" placeholder="Where did you buy it?" list="shop-list" autocomplete="off"></div>
+    <div style="display:flex;justify-content:flex-end;gap:9px"><button class="btn bg2" onclick="closeWlBuy()">Cancel</button><button class="btn bp" onclick="confirmWlBuy()">✓ Add expense</button></div>
+    <div id="wlbuy-msg" class="msg"></div>
+  </div>
+</div>
+
 <!-- SOURCE PICKER MODAL (Drive vs Local) -->
 <div class="overlay" id="src-pick-overlay">
   <div class="sbox" style="max-width:380px">
@@ -671,7 +795,7 @@ const DEFBC=[
   {id:'personal',name:'Personal',icon:'👤',color:'#5b6af0',limit:0,desc:'Personal care, clothing, entertainment',locked:true},
   {id:'home',name:'Home',icon:'🏠',color:'#16a34a',limit:0,desc:'Rent, utilities, groceries, household',locked:true}
 ];
-const DS={expenses:[],categories:['Credit card','Grocery','School','Utilities','Transport'],budgetCats:JSON.parse(JSON.stringify(DEFBC)),savings:[],incomeData:{},prefs:{name:'',currency:'₱',themeId:'indigo',cc:{},font:"'Inter',system-ui,sans-serif",fw:'400',fs:'15px',tz:'Asia/Manila',cf:'12',autosave:true,incLock:false,incPIN:''}};
+const DS={expenses:[],categories:['Credit card','Grocery','School','Utilities','Transport'],budgetCats:JSON.parse(JSON.stringify(DEFBC)),savings:[],incomeData:{},wishlists:[],prefs:{name:'',currency:'₱',themeId:'indigo',cc:{},font:"'Inter',system-ui,sans-serif",fw:'400',fs:'15px',tz:'Asia/Manila',cf:'12',autosave:true,incLock:false,incPIN:''}};
 let S=JSON.parse(JSON.stringify(DS));
 let AT='home',SV='overview',VY=new Date().getFullYear(),VM=new Date().getMonth();
 let svCatGroup='default'; // 'default' | 'category' | 'date'
@@ -1131,7 +1255,7 @@ function loadFile(e){
     catch(err){showMsg('pmsg','Invalid file.',false);}
   };r.readAsText(f);e.target.value='';
 }
-function _applyLoadedData(d){['expenses','categories','budgetCats','savings','incomeData'].forEach(k=>{if(d[k])S[k]=d[k];});if(d.prefs)S.prefs=Object.assign(S.prefs,d.prefs);}
+function _applyLoadedData(d){['expenses','categories','budgetCats','savings','incomeData','wishlists'].forEach(k=>{if(d[k])S[k]=d[k];});if(d.prefs)S.prefs=Object.assign(S.prefs,d.prefs);}
 
 async function sessLoad(){
   document.getElementById('sess-overlay').classList.remove('show');
@@ -1211,7 +1335,19 @@ function saveBcatModal(){
   persist();closeBcatModal();renderBudget();popBcat();
 }
 function saveBcatLimit(id,val){const bc=bcById(id);if(!bc)return;const lim=parseFloat(val)||0;bc.limit=lim;persist();renderBudget();}
-function deleteBcat(id){const bc=bcById(id);if(!bc||bc.locked){showMsg('bmsg','Cannot delete a default category.',false);return;}if(!confirm(`Remove "${bc.name}"? Expenses linked to it will be unassigned.`))return;S.budgetCats=S.budgetCats.filter(b=>b.id!==id);S.expenses.forEach(e=>{if(e.budgetCat===id)e.budgetCat=null;});persist();renderBudget();popBcat();}
+function deleteBcat(id){
+  const bc=bcById(id);if(!bc)return;
+  if(!confirm(`Remove "${bc.name}"? Expenses linked to it will be unassigned.`))return;
+  S.budgetCats=S.budgetCats.filter(b=>b.id!==id);
+  S.expenses.forEach(e=>{if(e.budgetCat===id)e.budgetCat=null;});
+  persist();renderBudget();popBcat();
+}
+// ── Budget category drag-and-drop ─────────────────────
+let _bcatDragIdx=null;
+function bcatDragStart(e,i){_bcatDragIdx=i;e.currentTarget.classList.add('dragging');e.dataTransfer.effectAllowed='move';}
+function bcatDragOver(e,i){e.preventDefault();e.dataTransfer.dropEffect='move';document.querySelectorAll('#bcat-grid .bcat-card').forEach((c,ci)=>c.classList.toggle('drag-over',ci===i&&i!==_bcatDragIdx));}
+function bcatDrop(e,i){e.preventDefault();if(_bcatDragIdx===null||_bcatDragIdx===i)return;const arr=S.budgetCats;const [moved]=arr.splice(_bcatDragIdx,1);arr.splice(i,0,moved);_bcatDragIdx=null;persist();renderBudget();popBcat();}
+function bcatDragEnd(e){_bcatDragIdx=null;document.querySelectorAll('#bcat-grid .bcat-card').forEach(c=>c.classList.remove('dragging','drag-over'));}
 
 function renderBudget(){
   const y=VY,m=VM;document.getElementById('bml').textContent=fm(y,m);
@@ -1222,15 +1358,24 @@ function renderBudget(){
     <div class="met dn"><div class="ml">Total spent</div><div class="mv">${fa(totSpent)}</div><div class="ms">${allE.length} transactions</div></div>
     <div class="met ${totBudget>0&&totSpent<=totBudget?'ok':''}"><div class="ml">Remaining budget</div><div class="mv">${totBudget>0?fa(totBudget-totSpent):'—'}</div><div class="ms">${totBudget>0?((totSpent/totBudget)*100).toFixed(1)+'% used':''}</div></div>`;
   const grid=document.getElementById('bcat-grid');
-  grid.innerHTML=S.budgetCats.map(bc=>{
+  grid.innerHTML=S.budgetCats.map((bc,idx)=>{
     const spent=bcTotal(bc.id,y,m);const lim=bc.limit||0;const pct=lim>0?Math.min((spent/lim)*100,100):0;const pc=pct>=90?'#ef4444':pct>=70?'#f59e0b':bc.color;const cnt=bcExps(bc.id,y,m).length;
-    return`<div class="bcat-card">
-      <div class="bcat-top"><div class="bcat-name"><span class="bcat-icon">${bc.icon}</span>${bc.name}</div>
-      <div class="bcat-actions">
-        <button class="btn bg2 bico" style="font-size:13px" onclick="openBcatModal('${bc.id}')" title="Edit">✏️</button>
-        ${!bc.locked?`<button class="bdel" onclick="deleteBcat('${bc.id}')">🗑</button>`:''}
-        <button class="btn bp bico" style="font-size:13px" onclick="openRpt('${bc.id}')" title="Report">📊</button>
-      </div></div>
+    return`<div class="bcat-card" draggable="true" data-bcidx="${idx}"
+      ondragstart="bcatDragStart(event,${idx})"
+      ondragover="bcatDragOver(event,${idx})"
+      ondrop="bcatDrop(event,${idx})"
+      ondragend="bcatDragEnd(event)">
+      <div class="bcat-top">
+        <div class="bcat-name">
+          <span class="drag-handle" title="Drag to reorder" onclick="event.stopPropagation()">⠿</span>
+          <span class="bcat-icon">${bc.icon}</span>${bc.name}
+        </div>
+        <div class="bcat-actions">
+          <button class="btn bg2 bico" style="font-size:13px" onclick="openBcatModal('${bc.id}')" title="Edit">✏️</button>
+          <button class="bdel" onclick="deleteBcat('${bc.id}')">🗑</button>
+          <button class="btn bp bico" style="font-size:13px" onclick="openRpt('${bc.id}')" title="Report">📊</button>
+        </div>
+      </div>
       <div class="bcat-amount">${fa(spent)}</div>
       <div class="bcat-sub">${cnt} expense${cnt!==1?'s':''}${lim>0?' · limit: '+fa(lim):''}</div>
       ${lim>0?`<div class="bcat-prog-wrap"><div class="bcat-prog"><div class="bcat-progf" style="width:${pct.toFixed(1)}%;background:${pc}"></div></div><div class="bcat-prog-lbl"><span>${pct.toFixed(1)}% used</span><span>${fa(lim-spent)} left</span></div></div>`:''}
@@ -1663,9 +1808,42 @@ function renderSV(v){
 // COMPARE
 function renderCompare(){const now=new Date();const months=[],labels=[],tots=[],avgs=[];for(let i=5;i>=0;i--){let mo=now.getMonth()-i,yr=now.getFullYear();while(mo<0){mo+=12;yr--;}months.push({y:yr,m:mo});labels.push(new Date(yr,mo,1).toLocaleDateString('en-PH',{month:'short',year:'2-digit'}));const ex=exm(yr,mo);const tot=ex.reduce((s,e)=>s+e.amount,0);tots.push(+tot.toFixed(2));const dim=new Date(yr,mo+1,0).getDate();const d=(yr===now.getFullYear()&&mo===now.getMonth())?now.getDate():dim;avgs.push(+(d>0?tot/d:0).toFixed(2));}const cco=gCC();const th=THEMES.find(t=>t.id===S.prefs.themeId)||THEMES[0];const ac=th.ac;dkc('mc');CHS.mc=new Chart(document.getElementById('mc'),{type:'bar',data:{labels,datasets:[{data:tots,backgroundColor:ac+'dd',borderRadius:6,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:cco.t,font:{size:11}}},y:{ticks:{color:cco.t,font:{size:11},callback:v=>S.prefs.currency+v.toLocaleString()},grid:{color:cco.g}}}}});dkc('adc');CHS.adc=new Chart(document.getElementById('adc'),{type:'bar',data:{labels,datasets:[{data:avgs,backgroundColor:'#22c55e99',borderRadius:6,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:cco.t,font:{size:11}}},y:{ticks:{color:cco.t,font:{size:11},callback:v=>S.prefs.currency+v.toLocaleString()},grid:{color:cco.g}}}}});const ds=S.categories.map((c,i)=>({label:c,data:months.map(({y,m})=>+exm(y,m).filter(e=>e.category===c).reduce((s,e)=>s+e.amount,0).toFixed(2)),borderColor:PAL[i%PAL.length],backgroundColor:'transparent',tension:.4,pointRadius:4})).filter(d=>d.data.some(vv=>vv>0));document.getElementById('tleg').innerHTML=ds.map(d=>`<span class="li"><span class="lsw" style="background:${d.borderColor}"></span>${d.label}</span>`).join('');dkc('tc');CHS.tc=new Chart(document.getElementById('tc'),{type:'line',data:{labels,datasets:ds},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:cco.t,font:{size:11}}},y:{ticks:{color:cco.t,font:{size:11},callback:v=>S.prefs.currency+v.toLocaleString()},grid:{color:cco.g}}}}});}
 // CATS
-function renderCats(){document.getElementById('ctlist').innerHTML=S.categories.map((c,i)=>`<span class="ctag"><span class="cdot" style="background:${PAL[i%PAL.length]}"></span>${c}${!['Credit card','Grocery','School'].includes(c)?`<button class="bdel" onclick="delCat('${c.replace(/'/g,"\\'")}')">✕</button>`:''}</span>`).join('');}
-function addCat(){const n=document.getElementById('cin').value.trim();if(!n){showMsg('cmsg','Enter a name.',false);return;}if(S.categories.map(c=>c.toLowerCase()).includes(n.toLowerCase())){showMsg('cmsg','Already exists.',false);return;}S.categories.push(n);persist();document.getElementById('cin').value='';showMsg('cmsg',`"${n}" added!`,true);renderCats();popCat();}
-function delCat(c){if(!confirm(`Remove "${c}"?`))return;S.categories=S.categories.filter(x=>x!==c);persist();renderCats();popCat();}
+// ── EXPENSE CATEGORIES (sortable, all removable) ─────
+function renderCats(){
+  const el=document.getElementById('ctlist');if(!el)return;
+  if(!S.categories.length){el.innerHTML='<div class="empty">No categories yet.</div>';return;}
+  el.innerHTML=S.categories.map((c,i)=>`
+    <div class="catsort-row sortable-item" draggable="true"
+      data-idx="${i}"
+      ondragstart="catDragStart(event,${i})"
+      ondragover="catDragOver(event,${i})"
+      ondrop="catDrop(event,${i})"
+      ondragend="catDragEnd(event)">
+      <span class="drag-handle" title="Drag to reorder">⠿</span>
+      <span class="catsort-dot" style="background:${PAL[i%PAL.length]}"></span>
+      <span class="catsort-name">${c}</span>
+      <button class="bdel" onclick="delCat(this.dataset.cat)" data-cat="${c}" title="Remove">🗑</button>
+    </div>`).join('');
+}
+function addCat(){
+  const n=document.getElementById('cin').value.trim();
+  if(!n){showMsg('cmsg','Enter a name.',false);return;}
+  if(S.categories.map(c=>c.toLowerCase()).includes(n.toLowerCase())){showMsg('cmsg','Already exists.',false);return;}
+  S.categories.push(n);persist();document.getElementById('cin').value='';
+  showMsg('cmsg',`"${n}" added!`,true);renderCats();popCat();
+}
+function delCat(c){
+  if(!confirm(`Remove "${c}"? It will be removed from all dropdowns.`))return;
+  S.categories=S.categories.filter(x=>x!==c);
+  const fallback=S.categories[0]||'';
+  S.expenses.forEach(e=>{if(e.category===c)e.category=fallback;});
+  persist();renderCats();popCat();
+}
+let _catDragIdx=null;
+function catDragStart(e,i){_catDragIdx=i;e.currentTarget.classList.add('dragging');e.dataTransfer.effectAllowed='move';}
+function catDragOver(e,i){e.preventDefault();e.dataTransfer.dropEffect='move';document.querySelectorAll('#ctlist .catsort-row').forEach((r,ri)=>r.classList.toggle('drag-over',ri===i&&i!==_catDragIdx));}
+function catDrop(e,i){e.preventDefault();if(_catDragIdx===null||_catDragIdx===i)return;const arr=S.categories;const [moved]=arr.splice(_catDragIdx,1);arr.splice(i,0,moved);_catDragIdx=null;persist();renderCats();popCat();}
+function catDragEnd(e){_catDragIdx=null;document.querySelectorAll('#ctlist .catsort-row').forEach(r=>r.classList.remove('dragging','drag-over'));}
 // INCOME TAB
 function renderIncome(){
   document.getElementById('iml').textContent=fm(VY,VM);const sources=iSrc(VY,VM);const deds=iDed(VY,VM);const gross=sources.reduce((s,x)=>s+x.amount,0);const ded=deds.reduce((s,x)=>s+x.amount,0);const net=gross-ded;const pct=gross>0?Math.min((ded/gross)*100,100):0;const bc=pct>=80?'#ef4444':pct>=50?'#f59e0b':'#22c55e';
@@ -1713,7 +1891,7 @@ function closePin(){document.getElementById('pin-overlay').classList.remove('sho
 function go(tab){
   if(tab==='income'&&S.prefs.incLock&&S.prefs.incPIN&&!incUnlocked){openPin('🔒 Income PIN required','Enter your income 6-digit PIN.',()=>{incUnlocked=true;go('income');});return;}
   AT=tab;document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));const btn=document.getElementById('nb-'+tab);if(btn)btn.classList.add('on');document.querySelectorAll('.sec').forEach(s=>s.classList.remove('vis'));const sec=document.getElementById('sec-'+tab);if(sec)sec.classList.add('vis');
-  if(tab==='home')renderHome();else if(tab==='list')renderList();else if(tab==='budget')renderBudget();else if(tab==='savings')renderSavings();else if(tab==='summary')renderSummary();else if(tab==='compare')renderCompare();else if(tab==='cats')renderCats();else if(tab==='income')renderIncome();
+  if(tab==='home')renderHome();else if(tab==='list')renderList();else if(tab==='budget')renderBudget();else if(tab==='savings')renderSavings();else if(tab==='summary')renderSummary();else if(tab==='compare')renderCompare();else if(tab==='cats')renderCats();else if(tab==='income')renderIncome();else if(tab==='wishlist')renderWishlist();
 }
 function shiftM(d){VM+=d;if(VM>11){VM=0;VY++;}if(VM<0){VM=11;VY--;}calSelectedDate=null;svCatGroup='default';if(AT==='list'){document.getElementById('cal-day-panel').style.display='none';renderList();}else if(AT==='budget')renderBudget();else if(AT==='summary')renderSummary();else if(AT==='income')renderIncome();}
 
@@ -1964,6 +2142,273 @@ savePrefs=function(){
   _origSavePrefs();
   saveAutoLock();
 };
+
+// ══════════════════════════════════════════════════════
+// WISHLIST
+// ══════════════════════════════════════════════════════
+let wlFilter='all';
+
+function setWlFilter(f){
+  wlFilter=f;
+  ['all','open','done'].forEach(k=>{const b=document.getElementById('wlf-'+k);if(b)b.classList.toggle('on',k===f);});
+  renderWishlist();
+}
+
+// ── Helpers ───────────────────────────────────────────
+function wlById(id){return(S.wishlists||[]).find(w=>w.id===id);}
+function wlItemById(list,iid){return list.items.find(i=>i.id===iid);}
+function wlIsComplete(list){return list.items.length>0&&list.items.every(i=>i.bought);}
+function wlTotalEst(list){return list.items.reduce((s,i)=>s+(i.price||0)*(i.qty||1),0);}
+function wlTotalBought(list){return list.items.filter(i=>i.bought).reduce((s,i)=>s+(i.actualAmt||i.price||0)*(i.qty||1),0);}
+function wlBoughtCount(list){return list.items.filter(i=>i.bought).length;}
+
+// ── Render ────────────────────────────────────────────
+function renderWishlist(){
+  if(!S.wishlists)S.wishlists=[];
+  const lists=S.wishlists.filter(w=>{
+    if(wlFilter==='open')return!wlIsComplete(w);
+    if(wlFilter==='done')return wlIsComplete(w);
+    return true;
+  }).sort((a,b)=>b.date.localeCompare(a.date));
+
+  const all=S.wishlists;
+  const totalItems=all.reduce((s,w)=>s+w.items.length,0);
+  const boughtItems=all.reduce((s,w)=>s+wlBoughtCount(w),0);
+  const totalEst=all.reduce((s,w)=>s+wlTotalEst(w),0);
+  const totalSpent=all.reduce((s,w)=>s+wlTotalBought(w),0);
+
+  document.getElementById('wl-mets').innerHTML=`
+    <div class="met"><div class="ml">Wishlists</div><div class="mv">${all.length}</div><div class="ms">${all.filter(w=>!wlIsComplete(w)).length} open</div></div>
+    <div class="met"><div class="ml">Items</div><div class="mv">${boughtItems}/${totalItems}</div><div class="ms">purchased</div></div>
+    <div class="met"><div class="ml">Est. total</div><div class="mv">${totalEst>0?fa(totalEst):'—'}</div><div class="ms">${totalSpent>0?fa(totalSpent)+' spent':''}</div></div>`;
+
+  const cont=document.getElementById('wl-lists');
+  if(!lists.length){cont.innerHTML='<div class="empty" style="padding:3rem">🛒 No wishlists yet. Tap ＋ Add wishlist to start.</div>';return;}
+
+  cont.innerHTML=lists.map(w=>{
+    const bc=w.budgetCat?bcById(w.budgetCat):null;
+    const done=wlBoughtCount(w);const total=w.items.length;
+    const pct=total>0?Math.round((done/total)*100):0;
+    const progColor=pct===100?'var(--ok)':bc?bc.color:'var(--ac)';
+    const est=wlTotalEst(w);const spent=wlTotalBought(w);
+    const complete=wlIsComplete(w);
+
+    const itemsHtml=w.items.map(item=>{
+      const itemBc=bc;
+      return`<div class="wl-item${item.bought?' wl-item-bought':''}" id="wli-${item.id}">
+        <div class="wl-cb${item.bought?' checked':''}" onclick="wlToggleItem('${w.id}','${item.id}')">${item.bought?'✓':''}</div>
+        <div class="wl-item-info">
+          <div class="wl-item-name">${item.name}${item.qty>1?` ×${item.qty}`:''}</div>
+          <div class="wl-item-meta">${item.shop?item.shop+' · ':''}${item.category||''}${item.bought&&item.boughtDate?' · Bought '+new Date(item.boughtDate+'T00:00:00').toLocaleDateString('en-PH',{month:'short',day:'numeric'}):''}</div>
+        </div>
+        <div class="wl-item-price">${item.price>0?fa(item.price*(item.qty||1)):'—'}</div>
+        <div class="wl-item-actions">
+          ${!item.bought?`<button class="btn bg2 bico" style="font-size:12px;height:28px;width:28px" onclick="openWliModal('${w.id}','${item.id}')" title="Edit">✏️</button>`:'<span class="wl-bought-badge">✓ Bought</span>'}
+          <button class="bdel" onclick="wlDelItem('${w.id}','${item.id}')" title="Remove">🗑</button>
+        </div>
+      </div>`;
+    }).join('');
+
+    return`<div class="wl-list-card${complete?' wl-done':''}">
+      <div class="wl-card-header">
+        <div class="wl-card-icon" style="background:${bc?bc.color+'22':'var(--surf3)'};border:1.5px solid ${bc?bc.color+'40':'var(--bd)'}">${w.icon||'🛒'}</div>
+        <div class="wl-card-meta">
+          <div class="wl-card-title">${w.name}</div>
+          <div class="wl-card-sub">
+            ${bc?`<span class="bcat-pill" style="background:${bc.color}22;color:${bc.color}">${bc.icon} ${bc.name}</span>`:''}
+            <span>📅 ${new Date(w.date+'T00:00:00').toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'})}</span>
+            <span>${done}/${total} item${total!==1?'s':''}</span>
+            ${est>0?`<span>${fa(est)} est.</span>`:''}
+            ${complete?'<span style="color:var(--ok);font-weight:600">✓ Complete</span>':''}
+          </div>
+        </div>
+        <div class="wl-card-actions">
+          <button class="btn bg2 bico" style="font-size:13px" onclick="openWlModal('${w.id}')" title="Edit">✏️</button>
+          <button class="bdel" onclick="wlDelList('${w.id}')" title="Delete">🗑</button>
+        </div>
+      </div>
+      ${total>0?`<div class="wl-progress"><div class="wl-progressf" style="width:${pct}%;background:${progColor}"></div></div>`:'' }
+      <div class="wl-items">${itemsHtml}</div>
+      <div class="wl-add-item-row">
+        <input id="wlq-${w.id}" placeholder="Quick add item name…" style="flex:2;min-width:140px" onkeydown="if(event.key==='Enter')wlQuickAdd('${w.id}')">
+        <button class="btn bp" style="font-size:13px;padding:8px 13px;white-space:nowrap" onclick="openWliModal('${w.id}')">＋ Add item</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── Create / Edit Wishlist Modal ──────────────────────
+function openWlModal(editId){
+  document.getElementById('wlm-id').value=editId||'';
+  if(editId){
+    const w=wlById(editId);if(!w)return;
+    document.getElementById('wlm-name').value=w.name;
+    document.getElementById('wlm-icon').value=w.icon||'🛒';
+    document.getElementById('wlm-date').value=w.date;
+    document.getElementById('wlm-notes').value=w.notes||'';
+    document.getElementById('wlm-title').textContent='✏️ Edit wishlist';
+  } else {
+    document.getElementById('wlm-name').value='';
+    document.getElementById('wlm-icon').value='🛒';
+    document.getElementById('wlm-date').value=new Date().toISOString().slice(0,10);
+    document.getElementById('wlm-notes').value='';
+    document.getElementById('wlm-title').textContent='🛒 New wishlist';
+  }
+  // Populate budget cat select
+  const sel=document.getElementById('wlm-bcat');
+  sel.innerHTML='<option value="">— No budget category —</option>'+S.budgetCats.map(b=>`<option value="${b.id}">${b.icon} ${b.name}</option>`).join('');
+  if(editId){const w=wlById(editId);if(w)sel.value=w.budgetCat||'';}
+  document.getElementById('wlm-msg').style.display='none';
+  document.getElementById('wl-overlay').classList.add('show');
+  setTimeout(()=>document.getElementById('wlm-name').focus(),100);
+}
+function closeWlModal(){document.getElementById('wl-overlay').classList.remove('show');}
+function saveWlModal(){
+  const name=document.getElementById('wlm-name').value.trim();
+  const icon=document.getElementById('wlm-icon').value.trim()||'🛒';
+  const date=document.getElementById('wlm-date').value;
+  const bcat=document.getElementById('wlm-bcat').value;
+  const notes=document.getElementById('wlm-notes').value.trim();
+  if(!name){showMsg('wlm-msg','Enter a list name.',false);return;}
+  if(!date){showMsg('wlm-msg','Select a date.',false);return;}
+  const eid=document.getElementById('wlm-id').value;
+  if(!S.wishlists)S.wishlists=[];
+  if(eid){
+    const w=wlById(eid);if(w){w.name=name;w.icon=icon;w.date=date;w.budgetCat=bcat||null;w.notes=notes;}
+  } else {
+    S.wishlists.push({id:'wl_'+Date.now(),name,icon,date,budgetCat:bcat||null,notes,items:[]});
+  }
+  persist();closeWlModal();renderWishlist();
+}
+
+// ── Add / Edit Item Modal ──────────────────────────────
+function openWliModal(listId,itemId){
+  document.getElementById('wlim-listid').value=listId;
+  document.getElementById('wlim-itemid').value=itemId||'';
+  // Populate expense cat
+  const csel=document.getElementById('wlim-cat');
+  csel.innerHTML=S.categories.map(c=>`<option value="${c}">${c}</option>`).join('');
+  if(itemId){
+    const w=wlById(listId);const item=w?wlItemById(w,itemId):null;
+    if(item){
+      document.getElementById('wlim-name').value=item.name;
+      document.getElementById('wlim-price').value=item.price||'';
+      document.getElementById('wlim-shop').value=item.shop||'';
+      document.getElementById('wlim-qty').value=item.qty||1;
+      document.getElementById('wlim-desc').value=item.desc||'';
+      csel.value=item.category||S.categories[0];
+    }
+    document.getElementById('wlim-title').textContent='✏️ Edit item';
+  } else {
+    document.getElementById('wlim-name').value='';
+    document.getElementById('wlim-price').value='';
+    document.getElementById('wlim-shop').value='';
+    document.getElementById('wlim-qty').value=1;
+    document.getElementById('wlim-desc').value='';
+    document.getElementById('wlim-title').textContent='➕ Add item';
+  }
+  popShopList();
+  document.getElementById('wlim-msg').style.display='none';
+  document.getElementById('wli-overlay').classList.add('show');
+  setTimeout(()=>document.getElementById('wlim-name').focus(),100);
+}
+function closeWliModal(){document.getElementById('wli-overlay').classList.remove('show');}
+function saveWliModal(){
+  const listId=document.getElementById('wlim-listid').value;
+  const itemId=document.getElementById('wlim-itemid').value;
+  const name=document.getElementById('wlim-name').value.trim();
+  const price=parseFloat(document.getElementById('wlim-price').value)||0;
+  const shop=document.getElementById('wlim-shop').value.trim();
+  const qty=parseInt(document.getElementById('wlim-qty').value)||1;
+  const desc=document.getElementById('wlim-desc').value.trim();
+  const category=document.getElementById('wlim-cat').value;
+  if(!name){showMsg('wlim-msg','Enter an item name.',false);return;}
+  const w=wlById(listId);if(!w){showMsg('wlim-msg','List not found.',false);return;}
+  if(itemId){
+    const item=wlItemById(w,itemId);
+    if(item){Object.assign(item,{name,price,shop,qty,desc,category});}
+  } else {
+    w.items.push({id:'wli_'+Date.now(),name,price,shop,qty,desc,category,bought:false,boughtDate:null,actualAmt:null});
+  }
+  persist();closeWliModal();renderWishlist();
+}
+
+// ── Quick add (inline) ────────────────────────────────
+function wlQuickAdd(listId){
+  const inp=document.getElementById('wlq-'+listId);
+  const name=(inp&&inp.value.trim())||'';
+  if(!name)return;
+  const w=wlById(listId);if(!w)return;
+  w.items.push({id:'wli_'+Date.now(),name,price:0,shop:'',qty:1,desc:'',category:S.categories[0],bought:false,boughtDate:null,actualAmt:null});
+  persist();inp.value='';renderWishlist();
+}
+
+// ── Toggle item (check/uncheck) ───────────────────────
+function wlToggleItem(listId,itemId){
+  const w=wlById(listId);if(!w)return;
+  const item=wlItemById(w,itemId);if(!item)return;
+  if(item.bought){
+    // Uncheck — just unmark (don't remove the expense)
+    item.bought=false;item.boughtDate=null;item.actualAmt=null;
+    persist();renderWishlist();
+  } else {
+    // Open confirm purchase modal
+    openWlBuy(listId,itemId);
+  }
+}
+
+// ── Confirm Purchase Modal ────────────────────────────
+function openWlBuy(listId,itemId){
+  const w=wlById(listId);if(!w)return;
+  const item=wlItemById(w,itemId);if(!item)return;
+  const bc=w.budgetCat?bcById(w.budgetCat):null;
+  document.getElementById('wlbuy-listid').value=listId;
+  document.getElementById('wlbuy-itemid').value=itemId;
+  document.getElementById('wlbuy-date').value=new Date().toISOString().slice(0,10);
+  document.getElementById('wlbuy-amt').value=item.price>0?(item.price*(item.qty||1)).toFixed(2):'';
+  document.getElementById('wlbuy-shop').value=item.shop||'';
+  document.getElementById('wlbuy-summary').innerHTML=
+    `<span style="font-size:17px;margin-right:6px">${w.icon||'🛒'}</span>${item.name}${item.qty>1?' ×'+item.qty:''}`+
+    (bc?` <span class="bcat-pill" style="background:${bc.color}22;color:${bc.color};margin-left:6px">${bc.icon} ${bc.name}</span>`:'');
+  document.getElementById('wlbuy-msg').style.display='none';
+  popShopList();
+  document.getElementById('wlbuy-overlay').classList.add('show');
+  setTimeout(()=>document.getElementById('wlbuy-amt').focus(),100);
+}
+function closeWlBuy(){document.getElementById('wlbuy-overlay').classList.remove('show');}
+function confirmWlBuy(){
+  const listId=document.getElementById('wlbuy-listid').value;
+  const itemId=document.getElementById('wlbuy-itemid').value;
+  const date=document.getElementById('wlbuy-date').value;
+  const amt=parseFloat(document.getElementById('wlbuy-amt').value);
+  const shop=document.getElementById('wlbuy-shop').value.trim();
+  if(!date){showMsg('wlbuy-msg','Select a purchase date.',false);return;}
+  if(!amt||amt<=0){showMsg('wlbuy-msg','Enter the amount paid.',false);return;}
+  const w=wlById(listId);if(!w)return;
+  const item=wlItemById(w,itemId);if(!item)return;
+  // Mark as bought
+  item.bought=true;item.boughtDate=date;item.actualAmt=amt/(item.qty||1);
+  // Add to expenses
+  S.expenses.push({
+    amount:amt,
+    category:item.category||S.categories[0],
+    date,
+    shop:shop||item.shop||'',
+    description:item.name+(item.qty>1?' ×'+item.qty:''),
+    budgetCat:w.budgetCat||null
+  });
+  persist();
+  closeWlBuy();
+  renderWishlist();
+  // Show confirmation toast
+  const fl=document.getElementById('sfl');
+  fl.textContent='✓ Added to expenses';fl.classList.add('show');
+  setTimeout(()=>{fl.classList.remove('show');setTimeout(()=>fl.textContent='✓ Saved',400);},2200);
+}
+
+// ── Delete ────────────────────────────────────────────
+function wlDelList(id){if(!confirm('Remove this wishlist and all its items?'))return;S.wishlists=S.wishlists.filter(w=>w.id!==id);persist();renderWishlist();}
+function wlDelItem(listId,itemId){const w=wlById(listId);if(!w)return;w.items=w.items.filter(i=>i.id!==itemId);persist();renderWishlist();}
 
 // INIT
 document.getElementById('wdate').value=new Date().toISOString().slice(0,10);
