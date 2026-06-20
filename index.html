@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>MoneyWatch v13</title>
+<title>MoneyWatch v16</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&family=Poppins:wght@300;400;500;600&family=Nunito:wght@300;400;600;700&family=Manrope:wght@300;400;500;600&family=Figtree:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Sora:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&family=Lato:wght@300;400;700&family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;500;600&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
@@ -29,7 +29,7 @@ html,body{font-family:var(--f);background:var(--bg);color:var(--tx);font-size:va
 .pin-setup-wrap{display:none}.pin-setup-wrap.show{display:block}
 .nav-sticky{position:sticky;top:0;z-index:50;background:var(--bg);padding:4px 0 0}
 .nav{display:flex;background:var(--surf);border-radius:var(--rl);padding:5px;gap:3px;box-shadow:var(--sh);border:1px solid var(--bd);overflow-x:auto;scrollbar-width:none}.nav::-webkit-scrollbar{display:none}
-.nb{flex:1;min-width:44px;padding:8px 3px 7px;border:none;background:none;font-family:var(--f);font-size:11px;font-weight:500;color:var(--tx3);cursor:pointer;border-radius:10px;display:flex;flex-direction:column;align-items:center;gap:3px;transition:all .2s;white-space:nowrap;flex-shrink:0}.nb .ico{font-size:17px;display:block}.nb.on{background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;box-shadow:0 3px 10px rgba(91,106,240,.35)}.nb:hover:not(.on){background:var(--surf2);color:var(--tx)}
+.nb{flex:1;min-width:40px;padding:7px 2px 6px;border:none;background:none;font-family:var(--f);font-size:9px;font-weight:500;color:var(--tx3);cursor:pointer;border-radius:10px;display:flex;flex-direction:column;align-items:center;gap:2px;transition:all .2s;white-space:nowrap;flex-shrink:0}.nb .ico{font-size:16px;display:block}.nb.on{background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;box-shadow:0 3px 10px rgba(91,106,240,.35)}.nb:hover:not(.on){background:var(--surf2);color:var(--tx)}
 .add-fab-row{display:flex;justify-content:center;padding:10px 0 16px}.add-fab{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--ac),var(--ac2));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 4px 16px rgba(91,106,240,.45);transition:all .2s;font-size:26px}.add-fab:hover{transform:scale(1.1) translateY(-2px)}.add-fab:active{transform:scale(.95)}
 .sec{display:none}.sec.vis{display:block}
 .card{background:var(--surf);border:1px solid var(--bd);border-radius:var(--rl);padding:20px;margin-bottom:15px;box-shadow:var(--sh)}
@@ -234,6 +234,31 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
 .amt-blur.revealed{filter:none}
 .amt-eye{font-size:13px;color:var(--tx3);transition:opacity .2s;flex-shrink:0}
 .amt-hidden:hover .amt-eye{opacity:1;color:var(--ac)}
+/* ── BILLS ────────────────────────────────────────────── */
+.bill-card{background:var(--surf);border:1.5px solid var(--bd);border-radius:var(--rl);padding:18px;box-shadow:var(--sh);margin-bottom:12px;transition:all .18s;position:relative}
+.bill-card:hover{box-shadow:var(--sh2)}
+.bill-card.bill-overdue{border-color:rgba(220,38,38,.4);background:var(--dnbg)}
+.bill-card.bill-due-soon{border-color:rgba(217,119,6,.4);background:var(--wnbg)}
+.bill-card.bill-paid{opacity:.6}
+.bill-status-bar{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.bill-badge{font-size:10px;font-weight:700;padding:2px 9px;border-radius:100px;text-transform:uppercase;letter-spacing:.4px}
+.bill-badge.overdue{background:var(--dnbg);color:var(--dn);border:1px solid rgba(220,38,38,.25)}
+.bill-badge.due-soon{background:var(--wnbg);color:var(--wn);border:1px solid rgba(217,119,6,.25)}
+.bill-badge.paid{background:var(--okbg);color:var(--okdk);border:1px solid rgba(22,163,74,.25)}
+.bill-badge.upcoming{background:var(--acbg);color:var(--ac);border:1px solid rgba(91,106,240,.25)}
+.bill-header{display:flex;align-items:flex-start;gap:11px;margin-bottom:10px}
+.bill-icon{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.bill-meta{flex:1;min-width:0}
+.bill-name{font-size:16px;font-weight:700}
+.bill-sub{font-size:12px;color:var(--tx3);margin-top:3px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.bill-amount{font-size:22px;font-weight:700;flex-shrink:0;color:var(--tx)}
+.bill-dates{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+@media(min-width:480px){.bill-dates{grid-template-columns:repeat(3,1fr)}}
+.bill-date-box{background:var(--surf2);border:1px solid var(--bd);border-radius:9px;padding:8px 10px}
+.bill-date-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--tx3);margin-bottom:3px}
+.bill-date-val{font-size:13px;font-weight:600;color:var(--tx)}
+.bill-reminder-row{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--tx3);margin-bottom:8px}
+.bill-actions{display:flex;gap:6px;flex-wrap:wrap}
 </style>
 <body>
 
@@ -441,8 +466,9 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
     <button class="nb" id="nb-summary" onclick="go('summary')"><span class="ico">📊</span>Summary</button>
     <button class="nb" id="nb-compare" onclick="go('compare')"><span class="ico">📈</span>Compare</button>
     <button class="nb" id="nb-cats" onclick="go('cats')"><span class="ico">🏷</span>Categories</button>
-    <button class="nb" id="nb-income" onclick="go('income')" style="border-left:1px solid var(--bd);margin-left:2px;padding-left:6px"><span class="ico">💵</span>Income</button>
     <button class="nb" id="nb-wishlist" onclick="go('wishlist')"><span class="ico">🛒</span>Wishlist</button>
+    <button class="nb" id="nb-bills" onclick="go('bills')"><span class="ico">🧾</span>Bills</button>
+    <button class="nb" id="nb-income" onclick="go('income')"><span class="ico">💵</span>Income</button>
   </nav>
   <div class="add-fab-row"><button class="add-fab" onclick="openAddModal()" title="Add expense">＋</button></div>
 </div>
@@ -541,6 +567,26 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
     <div id="ctlist"></div>
   </div>
 </div>
+<!-- BILLS -->
+<div id="sec-bills" class="sec">
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px">
+    <div>
+      <h2 style="font-size:20px;font-weight:700">🧾 Bills</h2>
+      <div style="font-size:13px;color:var(--tx3);margin-top:2px">Track recurring bills and one-time payments</div>
+    </div>
+    <button class="btn bp" onclick="openBillModal()">＋ Add bill</button>
+  </div>
+  <div class="mets f4" id="bill-mets" style="margin-bottom:18px"></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center">
+    <span style="font-size:12px;font-weight:600;color:var(--tx3);text-transform:uppercase;letter-spacing:.5px">Filter:</span>
+    <button class="ft on" id="billf-all"      onclick="setBillFilter('all')"      style="padding:4px 13px;font-size:12px">All</button>
+    <button class="ft"    id="billf-unpaid"   onclick="setBillFilter('unpaid')"   style="padding:4px 13px;font-size:12px">Unpaid</button>
+    <button class="ft"    id="billf-overdue"  onclick="setBillFilter('overdue')"  style="padding:4px 13px;font-size:12px">Overdue</button>
+    <button class="ft"    id="billf-paid"     onclick="setBillFilter('paid')"     style="padding:4px 13px;font-size:12px">Paid</button>
+  </div>
+  <div id="bill-list"></div>
+</div>
+
 <!-- INCOME -->
 <div id="sec-income" class="sec">
   <div class="inc-hero" id="inc-hero"></div>
@@ -727,6 +773,68 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
   </div>
 </div>
 
+<!-- CREATE / EDIT BILL MODAL -->
+<div class="overlay" id="bill-overlay">
+  <div class="modal-box" style="max-width:500px">
+    <div class="modal-header"><div class="modal-title" id="billm-title">🧾 New bill</div><button class="modal-close" onclick="closeBillModal()">✕</button></div>
+    <input type="hidden" id="billm-id">
+    <div class="fg2">
+      <div><label>Bill name</label><input id="billm-name" placeholder="e.g. Electricity, Netflix, Rent"></div>
+      <div><label>Icon (emoji)</label><input id="billm-icon" placeholder="💡" maxlength="4" style="font-size:22px;text-align:center"></div>
+    </div>
+    <div class="fg2">
+      <div><label>Amount</label><input type="number" id="billm-amt" placeholder="0.00" min="0" step="0.01"></div>
+      <div><label>Budget category</label><select id="billm-bcat"></select></div>
+    </div>
+    <div class="fg2">
+      <div><label>Expense category</label><select id="billm-cat"></select></div>
+      <div><label>Frequency</label><select id="billm-freq">
+        <option value="monthly">Monthly</option>
+        <option value="weekly">Weekly</option>
+        <option value="quarterly">Quarterly</option>
+        <option value="annual">Annual</option>
+        <option value="one-time">One-time</option>
+      </select></div>
+    </div>
+    <div class="fg2">
+      <div><label>Due date</label><input type="date" id="billm-due"></div>
+      <div><label>Reminder <span style="font-weight:400;color:var(--tx3);font-size:11px">(days before due)</span></label>
+        <select id="billm-remind">
+          <option value="0">No reminder</option>
+          <option value="1">1 day before</option>
+          <option value="2">2 days before</option>
+          <option value="3" selected>3 days before</option>
+          <option value="5">5 days before</option>
+          <option value="7">1 week before</option>
+          <option value="14">2 weeks before</option>
+        </select>
+      </div>
+    </div>
+    <div style="margin-bottom:16px"><label>Notes</label><input id="billm-notes" placeholder="e.g. Meralco account #12345"></div>
+    <div style="display:flex;justify-content:flex-end;gap:9px"><button class="btn bg2" onclick="closeBillModal()">Cancel</button><button class="btn bp" onclick="saveBillModal()">✓ Save</button></div>
+    <div id="billm-msg" class="msg"></div>
+  </div>
+</div>
+
+<!-- CONFIRM BILL PAYMENT MODAL -->
+<div class="overlay" id="billpay-overlay">
+  <div class="modal-box" style="max-width:420px">
+    <div class="modal-header"><div class="modal-title">✅ Mark as paid</div><button class="modal-close" onclick="closeBillPay()">✕</button></div>
+    <input type="hidden" id="billpay-id">
+    <div style="background:var(--surf2);border:1px solid var(--bd);border-radius:11px;padding:14px;margin-bottom:16px">
+      <div style="font-size:13px;color:var(--tx2);margin-bottom:6px">Adding expense for:</div>
+      <div id="billpay-summary" style="font-size:15px;font-weight:600;color:var(--tx)"></div>
+    </div>
+    <div class="fg2">
+      <div><label>Date paid</label><input type="date" id="billpay-date"></div>
+      <div><label>Amount paid</label><input type="number" id="billpay-amt" placeholder="0.00" min="0" step="0.01"></div>
+    </div>
+    <div style="margin-bottom:16px"><label>Shop / Provider</label><input id="billpay-shop" placeholder="e.g. Meralco, Grab" list="shop-list" autocomplete="off"></div>
+    <div style="display:flex;justify-content:flex-end;gap:9px"><button class="btn bg2" onclick="closeBillPay()">Cancel</button><button class="btn bp" onclick="confirmBillPay()">✓ Mark paid & add expense</button></div>
+    <div id="billpay-msg" class="msg"></div>
+  </div>
+</div>
+
 <!-- SOURCE PICKER MODAL (Drive vs Local) -->
 <div class="overlay" id="src-pick-overlay">
   <div class="sbox" style="max-width:380px">
@@ -801,7 +909,7 @@ const DEFBC=[
   {id:'personal',name:'Personal',icon:'👤',color:'#5b6af0',limit:0,desc:'Personal care, clothing, entertainment',locked:true},
   {id:'home',name:'Home',icon:'🏠',color:'#16a34a',limit:0,desc:'Rent, utilities, groceries, household',locked:true}
 ];
-const DS={expenses:[],categories:['Credit card','Grocery','School','Utilities','Transport'],budgetCats:JSON.parse(JSON.stringify(DEFBC)),savings:[],incomeData:{},wishlists:[],prefs:{name:'',currency:'₱',themeId:'indigo',cc:{},font:"'Inter',system-ui,sans-serif",fw:'400',fs:'15px',tz:'Asia/Manila',cf:'12',autosave:true,incLock:false,incPIN:''}};
+const DS={expenses:[],categories:['Credit card','Grocery','School','Utilities','Transport'],budgetCats:JSON.parse(JSON.stringify(DEFBC)),savings:[],incomeData:{},wishlists:[],bills:[],prefs:{name:'',currency:'₱',themeId:'indigo',cc:{},font:"'Inter',system-ui,sans-serif",fw:'400',fs:'15px',tz:'Asia/Manila',cf:'12',autosave:true,incLock:false,incPIN:''}};
 let S=JSON.parse(JSON.stringify(DS));
 let AT='home',SV='overview',VY=new Date().getFullYear(),VM=new Date().getMonth();
 let svCatGroup='default'; // 'default' | 'category' | 'date'
@@ -1262,7 +1370,7 @@ function loadFile(e){
     catch(err){showMsg('pmsg','Invalid file.',false);}
   };r.readAsText(f);e.target.value='';
 }
-function _applyLoadedData(d){['expenses','categories','budgetCats','savings','incomeData','wishlists'].forEach(k=>{if(d[k])S[k]=d[k];});if(d.prefs)S.prefs=Object.assign(S.prefs,d.prefs);}
+function _applyLoadedData(d){['expenses','categories','budgetCats','savings','incomeData','wishlists','bills'].forEach(k=>{if(d[k])S[k]=d[k];});if(d.prefs)S.prefs=Object.assign(S.prefs,d.prefs);}
 
 async function sessLoad(){
   document.getElementById('sess-overlay').classList.remove('show');
@@ -1278,7 +1386,7 @@ const catC=c=>PAL[S.categories.indexOf(c)%PAL.length]||'#888';
 function gCC(){const dk=document.getElementById('app').hasAttribute('data-dk');return dk?{g:'rgba(255,255,255,.07)',t:'#4a527a',b:'#161b2e'}:{g:'rgba(91,106,240,.07)',t:'#8890b8',b:'#fff'};}
 function dkc(k){if(CHS[k]){CHS[k].destroy();delete CHS[k];}}
 function showMsg(id,m,ok){const el=document.getElementById(id);if(!el)return;el.textContent=m;el.className='msg '+(ok?'ok':'er');el.style.display='block';setTimeout(()=>el.style.display='none',2800);}
-function popCat(){const s=document.getElementById('mc-sel');if(!s)return;const pv=s.value;s.innerHTML=S.categories.map(c=>`<option value="${c}">${c}</option>`).join('');if(pv&&S.categories.includes(pv))s.value=pv;}
+function popCat(){const s=document.getElementById('mc-sel');if(!s)return;const pv=s.value;s.innerHTML='<option value="">— Select category —</option>'+S.categories.map(c=>`<option value="${c}">${c}</option>`).join('');if(pv&&S.categories.includes(pv))s.value=pv;}
 function popBcat(){const s=document.getElementById('mbcat');if(!s)return;s.innerHTML='<option value="">— No budget category —</option>'+S.budgetCats.map(b=>`<option value="${b.id}">${b.icon} ${b.name}</option>`).join('');}
 function updateClock(){try{const o={timeZone:S.prefs.tz,hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:S.prefs.cf==='12'};document.getElementById('clk').textContent=new Intl.DateTimeFormat('en-PH',o).format(new Date());}catch(e){}}
 setInterval(updateClock,1000);updateClock();
@@ -1293,7 +1401,7 @@ function openEditExp(idx){
   document.getElementById('ee-desc').value=e.description||'';
   document.getElementById('ee-amt').value=e.amount||'';
   // populate selects
-  const catSel=document.getElementById('ee-cat');catSel.innerHTML=S.categories.map(c=>`<option value="${c}">${c}</option>`).join('');catSel.value=e.category||S.categories[0];
+  const catSel=document.getElementById('ee-cat');catSel.innerHTML='<option value="">— Select category —</option>'+S.categories.map(c=>`<option value="${c}">${c}</option>`).join('');catSel.value=e.category||'';
   const bcSel=document.getElementById('ee-bcat');bcSel.innerHTML='<option value="">— None —</option>'+S.budgetCats.map(b=>`<option value="${b.id}">${b.icon} ${b.name}</option>`).join('');bcSel.value=e.budgetCat||'';
   document.getElementById('ee-msg').style.display='none';
   popShopList();
@@ -1313,14 +1421,14 @@ function saveEditExp(){
 }
 // ADD EXPENSE
 function popShopList(){const dl=document.getElementById('shop-list');if(!dl)return;const shops=[...new Set(S.expenses.map(e=>e.shop).filter(Boolean))].sort();dl.innerHTML=shops.map(s=>`<option value="${s.replace(/"/g,'&quot;')}">`).join('');}
-function openAddModal(){document.getElementById('ma').value='';document.getElementById('md').value=new Date().toISOString().slice(0,10);document.getElementById('mdesc').value='';document.getElementById('mshop').value='';document.getElementById('mmsg').style.display='none';document.getElementById('nci').classList.remove('show');document.getElementById('nci-inp').value='';popCat();popBcat();popShopList();document.getElementById('add-overlay').classList.add('show');setTimeout(()=>document.getElementById('md').focus(),100);}
+function openAddModal(){document.getElementById('ma').value='';document.getElementById('md').value=new Date().toISOString().slice(0,10);document.getElementById('mdesc').value='';document.getElementById('mshop').value='';document.getElementById('mmsg').style.display='none';document.getElementById('nci').classList.remove('show');document.getElementById('nci-inp').value='';popCat();document.getElementById('mc-sel').value='';popBcat();popShopList();document.getElementById('add-overlay').classList.add('show');setTimeout(()=>document.getElementById('md').focus(),100);}
 function closeAddModal(){document.getElementById('add-overlay').classList.remove('show');}
 function togNewCat(){const el=document.getElementById('nci');el.classList.toggle('show');if(el.classList.contains('show'))setTimeout(()=>document.getElementById('nci-inp').focus(),50);}
 function cancelNewCat(){document.getElementById('nci').classList.remove('show');document.getElementById('nci-inp').value='';}
 function saveNewCat(){const n=document.getElementById('nci-inp').value.trim();if(!n)return;if(S.categories.map(c=>c.toLowerCase()).includes(n.toLowerCase())){showMsg('mmsg','Already exists.',false);return;}S.categories.push(n);persist();popCat();document.getElementById('mc-sel').value=n;document.getElementById('nci').classList.remove('show');document.getElementById('nci-inp').value='';renderCats();}
 function addExpModal(){
   const amt=parseFloat(document.getElementById('ma').value);const cat=document.getElementById('mc-sel').value;const date=document.getElementById('md').value;const shop=document.getElementById('mshop').value.trim();const desc=document.getElementById('mdesc').value.trim();const bcat=document.getElementById('mbcat').value;
-  if(!amt||amt<=0){showMsg('mmsg','Enter a valid amount.',false);return;}if(!date){showMsg('mmsg','Select a date.',false);return;}
+  if(!amt||amt<=0){showMsg('mmsg','Enter a valid amount.',false);return;}if(!date){showMsg('mmsg','Select a date.',false);return;}if(!cat){showMsg('mmsg','Select an expense category.',false);return;}
   S.expenses.push({amount:amt,category:cat,date,shop:shop||'',description:desc,budgetCat:bcat||null});
   persist();showMsg('mmsg','Expense added!',true);document.getElementById('ma').value='';document.getElementById('mdesc').value='';document.getElementById('mshop').value='';setTimeout(closeAddModal,800);if(AT==='home')renderHome();if(AT==='list')renderList();if(AT==='budget')renderBudget();
 }
@@ -1918,7 +2026,7 @@ function closePin(){document.getElementById('pin-overlay').classList.remove('sho
 function go(tab){
   if(tab==='income'&&S.prefs.incLock&&S.prefs.incPIN&&!incUnlocked){openPin('🔒 Income PIN required','Enter your income 6-digit PIN.',()=>{incUnlocked=true;go('income');});return;}
   AT=tab;document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));const btn=document.getElementById('nb-'+tab);if(btn)btn.classList.add('on');document.querySelectorAll('.sec').forEach(s=>s.classList.remove('vis'));const sec=document.getElementById('sec-'+tab);if(sec)sec.classList.add('vis');
-  if(tab==='home')renderHome();else if(tab==='list')renderList();else if(tab==='budget')renderBudget();else if(tab==='savings')renderSavings();else if(tab==='summary')renderSummary();else if(tab==='compare')renderCompare();else if(tab==='cats')renderCats();else if(tab==='income')renderIncome();else if(tab==='wishlist')renderWishlist();
+  if(tab==='home')renderHome();else if(tab==='list')renderList();else if(tab==='budget')renderBudget();else if(tab==='savings')renderSavings();else if(tab==='summary')renderSummary();else if(tab==='compare')renderCompare();else if(tab==='cats')renderCats();else if(tab==='income')renderIncome();else if(tab==='wishlist')renderWishlist();else if(tab==='bills')renderBills();
 }
 function shiftM(d){VM+=d;if(VM>11){VM=0;VY++;}if(VM<0){VM=11;VY--;}calSelectedDate=null;svCatGroup='default';if(AT==='list'){document.getElementById('cal-day-panel').style.display='none';renderList();}else if(AT==='budget')renderBudget();else if(AT==='summary')renderSummary();else if(AT==='income')renderIncome();}
 
@@ -2251,6 +2359,7 @@ function renderWishlist(){
         </div>
         <div class="wl-card-actions">
           <button class="btn bg2 bico" style="font-size:13px" onclick="openWlModal('${w.id}')" title="Edit">✏️</button>
+          <button class="btn bg2 bico" style="font-size:13px" onclick="wlCopy('${w.id}')" title="Copy to new list">📋</button>
           <button class="bdel" onclick="wlDelList('${w.id}')" title="Delete">🗑</button>
         </div>
       </div>
@@ -2314,7 +2423,7 @@ function openWliModal(listId,itemId){
   document.getElementById('wlim-itemid').value=itemId||'';
   // Populate expense cat
   const csel=document.getElementById('wlim-cat');
-  csel.innerHTML=S.categories.map(c=>`<option value="${c}">${c}</option>`).join('');
+  csel.innerHTML='<option value="">— Select category —</option>'+S.categories.map(c=>`<option value="${c}">${c}</option>`).join('');
   if(itemId){
     const w=wlById(listId);const item=w?wlItemById(w,itemId):null;
     if(item){
@@ -2323,7 +2432,7 @@ function openWliModal(listId,itemId){
       document.getElementById('wlim-shop').value=item.shop||'';
       document.getElementById('wlim-qty').value=item.qty||1;
       document.getElementById('wlim-desc').value=item.desc||'';
-      csel.value=item.category||S.categories[0];
+      csel.value=item.category||'';
     }
     document.getElementById('wlim-title').textContent='✏️ Edit item';
   } else {
@@ -2366,7 +2475,7 @@ function wlQuickAdd(listId){
   const name=(inp&&inp.value.trim())||'';
   if(!name)return;
   const w=wlById(listId);if(!w)return;
-  w.items.push({id:'wli_'+Date.now(),name,price:0,shop:'',qty:1,desc:'',category:S.categories[0],bought:false,boughtDate:null,actualAmt:null});
+  w.items.push({id:'wli_'+Date.now(),name,price:0,shop:'',qty:1,desc:'',category:'',bought:false,boughtDate:null,actualAmt:null});
   persist();inp.value='';renderWishlist();
 }
 
@@ -2418,7 +2527,7 @@ function confirmWlBuy(){
   // Add to expenses
   S.expenses.push({
     amount:amt,
-    category:item.category||S.categories[0],
+    category:item.category||S.categories[0]||'',
     date,
     shop:shop||item.shop||'',
     description:item.name+(item.qty>1?' ×'+item.qty:''),
@@ -2436,6 +2545,264 @@ function confirmWlBuy(){
 // ── Delete ────────────────────────────────────────────
 function wlDelList(id){if(!confirm('Remove this wishlist and all its items?'))return;S.wishlists=S.wishlists.filter(w=>w.id!==id);persist();renderWishlist();}
 function wlDelItem(listId,itemId){const w=wlById(listId);if(!w)return;w.items=w.items.filter(i=>i.id!==itemId);persist();renderWishlist();}
+function wlCopy(id){
+  const src=wlById(id);if(!src)return;
+  const now=new Date().toISOString().slice(0,10);
+  const newList={
+    id:'wl_'+Date.now(),
+    name:'Copy of '+src.name,
+    icon:src.icon||'🛒',
+    date:now,
+    budgetCat:src.budgetCat||null,
+    notes:src.notes||'',
+    items:src.items.map(item=>({
+      ...item,
+      id:'wli_'+Date.now()+'_'+Math.random().toString(36).slice(2,7),
+      bought:false,boughtDate:null,actualAmt:null  // reset purchase state
+    }))
+  };
+  if(!S.wishlists)S.wishlists=[];
+  S.wishlists.push(newList);
+  persist();renderWishlist();
+  // Flash confirmation
+  const fl=document.getElementById('sfl');
+  fl.textContent='✓ List copied';fl.classList.add('show');
+  setTimeout(()=>{fl.classList.remove('show');setTimeout(()=>fl.textContent='✓ Saved',400);},1800);
+}
+
+// ══════════════════════════════════════════════════════
+// BILLS
+// ══════════════════════════════════════════════════════
+let billFilter='all';
+const FREQ_LABEL={monthly:'Monthly',weekly:'Weekly',quarterly:'Quarterly',annual:'Annual','one-time':'One-time'};
+
+function setBillFilter(f){
+  billFilter=f;
+  ['all','unpaid','overdue','paid'].forEach(k=>{const b=document.getElementById('billf-'+k);if(b)b.classList.toggle('on',k===f);});
+  renderBills();
+}
+
+// ── Helpers ───────────────────────────────────────────
+function billById(id){return(S.bills||[]).find(b=>b.id===id);}
+function daysDiff(dateStr){// positive = future, negative = past
+  const d=new Date(dateStr+'T00:00:00');const today=new Date();today.setHours(0,0,0,0);return Math.round((d-today)/(1000*60*60*24));}
+function billStatus(b){
+  if(b.paid)return'paid';
+  const diff=daysDiff(b.due);
+  if(diff<0)return'overdue';
+  if(diff<=b.remindDays)return'due-soon';
+  return'upcoming';
+}
+function billStatusLabel(b){
+  if(b.paid)return{cls:'paid',txt:'✓ Paid'+(b.paidDate?' on '+new Date(b.paidDate+'T00:00:00').toLocaleDateString('en-PH',{month:'short',day:'numeric'}):'')}; 
+  const diff=daysDiff(b.due);
+  if(diff<0)return{cls:'overdue',txt:'Overdue by '+Math.abs(diff)+' day'+(Math.abs(diff)!==1?'s':'')};
+  if(diff===0)return{cls:'due-soon',txt:'Due today!'};
+  if(diff<=b.remindDays)return{cls:'due-soon',txt:'Due in '+diff+' day'+(diff!==1?'s':'')};
+  return{cls:'upcoming',txt:'Due in '+diff+' day'+(diff!==1?'s':'')};
+}
+
+// ── Render ─────────────────────────────────────────────
+function renderBills(){
+  if(!S.bills)S.bills=[];
+  const today=new Date().toISOString().slice(0,10);
+  const all=S.bills;
+  const unpaid=all.filter(b=>!b.paid);
+  const overdue=unpaid.filter(b=>daysDiff(b.due)<0);
+  const dueSoon=unpaid.filter(b=>{const d=daysDiff(b.due);return d>=0&&d<=(b.remindDays||3);});
+  const totalUnpaid=unpaid.reduce((s,b)=>s+b.amount,0);
+
+  document.getElementById('bill-mets').innerHTML=`
+    <div class="met"><div class="ml">Total bills</div><div class="mv">${all.length}</div><div class="ms">${unpaid.length} unpaid</div></div>
+    <div class="met ${overdue.length?'dn':''}"><div class="ml">Overdue</div><div class="mv" style="color:${overdue.length?'var(--dn)':'var(--tx)'}">${overdue.length}</div><div class="ms">${overdue.length?'needs attention':'-'}</div></div>
+    <div class="met"><div class="ml">Due soon</div><div class="mv" style="color:${dueSoon.length?'var(--wn)':'var(--tx)'}">${dueSoon.length}</div><div class="ms">${dueSoon.length?'within reminder period':'-'}</div></div>
+    <div class="met"><div class="ml">Unpaid total</div><div class="mv">${totalUnpaid>0?fa(totalUnpaid):'—'}</div><div class="ms">outstanding</div></div>`;
+
+  const filtered=all.filter(b=>{
+    const st=billStatus(b);
+    if(billFilter==='unpaid')return!b.paid;
+    if(billFilter==='overdue')return st==='overdue';
+    if(billFilter==='paid')return b.paid;
+    return true;
+  }).sort((a,b)=>{
+    // Overdue first, then due-soon, then upcoming, then paid
+    const order={overdue:0,'due-soon':1,upcoming:2,paid:3};
+    const oa=order[billStatus(a)]??2,ob=order[billStatus(b)]??2;
+    if(oa!==ob)return oa-ob;
+    return a.due.localeCompare(b.due);
+  });
+
+  const cont=document.getElementById('bill-list');
+  if(!filtered.length){cont.innerHTML='<div class="empty" style="padding:3rem">🧾 No bills here. Tap ＋ Add bill to get started.</div>';return;}
+
+  cont.innerHTML=filtered.map(b=>{
+    const bc=b.budgetCat?bcById(b.budgetCat):null;
+    const st=billStatus(b);const stl=billStatusLabel(b);
+    const diff=daysDiff(b.due);
+    const cardCls=st==='overdue'?' bill-overdue':st==='due-soon'?' bill-due-soon':b.paid?' bill-paid':'';
+
+    return`<div class="bill-card${cardCls}">
+      <div class="bill-status-bar">
+        <span class="bill-badge ${stl.cls}">${stl.txt}</span>
+        ${b.paid?'':`<span style="font-size:12px;color:var(--tx3)">${FREQ_LABEL[b.freq]||b.freq}</span>`}
+        ${b.remindDays>0&&!b.paid?`<span style="font-size:11px;color:var(--tx3)">🔔 ${b.remindDays}d reminder</span>`:''}
+      </div>
+      <div class="bill-header">
+        <div class="bill-icon" style="background:${bc?bc.color+'22':'var(--surf3)'};border:1.5px solid ${bc?bc.color+'40':'var(--bd)'}">${b.icon||'🧾'}</div>
+        <div class="bill-meta">
+          <div class="bill-name">${b.name}</div>
+          <div class="bill-sub">
+            ${bc?`<span class="bcat-pill" style="background:${bc.color}22;color:${bc.color}">${bc.icon} ${bc.name}</span>`:''}
+            <span class="cpill">${b.category||''}</span>
+            ${b.notes?`<span style="color:var(--tx3)">${b.notes}</span>`:''}
+          </div>
+        </div>
+        <div class="bill-amount">${fa(b.amount)}</div>
+      </div>
+      <div class="bill-dates">
+        <div class="bill-date-box">
+          <div class="bill-date-lbl">Due date</div>
+          <div class="bill-date-val" style="color:${st==='overdue'?'var(--dn)':st==='due-soon'?'var(--wn)':'var(--tx)'}">${new Date(b.due+'T00:00:00').toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'})}</div>
+        </div>
+        ${b.paid?`<div class="bill-date-box">
+          <div class="bill-date-lbl">Paid on</div>
+          <div class="bill-date-val" style="color:var(--ok)">${new Date(b.paidDate+'T00:00:00').toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'})}</div>
+        </div>`:''}
+        ${b.paid&&b.paidAmt&&b.paidAmt!==b.amount?`<div class="bill-date-box">
+          <div class="bill-date-lbl">Paid amount</div>
+          <div class="bill-date-val">${fa(b.paidAmt)}</div>
+        </div>`:''}
+      </div>
+      <div class="bill-actions">
+        ${!b.paid?`<button class="btn bp" style="font-size:13px;padding:8px 16px" onclick="openBillPay('${b.id}')">✅ Mark paid</button>`:''}
+        <button class="btn bg2" style="font-size:13px;padding:8px 14px" onclick="openBillModal('${b.id}')">✏️ Edit</button>
+        ${b.paid?`<button class="btn bg2" style="font-size:13px;padding:8px 14px" onclick="billUnpay('${b.id}')">↺ Mark unpaid</button>`:''}
+        <button class="bdel" onclick="deleteBill('${b.id}')">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Check for notifications (browser notifications if permitted)
+  _billCheckNotifications();
+}
+
+// ── Create / Edit Bill Modal ──────────────────────────
+function openBillModal(editId){
+  document.getElementById('billm-id').value=editId||'';
+  const bcSel=document.getElementById('billm-bcat');
+  bcSel.innerHTML='<option value="">— No budget category —</option>'+S.budgetCats.map(b=>`<option value="${b.id}">${b.icon} ${b.name}</option>`).join('');
+  const cSel=document.getElementById('billm-cat');
+  cSel.innerHTML='<option value="">— Select category —</option>'+S.categories.map(c=>`<option value="${c}">${c}</option>`).join('');
+  if(editId){
+    const b=billById(editId);if(!b)return;
+    document.getElementById('billm-name').value=b.name;
+    document.getElementById('billm-icon').value=b.icon||'🧾';
+    document.getElementById('billm-amt').value=b.amount;
+    document.getElementById('billm-due').value=b.due;
+    document.getElementById('billm-freq').value=b.freq||'monthly';
+    document.getElementById('billm-remind').value=b.remindDays??3;
+    document.getElementById('billm-notes').value=b.notes||'';
+    bcSel.value=b.budgetCat||'';cSel.value=b.category||'';
+    document.getElementById('billm-title').textContent='✏️ Edit bill';
+  } else {
+    document.getElementById('billm-name').value='';document.getElementById('billm-icon').value='🧾';
+    document.getElementById('billm-amt').value='';document.getElementById('billm-due').value='';
+    document.getElementById('billm-freq').value='monthly';document.getElementById('billm-remind').value='3';
+    document.getElementById('billm-notes').value='';bcSel.value='';cSel.value='';
+    document.getElementById('billm-title').textContent='🧾 New bill';
+  }
+  document.getElementById('billm-msg').style.display='none';
+  document.getElementById('bill-overlay').classList.add('show');
+  setTimeout(()=>document.getElementById('billm-name').focus(),100);
+}
+function closeBillModal(){document.getElementById('bill-overlay').classList.remove('show');}
+function saveBillModal(){
+  const name=document.getElementById('billm-name').value.trim();
+  const icon=document.getElementById('billm-icon').value.trim()||'🧾';
+  const amount=parseFloat(document.getElementById('billm-amt').value);
+  const due=document.getElementById('billm-due').value;
+  const freq=document.getElementById('billm-freq').value;
+  const remindDays=parseInt(document.getElementById('billm-remind').value)||0;
+  const notes=document.getElementById('billm-notes').value.trim();
+  const budgetCat=document.getElementById('billm-bcat').value||null;
+  const category=document.getElementById('billm-cat').value;
+  if(!name){showMsg('billm-msg','Enter a bill name.',false);return;}
+  if(!amount||amount<=0){showMsg('billm-msg','Enter a valid amount.',false);return;}
+  if(!due){showMsg('billm-msg','Select a due date.',false);return;}
+  if(!S.bills)S.bills=[];
+  const eid=document.getElementById('billm-id').value;
+  if(eid){
+    const b=billById(eid);if(b)Object.assign(b,{name,icon,amount,due,freq,remindDays,notes,budgetCat,category});
+  } else {
+    S.bills.push({id:'bill_'+Date.now(),name,icon,amount,due,freq,remindDays,notes,budgetCat,category,paid:false,paidDate:null,paidAmt:null,shop:''});
+  }
+  persist();closeBillModal();renderBills();
+}
+
+// ── Pay Bill ──────────────────────────────────────────
+function openBillPay(id){
+  const b=billById(id);if(!b)return;
+  const bc=b.budgetCat?bcById(b.budgetCat):null;
+  document.getElementById('billpay-id').value=id;
+  document.getElementById('billpay-date').value=new Date().toISOString().slice(0,10);
+  document.getElementById('billpay-amt').value=b.amount.toFixed(2);
+  document.getElementById('billpay-shop').value=b.shop||'';
+  document.getElementById('billpay-summary').innerHTML=
+    `${b.icon} <b>${b.name}</b> — ${fa(b.amount)}`+
+    (bc?` <span class="bcat-pill" style="background:${bc.color}22;color:${bc.color};margin-left:6px">${bc.icon} ${bc.name}</span>`:'');
+  document.getElementById('billpay-msg').style.display='none';
+  popShopList();
+  document.getElementById('billpay-overlay').classList.add('show');
+  setTimeout(()=>document.getElementById('billpay-amt').focus(),100);
+}
+function closeBillPay(){document.getElementById('billpay-overlay').classList.remove('show');}
+function confirmBillPay(){
+  const id=document.getElementById('billpay-id').value;
+  const b=billById(id);if(!b){showMsg('billpay-msg','Bill not found.',false);return;}
+  const date=document.getElementById('billpay-date').value;
+  const amt=parseFloat(document.getElementById('billpay-amt').value);
+  const shop=document.getElementById('billpay-shop').value.trim();
+  if(!date){showMsg('billpay-msg','Select a payment date.',false);return;}
+  if(!amt||amt<=0){showMsg('billpay-msg','Enter the amount paid.',false);return;}
+  // Mark paid
+  b.paid=true;b.paidDate=date;b.paidAmt=amt;b.shop=shop;
+  // Add expense
+  S.expenses.push({amount:amt,category:b.category||S.categories[0],date,shop:shop||b.name,description:b.name,budgetCat:b.budgetCat||null});
+  persist();closeBillPay();renderBills();
+  // Toast
+  const fl=document.getElementById('sfl');
+  fl.textContent='✓ Bill paid & expense added';fl.classList.add('show');
+  setTimeout(()=>{fl.classList.remove('show');setTimeout(()=>fl.textContent='✓ Saved',400);},2200);
+}
+function billUnpay(id){
+  const b=billById(id);if(!b)return;
+  if(!confirm('Mark this bill as unpaid? The expense entry already added will remain.'))return;
+  b.paid=false;b.paidDate=null;b.paidAmt=null;persist();renderBills();
+}
+function deleteBill(id){if(!confirm('Remove this bill?'))return;S.bills=S.bills.filter(b=>b.id!==id);persist();renderBills();}
+
+// ── Browser Notifications ─────────────────────────────
+function _billCheckNotifications(){
+  if(!('Notification' in window)||Notification.permission==='denied')return;
+  const dueOrSoon=(S.bills||[]).filter(b=>!b.paid&&daysDiff(b.due)>=0&&daysDiff(b.due)<=(b.remindDays||3));
+  if(!dueOrSoon.length)return;
+  if(Notification.permission==='granted'){_billNotify(dueOrSoon);}
+  else if(Notification.permission==='default'){
+    Notification.requestPermission().then(p=>{if(p==='granted')_billNotify(dueOrSoon);});
+  }
+}
+function _billNotify(bills){
+  bills.forEach(b=>{
+    const key='bill_notif_'+b.id+'_'+new Date().toDateString();
+    if(localStorage.getItem(key))return;// only once per day
+    const diff=daysDiff(b.due);
+    const msg=diff===0?`${b.icon} ${b.name} is due TODAY (${fa(b.amount)})`:
+              diff<0?`${b.icon} ${b.name} is OVERDUE by ${Math.abs(diff)} day(s) (${fa(b.amount)})`:
+              `${b.icon} ${b.name} is due in ${diff} day(s) — ${fa(b.amount)}`;
+    try{new Notification('💰 MoneyWatch — Bill reminder',{body:msg,icon:'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">💰</text></svg>'});
+      localStorage.setItem(key,'1');}catch(e){}
+  });
+}
 
 // INIT
 document.getElementById('wdate').value=new Date().toISOString().slice(0,10);
@@ -2448,3 +2815,4 @@ setTimeout(()=>{if(!gdReady){const b=document.getElementById('drive-retry-btn');
 
 </script>
 </body></html>
+
