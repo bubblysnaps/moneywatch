@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="manifest" href="/site.webmanifest">
+<link rel="apple-touch-icon" sizes="180x180" href="https://bubblysnaps.github.io/moneywatch/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://bubblysnaps.github.io/moneywatch/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://bubblysnaps.github.io/moneywatch/favicon-16x16.png">
+<link rel="manifest" href="https://bubblysnaps.github.io/moneywatch/site.webmanifest">
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>MoneyWatch v17</title>
+<title>MoneyWatch v18</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&family=Poppins:wght@300;400;500;600&family=Nunito:wght@300;400;600;700&family=Manrope:wght@300;400;500;600&family=Figtree:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Sora:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&family=Lato:wght@300;400;700&family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;500;600&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
@@ -263,8 +264,32 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
 .bill-date-val{font-size:13px;font-weight:600;color:var(--tx)}
 .bill-reminder-row{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--tx3);margin-bottom:8px}
 .bill-actions{display:flex;gap:6px;flex-wrap:wrap}
+/* ── RECEIPTS ─────────────────────────────────────────── */
+.rcpt-thumb{width:42px;height:42px;border-radius:8px;object-fit:cover;border:1.5px solid var(--bd);cursor:pointer;flex-shrink:0;transition:transform .15s,box-shadow .15s}
+.rcpt-thumb:hover{transform:scale(1.08);box-shadow:var(--sh2)}
+.rcpt-btn{width:32px;height:32px;border-radius:8px;border:1.5px dashed var(--bd2);background:transparent;color:var(--tx3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;transition:all .15s;flex-shrink:0}
+.rcpt-btn:hover{border-color:var(--ac);color:var(--ac);background:var(--acbg)}
+/* Lightbox */
+#rcpt-lightbox{position:fixed;inset:0;z-index:9500;background:rgba(0,0,0,.88);display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(8px)}
+#rcpt-lightbox.show{display:flex}
+.rcpt-lb-img{max-width:100%;max-height:90vh;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.6);object-fit:contain}
+.rcpt-lb-close{position:absolute;top:16px;right:16px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.15);border:none;color:#fff;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s}
+.rcpt-lb-close:hover{background:rgba(255,255,255,.3)}
+.rcpt-lb-del{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);background:var(--dn);color:#fff;border:none;border-radius:10px;padding:9px 20px;font-size:13px;font-weight:600;font-family:var(--f);cursor:pointer;display:flex;align-items:center;gap:7px}
+.rcpt-lb-del:hover{filter:brightness(1.1)}
+.rcpt-lb-info{position:absolute;bottom:68px;left:50%;transform:translateX(-50%);font-size:12px;color:rgba(255,255,255,.6);white-space:nowrap}
 </style>
 <body>
+
+<!-- RECEIPT LIGHTBOX -->
+<div id="rcpt-lightbox">
+  <button class="rcpt-lb-close" onclick="closeLightbox()">✕</button>
+  <img id="rcpt-lb-img" class="rcpt-lb-img" src="" alt="Receipt">
+  <div class="rcpt-lb-info" id="rcpt-lb-info"></div>
+  <button class="rcpt-lb-del" onclick="delReceipt()">🗑 Remove receipt</button>
+</div>
+<!-- Hidden receipt file input (capture=environment opens camera on mobile) -->
+<input type="file" id="rcpt-file-inp" accept="image/*" capture="environment" style="display:none" onchange="handleReceiptFile(event)">
 
 <!-- IDLE WARNING BANNER -->
 <div id="idle-warn">
@@ -377,6 +402,17 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
       <div class="divl"></div>
       <div class="pst" style="margin-top:0">Auto-save</div>
       <div class="tog-row"><label class="tw"><input type="checkbox" id="astog" onchange="togAS()"><span class="tt"></span></label><div><div style="font-size:14px;font-weight:500">Auto-save to browser</div><div style="font-size:12px;color:var(--tx3)">Saves every change automatically</div></div></div>
+      <div class="divl"></div>
+      <div class="pst" style="margin-top:0">Receipt photos</div>
+      <div style="background:var(--surf2);border:1px solid var(--bd);border-radius:11px;padding:14px 16px;margin-bottom:10px">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+          <div>
+            <div style="font-size:14px;font-weight:500">Stored receipt photos</div>
+            <div style="font-size:12px;color:var(--tx3);margin-top:2px" id="rcpt-storage-lbl">Open preferences to calculate</div>
+          </div>
+          <button class="btn bg2" style="font-size:13px;padding:7px 13px;color:var(--dn);border-color:var(--dn)" onclick="clearAllReceipts()">🗑 Clear all</button>
+        </div>
+      </div>
       <div class="pst" style="margin-top:0">Google Drive sync</div>
       <div style="background:var(--surf2);border:1px solid var(--bd);border-radius:11px;padding:14px 16px;margin-bottom:10px">
         <div style="font-size:13px;color:var(--tx2);margin-bottom:12px;line-height:1.5">Connect to Google Drive to load and auto-save your data file in the cloud.</div>
@@ -1536,6 +1572,7 @@ function _renderBcatDet(){
         '<div class="emeta" style="margin-top:2px"><span class="cpill">'+e.category+'</span></div>'+
       '</div>'+
       '<div class="er2"><span class="eamt" style="color:var(--dn)">-'+fa(e.amount)+'</span></div>'+
+      rcptHtml(ri)+
       '<button class="btn bg2 bico" style="font-size:13px" onclick="openEditExp('+ri+')" title="Edit">✏️</button>'+
       '<button class="bdel" onclick="delBcatExp('+ri+')">🗑</button>'+
     '</div>';
@@ -1621,12 +1658,7 @@ function closeRpt(){document.getElementById('rpt-overlay').classList.remove('sho
 function dlBcatPDF(bcid){
   const bc=bcById(bcid);if(!bc)return;const exps=bcExps(bcid,VY,VM);const spent=bcTotal(bcid,VY,VM);const lim=bc.limit||0;
   const win=window.open('','_blank');if(!win)return;
-  win.document.write(`<!DOCTYPE html><html><head><title>${bc.name} Report</title><style>body{font-family:Arial,sans-serif;max-width:720px;margin:40px auto;color:#111;font-size:15px}h1{font-size:24px;font-weight:700}h2{font-size:16px;font-weight:600;margin:20px 0 8px;border-bottom:1px solid #eee;padding-bottom:5px}.meta{font-size:13px;color:#666;margin-bottom:16px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}.box{background:#f5f7ff;border-radius:8px;padding:11px 13px}.bl{font-size:11px;text-transform:uppercase;color:#888;margin-bottom:3px}.bv{font-size:19px;font-weight:700}table{width:100%;border-collapse:collapse;font-size:14px}th{background:#f5f7ff;padding:8px 10px;text-align:left;font-weight:600;border-bottom:2px solid #ddd}td{padding:7px 10px;border-bottom:1px solid #eee}.ft{margin-top:26px;font-size:11px;color:#aaa;text-align:center}@media print{body{margin:20px}}</style>
-
-
-
-
-  </head><body>
+  win.document.write(`<!DOCTYPE html><html><head><title>${bc.name} Report</title><style>body{font-family:Arial,sans-serif;max-width:720px;margin:40px auto;color:#111;font-size:15px}h1{font-size:24px;font-weight:700}h2{font-size:16px;font-weight:600;margin:20px 0 8px;border-bottom:1px solid #eee;padding-bottom:5px}.meta{font-size:13px;color:#666;margin-bottom:16px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}.box{background:#f5f7ff;border-radius:8px;padding:11px 13px}.bl{font-size:11px;text-transform:uppercase;color:#888;margin-bottom:3px}.bv{font-size:19px;font-weight:700}table{width:100%;border-collapse:collapse;font-size:14px}th{background:#f5f7ff;padding:8px 10px;text-align:left;font-weight:600;border-bottom:2px solid #ddd}td{padding:7px 10px;border-bottom:1px solid #eee}.ft{margin-top:26px;font-size:11px;color:#aaa;text-align:center}@media print{body{margin:20px}}</style></head><body>
   <h1>${bc.icon} ${bc.name} — Budget Report</h1><div class="meta">${fm(VY,VM)} | ${S.prefs.name||'User'} | ${new Date().toLocaleDateString()}</div>
   <div class="grid"><div class="box"><div class="bl">Total spent</div><div class="bv">${fa(spent)}</div></div><div class="box"><div class="bl">Budget limit</div><div class="bv">${lim>0?fa(lim):'Not set'}</div></div><div class="box"><div class="bl">Remaining</div><div class="bv">${lim>0?fa(lim-spent):'—'}</div></div></div>
   <h2>Transactions (${exps.length})</h2>
@@ -1786,6 +1818,7 @@ function renderDayPanel(dateStr){
         <div class="emeta" style="margin-top:2px">${bc?`<span class="bcat-pill" style="background:${bc.color}22;color:${bc.color};margin-right:4px">${bc.icon} ${bc.name}</span>`:''}<span class="cpill">${e.category}</span></div>
       </div>
       <div class="er2"><span class="eamt" style="color:var(--dn)">-${fa(e.amount)}</span></div>
+      ${rcptHtml(ri)}
       <button class="btn bg2 bico" style="font-size:13px" onclick="openEditExp(${ri})" title="Edit">✏️</button>
       <button class="bdel" onclick="delExpCal(${ri})">🗑</button>
     </div>`;
@@ -1903,6 +1936,7 @@ function renderSV(v){
           <div class="emeta" style="margin-top:2px">${bc?`<span class="bcat-pill" style="background:${bc.color}22;color:${bc.color};margin-right:4px">${bc.icon} ${bc.name}</span>`:''}<span class="cpill">${e.category}</span></div>
         </div>
         <div class="er2"><span class="eamt" style="color:var(--dn)">-${fa(e.amount)}</span></div>
+        ${rcptHtml(ri)}
         <button class="btn bg2 bico" style="font-size:13px" onclick="openEditExp(${ri})" title="Edit">✏️</button>
         <button class="bdel" onclick="delSummaryExp(${ri})">🗑</button>
       </div>`;
@@ -2063,7 +2097,25 @@ function renderFGrid(){document.getElementById('fgrid').innerHTML=FONTS.map(f=>`
 function pickFont(id){S.prefs.font=id;persist();applyPrefs();}
 function savePrefs(){S.prefs.name=document.getElementById('pn').value.trim();S.prefs.currency=document.getElementById('pc').value.trim()||'₱';S.prefs.tz=document.getElementById('ptz').value;S.prefs.cf=document.getElementById('pcf').value;S.prefs.fw=document.getElementById('pfw').value;S.prefs.fs=document.getElementById('pfs').value;persist();applyPrefs();showMsg('pmsg','Preferences applied!',true);setTimeout(closePref,900);}
 function resetPrefs(){S.prefs=JSON.parse(JSON.stringify(DS.prefs));incUnlocked=false;persist();applyPrefs();showMsg('pmsg','Preferences reset.',true);}
-function togPref(){document.getElementById('pref-overlay').classList.toggle('show');document.getElementById('pbtn').classList.toggle('on');}
+function clearAllReceipts(){
+  const count=S.expenses.filter(e=>e.receipt).length;
+  if(!count){showMsg('pmsg','No receipt photos stored.',false);return;}
+  if(!confirm(`Remove all ${count} receipt photo${count!==1?'s':''}? This cannot be undone.`))return;
+  S.expenses.forEach(e=>delete e.receipt);persist();
+  showMsg('pmsg','All receipts cleared.',true);
+  const lbl=document.getElementById('rcpt-storage-lbl');if(lbl)lbl.textContent='0 receipts — 0 KB';
+}
+function togPref(){
+  document.getElementById('pref-overlay').classList.toggle('show');
+  document.getElementById('pbtn').classList.toggle('on');
+  // Update receipt storage label when opening prefs
+  const lbl=document.getElementById('rcpt-storage-lbl');
+  if(lbl&&document.getElementById('pref-overlay').classList.contains('show')){
+    const count=S.expenses.filter(e=>e.receipt).length;
+    const kb=rcptStorageKB();
+    lbl.textContent=count+' receipt'+(count!==1?'s':'')+' — '+(kb>1024?(kb/1024).toFixed(1)+' MB':kb+' KB');
+  }
+}
 function closePref(){document.getElementById('pref-overlay').classList.remove('show');document.getElementById('pbtn').classList.remove('on');}
 function togAS(){S.prefs.autosave=document.getElementById('astog').checked;persist();}
 function togIncLock(){S.prefs.incLock=document.getElementById('sltog').checked;document.getElementById('pin-setup-area').classList.toggle('show',S.prefs.incLock);if(!S.prefs.incLock){S.prefs.incPIN='';incUnlocked=false;setupBuf='';setupStep='new';pinNew='';}persist();if(S.prefs.incLock)buildSetupNP();}
@@ -2857,6 +2909,112 @@ function _billNotify(bills){
     try{new Notification('💰 MoneyWatch — Bill reminder',{body:msg,icon:'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">💰</text></svg>'});
       localStorage.setItem(key,'1');}catch(e){}
   });
+}
+
+// ══════════════════════════════════════════════════════
+// RECEIPT / PHOTO ATTACHMENT
+// ══════════════════════════════════════════════════════
+let _rcptTargetIdx=null; // expense index we're attaching a receipt to
+let _lbIdx=null;         // expense index currently open in lightbox
+
+// ── Compress image via canvas ─────────────────────────
+function compressImage(file,maxW,maxH,quality){
+  return new Promise((resolve,reject)=>{
+    const img=new Image();const url=URL.createObjectURL(file);
+    img.onload=()=>{
+      URL.revokeObjectURL(url);
+      let w=img.width,h=img.height;
+      if(w>maxW){h=Math.round(h*maxW/w);w=maxW;}
+      if(h>maxH){w=Math.round(w*maxH/h);h=maxH;}
+      const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
+      const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,w,h);
+      resolve(canvas.toDataURL('image/jpeg',quality));
+    };
+    img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error('Image load failed'));};
+    img.src=url;
+  });
+}
+
+// ── Trigger file picker for a given expense index ─────
+function addReceipt(idx){
+  _rcptTargetIdx=idx;
+  const inp=document.getElementById('rcpt-file-inp');
+  if(inp){inp.value='';inp.click();}
+}
+
+// ── Handle selected file ──────────────────────────────
+async function handleReceiptFile(e){
+  const file=e.target.files[0];if(!file)return;
+  if(!file.type.startsWith('image/')){showMsg('mmsg','Please select an image file.',false);return;}
+  const idx=_rcptTargetIdx;if(idx==null||!S.expenses[idx])return;
+
+  // Show loading state on the button
+  const btn=document.querySelector(`[data-rcpt-idx="${idx}"]`);
+  if(btn){btn.textContent='⏳';btn.disabled=true;}
+
+  try{
+    // Compress: max 900×1200px, 82% quality → ~100-200KB typically
+    const b64=await compressImage(file,900,1200,0.82);
+    S.expenses[idx].receipt=b64;
+    persist();
+    // Refresh whichever view is active
+    if(AT==='list'&&calSelectedDate)renderDayPanel(calSelectedDate);
+    if(AT==='budget')_renderBcatDet();
+    if(AT==='summary')renderSV(SV);
+    showReceiptToast('📷 Receipt saved');
+  }catch(err){
+    console.warn('Receipt error:',err);
+    showReceiptToast('⚠ Could not save receipt');
+  }
+  e.target.value='';
+}
+
+function showReceiptToast(msg){
+  const fl=document.getElementById('sfl');
+  fl.textContent=msg;fl.classList.add('show');
+  setTimeout(()=>{fl.classList.remove('show');setTimeout(()=>fl.textContent='✓ Saved',400);},2000);
+}
+
+// ── Lightbox ──────────────────────────────────────────
+function openLightbox(idx){
+  const e=S.expenses[idx];if(!e||!e.receipt)return;
+  _lbIdx=idx;
+  document.getElementById('rcpt-lb-img').src=e.receipt;
+  const info=e.shop||(e.description||'')+' — '+new Date(e.date+'T00:00:00').toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'});
+  document.getElementById('rcpt-lb-info').textContent=info;
+  document.getElementById('rcpt-lightbox').classList.add('show');
+}
+function closeLightbox(){
+  document.getElementById('rcpt-lightbox').classList.remove('show');
+  document.getElementById('rcpt-lb-img').src='';
+  _lbIdx=null;
+}
+function delReceipt(){
+  if(_lbIdx==null)return;
+  if(!confirm('Remove this receipt photo?'))return;
+  delete S.expenses[_lbIdx].receipt;
+  persist();closeLightbox();
+  if(AT==='list'&&calSelectedDate)renderDayPanel(calSelectedDate);
+  if(AT==='budget')_renderBcatDet();
+  if(AT==='summary')renderSV(SV);
+}
+// Close lightbox on backdrop click
+document.addEventListener('click',e=>{if(e.target.id==='rcpt-lightbox')closeLightbox();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('rcpt-lightbox').classList.contains('show'))closeLightbox();});
+
+// ── Receipt button/thumb HTML helper ─────────────────
+function rcptHtml(idx){
+  const e=S.expenses[idx];
+  if(e&&e.receipt){
+    return`<img src="${e.receipt}" class="rcpt-thumb" onclick="openLightbox(${idx})" title="View receipt" alt="Receipt">`;
+  }
+  return`<button class="rcpt-btn" data-rcpt-idx="${idx}" onclick="addReceipt(${idx})" title="Add receipt photo">📷</button>`;
+}
+
+// ── Storage usage helper (for prefs) ─────────────────
+function rcptStorageKB(){
+  const total=S.expenses.reduce((s,e)=>s+(e.receipt?e.receipt.length:0),0);
+  return Math.round(total/1024);
 }
 
 // INIT
