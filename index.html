@@ -1617,7 +1617,15 @@ function closeRpt(){document.getElementById('rpt-overlay').classList.remove('sho
 function dlBcatPDF(bcid){
   const bc=bcById(bcid);if(!bc)return;const exps=bcExps(bcid,VY,VM);const spent=bcTotal(bcid,VY,VM);const lim=bc.limit||0;
   const win=window.open('','_blank');if(!win)return;
-  win.document.write(`<!DOCTYPE html><html><head><title>${bc.name} Report</title><style>body{font-family:Arial,sans-serif;max-width:720px;margin:40px auto;color:#111;font-size:15px}h1{font-size:24px;font-weight:700}h2{font-size:16px;font-weight:600;margin:20px 0 8px;border-bottom:1px solid #eee;padding-bottom:5px}.meta{font-size:13px;color:#666;margin-bottom:16px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}.box{background:#f5f7ff;border-radius:8px;padding:11px 13px}.bl{font-size:11px;text-transform:uppercase;color:#888;margin-bottom:3px}.bv{font-size:19px;font-weight:700}table{width:100%;border-collapse:collapse;font-size:14px}th{background:#f5f7ff;padding:8px 10px;text-align:left;font-weight:600;border-bottom:2px solid #ddd}td{padding:7px 10px;border-bottom:1px solid #eee}.ft{margin-top:26px;font-size:11px;color:#aaa;text-align:center}@media print{body{margin:20px}}</style></head><body>
+  win.document.write(`<!DOCTYPE html><html><head><title>${bc.name} Report</title><style>body{font-family:Arial,sans-serif;max-width:720px;margin:40px auto;color:#111;font-size:15px}h1{font-size:24px;font-weight:700}h2{font-size:16px;font-weight:600;margin:20px 0 8px;border-bottom:1px solid #eee;padding-bottom:5px}.meta{font-size:13px;color:#666;margin-bottom:16px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}.box{background:#f5f7ff;border-radius:8px;padding:11px 13px}.bl{font-size:11px;text-transform:uppercase;color:#888;margin-bottom:3px}.bv{font-size:19px;font-weight:700}table{width:100%;border-collapse:collapse;font-size:14px}th{background:#f5f7ff;padding:8px 10px;text-align:left;font-weight:600;border-bottom:2px solid #ddd}td{padding:7px 10px;border-bottom:1px solid #eee}.ft{margin-top:26px;font-size:11px;color:#aaa;text-align:center}@media print{body{margin:20px}}</style>
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon//favicon-16x16.png">
+<link rel="manifest" href="/favicon/site.webmanifest">
+  </head><body>
   <h1>${bc.icon} ${bc.name} — Budget Report</h1><div class="meta">${fm(VY,VM)} | ${S.prefs.name||'User'} | ${new Date().toLocaleDateString()}</div>
   <div class="grid"><div class="box"><div class="bl">Total spent</div><div class="bv">${fa(spent)}</div></div><div class="box"><div class="bl">Budget limit</div><div class="bv">${lim>0?fa(lim):'Not set'}</div></div><div class="box"><div class="bl">Remaining</div><div class="bv">${lim>0?fa(lim-spent):'—'}</div></div></div>
   <h2>Transactions (${exps.length})</h2>
