@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>MoneyWatch v16</title>
+<title>MoneyWatch v17</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&family=Poppins:wght@300;400;500;600&family=Nunito:wght@300;400;600;700&family=Manrope:wght@300;400;500;600&family=Figtree:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Sora:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&family=Lato:wght@300;400;700&family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;500;600&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
@@ -1999,7 +1999,53 @@ function saveSrcModal(){const name=document.getElementById('src-name').value.tri
 function delSrc(id){if(!confirm('Remove this income source?'))return;const m=getIM(VY,VM);m.sources=m.sources.filter(s=>s.id!==id);persist();renderIncome();}
 
 // PREFS
-function applyPrefs(){const p=S.prefs,a=document.getElementById('app');const th=THEMES.find(t=>t.id===p.themeId)||THEMES[0];const c=p.cc||{};if(th.dark)a.setAttribute('data-dk','');else a.removeAttribute('data-dk');const set=(k,v)=>a.style.setProperty('--'+k,v);set('ac',c.ac||th.ac);set('ac2',th.ac2);set('bg',c.bg||th.bg);set('surf',c.surf||th.surf);set('surf2',c.surf2||th.surf2);set('surf3',th.surf3||'');set('tx',c.tx||th.tx);set('tx2',th.tx2);set('bd',c.bd||th.bd);set('f',p.font);set('fw',p.fw||'400');set('fs',p.fs||'15px');document.body.style.fontFamily=p.font;document.body.style.fontSize=p.fs;document.getElementById('pn').value=p.name||'';document.getElementById('pc').value=p.currency||'₱';document.getElementById('ptz').value=p.tz||'Asia/Manila';document.getElementById('pcf').value=p.cf||'12';document.getElementById('pfw').value=p.fw||'400';document.getElementById('pfs').value=p.fs||'15px';document.getElementById('astog').checked=!!p.autosave;document.getElementById('sltog').checked=!!p.incLock;document.getElementById('pin-setup-area').classList.toggle('show',!!p.incLock);const alSel=document.getElementById('p-autolock');if(alSel)alSel.value=String(alData.autoLockMin||15);renderTGrid();renderFGrid();renderCCols();updateHero();}
+function applyPrefs(){
+  const p=S.prefs;
+  const th=THEMES.find(t=>t.id===p.themeId)||THEMES[0];
+  const c=p.cc||{};
+  const root=document.documentElement;// <html>
+  const a=document.getElementById('app');
+
+  // Apply data-dk to BOTH html and #app so all fixed/absolute elements (modals, overlays) pick it up
+  if(th.dark){root.setAttribute('data-dk','');if(a)a.setAttribute('data-dk','');}
+  else{root.removeAttribute('data-dk');if(a)a.removeAttribute('data-dk');}
+
+  // Set CSS vars on :root so they cascade to EVERYTHING (body, overlays, modals, app-lock screen)
+  const set=(k,v)=>{root.style.setProperty('--'+k,v);if(a)a.style.setProperty('--'+k,v);};
+  set('ac',c.ac||th.ac);
+  set('ac2',th.ac2);
+  set('bg',c.bg||th.bg);
+  set('surf',c.surf||th.surf);
+  set('surf2',c.surf2||th.surf2);
+  set('surf3',th.surf3||'');
+  set('tx',c.tx||th.tx);
+  set('tx2',th.tx2);
+  set('bd',c.bd||th.bd);
+  set('f',p.font);
+  set('fw',p.fw||'400');
+  set('fs',p.fs||'15px');
+
+  // Apply background and text directly to html+body so the page chrome is covered
+  document.body.style.background='var(--bg)';
+  document.body.style.color='var(--tx)';
+  document.body.style.fontFamily=p.font;
+  document.body.style.fontSize=p.fs;
+  root.style.background='var(--bg)';
+  root.style.color='var(--tx)';
+
+  // Sync pref form fields
+  document.getElementById('pn').value=p.name||'';
+  document.getElementById('pc').value=p.currency||'₱';
+  document.getElementById('ptz').value=p.tz||'Asia/Manila';
+  document.getElementById('pcf').value=p.cf||'12';
+  document.getElementById('pfw').value=p.fw||'400';
+  document.getElementById('pfs').value=p.fs||'15px';
+  document.getElementById('astog').checked=!!p.autosave;
+  document.getElementById('sltog').checked=!!p.incLock;
+  document.getElementById('pin-setup-area').classList.toggle('show',!!p.incLock);
+  const alSel=document.getElementById('p-autolock');if(alSel)alSel.value=String(alData.autoLockMin||15);
+  renderTGrid();renderFGrid();renderCCols();updateHero();
+}
 function renderTGrid(){document.getElementById('tgrid').innerHTML=THEMES.map(t=>`<div class="tp ${S.prefs.themeId===t.id?'on':''}" onclick="pickTheme('${t.id}')"><div class="tp-prev"><div class="tp-dot" style="background:${t.bg};border:1px solid #ccc"></div><div class="tp-dot" style="background:${t.surf};border:1px solid #ccc"></div><div class="tp-dot" style="background:${t.ac}"></div></div><div class="tp-lbl">${t.label}</div></div>`).join('');}
 function pickTheme(id){S.prefs.themeId=id;S.prefs.cc={};persist();applyPrefs();}
 function renderCCols(){const th=THEMES.find(t=>t.id===S.prefs.themeId)||THEMES[0];document.getElementById('ccrow').innerHTML=CCOLS.map(c=>{const def=S.prefs.cc[c.id]||(c.id==='ac'?th.ac:c.id==='bg'?th.bg:c.id==='surf'?th.surf:c.id==='tx'?th.tx:th.bd);return`<div class="cpick"><input type="color" value="${def}" oninput="setCC('${c.id}',this.value)"><label>${c.l}</label></div>`;}).join('');}
