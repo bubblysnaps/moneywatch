@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="icon" type="image/x-icon" href="https://bubblysnaps.github.io/moneywatch/favicon.ico">
 <link rel="apple-touch-icon" sizes="180x180" href="https://bubblysnaps.github.io/moneywatch/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://bubblysnaps.github.io/moneywatch/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="https://bubblysnaps.github.io/moneywatch/favicon-16x16.png">
@@ -8,7 +9,8 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>MoneyWatch v18</title>
+<title>MoneyWatch v19</title>
+
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&family=Poppins:wght@300;400;500;600&family=Nunito:wght@300;400;600;700&family=Manrope:wght@300;400;500;600&family=Figtree:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Sora:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&family=Lato:wght@300;400;700&family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;500;600&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
@@ -278,6 +280,38 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
 .rcpt-lb-del{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);background:var(--dn);color:#fff;border:none;border-radius:10px;padding:9px 20px;font-size:13px;font-weight:600;font-family:var(--f);cursor:pointer;display:flex;align-items:center;gap:7px}
 .rcpt-lb-del:hover{filter:brightness(1.1)}
 .rcpt-lb-info{position:absolute;bottom:68px;left:50%;transform:translateX(-50%);font-size:12px;color:rgba(255,255,255,.6);white-space:nowrap}
+/* ── HOME BUTTON (standalone above nav) ──────────────── */
+.home-btn-row{padding:8px 0 0}
+.home-btn{width:100%;padding:10px 16px;border:none;background:var(--surf);border-radius:var(--rl);font-family:var(--f);font-size:13px;font-weight:600;color:var(--tx2);cursor:pointer;display:flex;align-items:center;gap:10px;box-shadow:var(--sh);border:1px solid var(--bd);transition:all .18s}
+.home-btn:hover{background:var(--surf2);border-color:var(--ac);color:var(--ac)}
+.home-btn.on{background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;border-color:transparent;box-shadow:0 3px 12px rgba(91,106,240,.35)}
+.home-btn.on .home-ico{opacity:1}
+.home-ico{font-size:18px}
+.home-btn-label{flex:1;text-align:left}
+.home-btn-sub{font-size:11px;opacity:.65;font-weight:400}
+/* ── CREDITS ──────────────────────────────────────────── */
+.credit-card{background:var(--surf);border:1.5px solid var(--bd);border-radius:var(--rl);padding:18px;box-shadow:var(--sh);margin-bottom:12px;transition:all .18s;position:relative}
+.credit-card:hover{box-shadow:var(--sh2)}
+.credit-card.cr-paid{opacity:.55}
+.credit-card.cr-overdue{border-color:rgba(220,38,38,.45)}
+.cr-header{display:flex;align-items:flex-start;gap:11px;margin-bottom:12px}
+.cr-icon{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;background:var(--surf2);border:1px solid var(--bd)}
+.cr-meta{flex:1;min-width:0}
+.cr-name{font-size:16px;font-weight:700}
+.cr-sub{font-size:12px;color:var(--tx3);margin-top:3px;display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.cr-amount{font-size:22px;font-weight:700;flex-shrink:0}
+.cr-amount.unpaid{color:var(--dn)}
+.cr-amount.paid{color:var(--ok)}
+.cr-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+@media(min-width:480px){.cr-info-grid{grid-template-columns:repeat(3,1fr)}}
+.cr-info-box{background:var(--surf2);border:1px solid var(--bd);border-radius:9px;padding:8px 10px}
+.cr-info-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--tx3);margin-bottom:3px}
+.cr-info-val{font-size:13px;font-weight:600;color:var(--tx)}
+.cr-purpose{font-size:13px;color:var(--tx2);background:var(--surf2);border-radius:9px;padding:8px 11px;margin-bottom:10px;border:1px solid var(--bd);line-height:1.5}
+.cr-badge{font-size:10px;font-weight:700;padding:2px 9px;border-radius:100px;text-transform:uppercase;letter-spacing:.4px}
+.cr-badge.unpaid{background:var(--dnbg);color:var(--dn);border:1px solid rgba(220,38,38,.2)}
+.cr-badge.paid{background:var(--okbg);color:var(--okdk);border:1px solid rgba(22,163,74,.2)}
+.cr-actions{display:flex;gap:7px;flex-wrap:wrap}
 </style>
 <body>
 
@@ -498,8 +532,14 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
   </div>
 </div>
 <div class="nav-sticky">
-  <nav class="nav">
-    <button class="nb on" id="nb-home" onclick="go('home')"><span class="ico">🏠</span>Home</button>
+  <div class="home-btn-row">
+    <button class="home-btn on" id="home-btn" onclick="go('home')">
+      <span class="home-ico">🏠</span>
+      <span class="home-btn-label">Home</span>
+      <span class="home-btn-sub" id="home-btn-sub">Dashboard</span>
+    </button>
+  </div>
+  <nav class="nav" style="margin-top:6px">
     <button class="nb" id="nb-list" onclick="go('list')"><span class="ico">📋</span>List</button>
     <button class="nb" id="nb-budget" onclick="go('budget')"><span class="ico">🎯</span>Budget</button>
     <button class="nb" id="nb-savings" onclick="go('savings')"><span class="ico">🐷</span>Savings</button>
@@ -508,6 +548,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
     <button class="nb" id="nb-cats" onclick="go('cats')"><span class="ico">🏷</span>Categories</button>
     <button class="nb" id="nb-wishlist" onclick="go('wishlist')"><span class="ico">🛒</span>Wishlist</button>
     <button class="nb" id="nb-bills" onclick="go('bills')"><span class="ico">🧾</span>Bills</button>
+    <button class="nb" id="nb-credits" onclick="go('credits')"><span class="ico">💳</span>Credits</button>
     <button class="nb" id="nb-income" onclick="go('income')"><span class="ico">💵</span>Income</button>
   </nav>
   <div class="add-fab-row"><button class="add-fab" onclick="openAddModal()" title="Add expense">＋</button></div>
@@ -625,6 +666,25 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
     <button class="ft"    id="billf-paid"     onclick="setBillFilter('paid')"     style="padding:4px 13px;font-size:12px">Paid</button>
   </div>
   <div id="bill-list"></div>
+</div>
+
+<!-- CREDITS -->
+<div id="sec-credits" class="sec">
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px">
+    <div>
+      <h2 style="font-size:20px;font-weight:700">💳 Credits</h2>
+      <div style="font-size:13px;color:var(--tx3);margin-top:2px">Track money you borrowed or credit taken</div>
+    </div>
+    <button class="btn bp" onclick="openCreditModal()">＋ Add credit</button>
+  </div>
+  <div class="mets f4" id="cr-mets" style="margin-bottom:18px"></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center">
+    <span style="font-size:12px;font-weight:600;color:var(--tx3);text-transform:uppercase;letter-spacing:.5px">Filter:</span>
+    <button class="ft on" id="crf-all"    onclick="setCrFilter('all')"    style="padding:4px 13px;font-size:12px">All</button>
+    <button class="ft"    id="crf-unpaid" onclick="setCrFilter('unpaid')" style="padding:4px 13px;font-size:12px">Unpaid</button>
+    <button class="ft"    id="crf-paid"   onclick="setCrFilter('paid')"   style="padding:4px 13px;font-size:12px">Paid</button>
+  </div>
+  <div id="cr-list"></div>
 </div>
 
 <!-- INCOME -->
@@ -875,6 +935,57 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
   </div>
 </div>
 
+<!-- CREATE / EDIT CREDIT MODAL -->
+<div class="overlay" id="cr-overlay">
+  <div class="modal-box" style="max-width:500px">
+    <div class="modal-header"><div class="modal-title" id="crm-title">💳 New credit</div><button class="modal-close" onclick="closeCreditModal()">✕</button></div>
+    <input type="hidden" id="crm-id">
+    <div class="fg2">
+      <div><label>Date credited</label><input type="date" id="crm-date"></div>
+      <div><label>Total amount</label><input type="number" id="crm-amt" placeholder="0.00" min="0" step="0.01"></div>
+    </div>
+    <div style="margin-bottom:12px">
+      <label>From (source)</label>
+      <div style="display:flex;gap:7px">
+        <select id="crm-source-sel" style="flex:1" onchange="crSourceSelChange()">
+          <option value="">— Type manually —</option>
+        </select>
+      </div>
+      <input id="crm-source-txt" placeholder="e.g. BDO, GCash, Family, Friend" style="margin-top:7px">
+    </div>
+    <div style="margin-bottom:12px"><label>What was it used for?</label><textarea id="crm-purpose" rows="3" placeholder="e.g. Emergency home repair, Medical bill, Travel expenses…"></textarea></div>
+    <div class="fg2">
+      <div><label>Budget category</label><select id="crm-bcat"></select></div>
+      <div><label>Expense category</label><select id="crm-cat"></select></div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:9px"><button class="btn bg2" onclick="closeCreditModal()">Cancel</button><button class="btn bp" onclick="saveCreditModal()">✓ Save</button></div>
+    <div id="crm-msg" class="msg"></div>
+  </div>
+</div>
+
+<!-- MARK CREDIT AS PAID MODAL -->
+<div class="overlay" id="crpay-overlay">
+  <div class="modal-box" style="max-width:420px">
+    <div class="modal-header"><div class="modal-title">✅ Mark credit as paid</div><button class="modal-close" onclick="closeCrPay()">✕</button></div>
+    <input type="hidden" id="crpay-id">
+    <div style="background:var(--surf2);border:1px solid var(--bd);border-radius:11px;padding:14px;margin-bottom:16px">
+      <div style="font-size:13px;color:var(--tx2);margin-bottom:6px">Marking as paid:</div>
+      <div id="crpay-summary" style="font-size:15px;font-weight:600;color:var(--tx)"></div>
+    </div>
+    <div class="fg2">
+      <div><label>Date paid</label><input type="date" id="crpay-date"></div>
+      <div><label>Amount paid</label><input type="number" id="crpay-amt" placeholder="0.00" min="0" step="0.01"></div>
+    </div>
+    <div style="margin-bottom:12px"><label>Payment notes</label><input id="crpay-notes" placeholder="e.g. Paid via bank transfer"></div>
+    <div class="tog-row" style="margin-bottom:16px">
+      <label class="tw"><input type="checkbox" id="crpay-addexp" checked><span class="tt"></span></label>
+      <div><div style="font-size:14px;font-weight:500">Add as expense</div><div style="font-size:12px;color:var(--tx3)">Record this payment in your expense list</div></div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:9px"><button class="btn bg2" onclick="closeCrPay()">Cancel</button><button class="btn bp" onclick="confirmCrPay()">✓ Mark paid</button></div>
+    <div id="crpay-msg" class="msg"></div>
+  </div>
+</div>
+
 <!-- SOURCE PICKER MODAL (Drive vs Local) -->
 <div class="overlay" id="src-pick-overlay">
   <div class="sbox" style="max-width:380px">
@@ -949,7 +1060,7 @@ const DEFBC=[
   {id:'personal',name:'Personal',icon:'👤',color:'#5b6af0',limit:0,desc:'Personal care, clothing, entertainment',locked:true},
   {id:'home',name:'Home',icon:'🏠',color:'#16a34a',limit:0,desc:'Rent, utilities, groceries, household',locked:true}
 ];
-const DS={expenses:[],categories:['Credit card','Grocery','School','Utilities','Transport'],budgetCats:JSON.parse(JSON.stringify(DEFBC)),savings:[],incomeData:{},wishlists:[],bills:[],prefs:{name:'',currency:'₱',themeId:'indigo',cc:{},font:"'Inter',system-ui,sans-serif",fw:'400',fs:'15px',tz:'Asia/Manila',cf:'12',autosave:true,incLock:false,incPIN:''}};
+const DS={expenses:[],categories:['Credit card','Grocery','School','Utilities','Transport'],budgetCats:JSON.parse(JSON.stringify(DEFBC)),savings:[],incomeData:{},wishlists:[],bills:[],credits:[],prefs:{name:'',currency:'₱',themeId:'indigo',cc:{},font:"'Inter',system-ui,sans-serif",fw:'400',fs:'15px',tz:'Asia/Manila',cf:'12',autosave:true,incLock:false,incPIN:''}};
 let S=JSON.parse(JSON.stringify(DS));
 let AT='home',SV='overview',VY=new Date().getFullYear(),VM=new Date().getMonth();
 let svCatGroup='default'; // 'default' | 'category' | 'date'
@@ -1410,7 +1521,7 @@ function loadFile(e){
     catch(err){showMsg('pmsg','Invalid file.',false);}
   };r.readAsText(f);e.target.value='';
 }
-function _applyLoadedData(d){['expenses','categories','budgetCats','savings','incomeData','wishlists','bills'].forEach(k=>{if(d[k])S[k]=d[k];});if(d.prefs)S.prefs=Object.assign(S.prefs,d.prefs);}
+function _applyLoadedData(d){['expenses','categories','budgetCats','savings','incomeData','wishlists','bills','credits'].forEach(k=>{if(d[k])S[k]=d[k];});if(d.prefs)S.prefs=Object.assign(S.prefs,d.prefs);}
 
 async function sessLoad(){
   document.getElementById('sess-overlay').classList.remove('show');
@@ -2132,8 +2243,14 @@ function closePin(){document.getElementById('pin-overlay').classList.remove('sho
 // NAV
 function go(tab){
   if(tab==='income'&&S.prefs.incLock&&S.prefs.incPIN&&!incUnlocked){openPin('🔒 Income PIN required','Enter your income 6-digit PIN.',()=>{incUnlocked=true;go('income');});return;}
-  AT=tab;document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));const btn=document.getElementById('nb-'+tab);if(btn)btn.classList.add('on');document.querySelectorAll('.sec').forEach(s=>s.classList.remove('vis'));const sec=document.getElementById('sec-'+tab);if(sec)sec.classList.add('vis');
-  if(tab==='home')renderHome();else if(tab==='list')renderList();else if(tab==='budget')renderBudget();else if(tab==='savings')renderSavings();else if(tab==='summary')renderSummary();else if(tab==='compare')renderCompare();else if(tab==='cats')renderCats();else if(tab==='income')renderIncome();else if(tab==='wishlist')renderWishlist();else if(tab==='bills')renderBills();
+  AT=tab;
+  // Home button
+  const homeBtn=document.getElementById('home-btn');if(homeBtn)homeBtn.classList.toggle('on',tab==='home');
+  const sub=document.getElementById('home-btn-sub');if(sub)sub.textContent=tab==='home'?new Date().toLocaleDateString('en-PH',{weekday:'short',month:'short',day:'numeric'}):'Tap for dashboard';
+  // Tab buttons
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));const btn=document.getElementById('nb-'+tab);if(btn)btn.classList.add('on');
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('vis'));const sec=document.getElementById('sec-'+tab);if(sec)sec.classList.add('vis');
+  if(tab==='home')renderHome();else if(tab==='list')renderList();else if(tab==='budget')renderBudget();else if(tab==='savings')renderSavings();else if(tab==='summary')renderSummary();else if(tab==='compare')renderCompare();else if(tab==='cats')renderCats();else if(tab==='income')renderIncome();else if(tab==='wishlist')renderWishlist();else if(tab==='bills')renderBills();else if(tab==='credits')renderCredits();
 }
 function shiftM(d){VM+=d;if(VM>11){VM=0;VY++;}if(VM<0){VM=11;VY--;}calSelectedDate=null;svCatGroup='default';if(AT==='list'){document.getElementById('cal-day-panel').style.display='none';renderList();}else if(AT==='budget')renderBudget();else if(AT==='summary')renderSummary();else if(AT==='income')renderIncome();}
 
@@ -3016,6 +3133,173 @@ function rcptStorageKB(){
   const total=S.expenses.reduce((s,e)=>s+(e.receipt?e.receipt.length:0),0);
   return Math.round(total/1024);
 }
+
+// ══════════════════════════════════════════════════════
+// CREDITS
+// ══════════════════════════════════════════════════════
+let crFilter='all';
+function setCrFilter(f){crFilter=f;['all','unpaid','paid'].forEach(k=>{const b=document.getElementById('crf-'+k);if(b)b.classList.toggle('on',k===f);});renderCredits();}
+function crById(id){return(S.credits||[]).find(c=>c.id===id);}
+
+// ── Source dropdown: populate from Savings ─────────────
+function crPopSources(){
+  const sel=document.getElementById('crm-source-sel');if(!sel)return;
+  sel.innerHTML='<option value="">— Type manually —</option>';
+  (S.savings||[]).forEach(sv=>{const o=document.createElement('option');o.value=sv.name;o.textContent='🐷 '+sv.name+' ('+fa(sv.amount)+')';sel.appendChild(o);});
+}
+function crSourceSelChange(){
+  const sel=document.getElementById('crm-source-sel');
+  const txt=document.getElementById('crm-source-txt');
+  if(sel.value){txt.value=sel.value;txt.style.display='none';}
+  else{txt.value='';txt.style.display='block';}
+}
+
+// ── Render ─────────────────────────────────────────────
+function renderCredits(){
+  if(!S.credits)S.credits=[];
+  const all=S.credits;
+  const unpaid=all.filter(c=>!c.paid);
+  const totalUnpaid=unpaid.reduce((s,c)=>s+c.amount,0);
+  const totalAll=all.reduce((s,c)=>s+c.amount,0);
+  const paidAmt=all.filter(c=>c.paid).reduce((s,c)=>s+(c.paidAmt||c.amount),0);
+
+  document.getElementById('cr-mets').innerHTML=`
+    <div class="met"><div class="ml">Total credits</div><div class="mv">${all.length}</div><div class="ms">${unpaid.length} unpaid</div></div>
+    <div class="met"><div class="ml">Total borrowed</div><div class="mv">${fa(totalAll)}</div><div class="ms">all time</div></div>
+    <div class="met dn"><div class="ml">Outstanding</div><div class="mv">${fa(totalUnpaid)}</div><div class="ms">to be paid</div></div>
+    <div class="met ok"><div class="ml">Paid back</div><div class="mv">${fa(paidAmt)}</div><div class="ms">${all.filter(c=>c.paid).length} settled</div></div>`;
+
+  const filtered=all.filter(c=>{
+    if(crFilter==='unpaid')return!c.paid;
+    if(crFilter==='paid')return c.paid;
+    return true;
+  }).sort((a,b)=>b.date.localeCompare(a.date));
+
+  const cont=document.getElementById('cr-list');
+  if(!filtered.length){cont.innerHTML='<div class="empty" style="padding:3rem">💳 No credits yet. Tap ＋ Add credit to start tracking.</div>';return;}
+
+  cont.innerHTML=filtered.map(c=>{
+    const bc=c.budgetCat?bcById(c.budgetCat):null;
+    return`<div class="credit-card${c.paid?' cr-paid':''}">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+        <span class="cr-badge ${c.paid?'paid':'unpaid'}">${c.paid?'✓ Paid':'Unpaid'}</span>
+        <span style="font-size:12px;color:var(--tx3)">📅 ${new Date(c.date+'T00:00:00').toLocaleDateString('en-PH',{month:'long',day:'numeric',year:'numeric'})}</span>
+      </div>
+      <div class="cr-header">
+        <div class="cr-icon">${bc?bc.icon:'💳'}</div>
+        <div class="cr-meta">
+          <div class="cr-name">${c.source||'Unknown source'}</div>
+          <div class="cr-sub">
+            ${bc?`<span class="bcat-pill" style="background:${bc.color}22;color:${bc.color}">${bc.icon} ${bc.name}</span>`:''}
+            ${c.category?`<span class="cpill">${c.category}</span>`:''}
+          </div>
+        </div>
+        <div class="cr-amount ${c.paid?'paid':'unpaid'}">${fa(c.amount)}</div>
+      </div>
+      ${c.purpose?`<div class="cr-purpose">📝 ${c.purpose}</div>`:''}
+      <div class="cr-info-grid">
+        <div class="cr-info-box"><div class="cr-info-lbl">Date credited</div><div class="cr-info-val">${new Date(c.date+'T00:00:00').toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'})}</div></div>
+        <div class="cr-info-box"><div class="cr-info-lbl">Amount</div><div class="cr-info-val">${fa(c.amount)}</div></div>
+        ${c.paid?`<div class="cr-info-box"><div class="cr-info-lbl">Paid on</div><div class="cr-info-val" style="color:var(--ok)">${new Date(c.paidDate+'T00:00:00').toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'})}</div></div>`:''}
+        ${c.paid&&c.paidAmt?`<div class="cr-info-box"><div class="cr-info-lbl">Paid amount</div><div class="cr-info-val" style="color:var(--ok)">${fa(c.paidAmt)}</div></div>`:''}
+        ${c.paidNotes?`<div class="cr-info-box" style="grid-column:1/-1"><div class="cr-info-lbl">Payment notes</div><div class="cr-info-val">${c.paidNotes}</div></div>`:''}
+      </div>
+      <div class="cr-actions">
+        ${!c.paid?`<button class="btn bp" style="font-size:13px;padding:8px 16px" onclick="openCrPay('${c.id}')">✅ Mark as paid</button>`:''}
+        <button class="btn bg2" style="font-size:13px;padding:8px 14px" onclick="openCreditModal('${c.id}')">✏️ Edit</button>
+        ${c.paid?`<button class="btn bg2" style="font-size:13px;padding:8px 14px" onclick="crUnpay('${c.id}')">↺ Mark unpaid</button>`:''}
+        <button class="bdel" onclick="deleteCr('${c.id}')">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── Create / Edit Credit Modal ────────────────────────
+function openCreditModal(editId){
+  document.getElementById('crm-id').value=editId||'';
+  // Populate selects
+  const bcSel=document.getElementById('crm-bcat');
+  bcSel.innerHTML='<option value="">— No budget category —</option>'+S.budgetCats.map(b=>`<option value="${b.id}">${b.icon} ${b.name}</option>`).join('');
+  const cSel=document.getElementById('crm-cat');
+  cSel.innerHTML='<option value="">— Select category —</option>'+S.categories.map(c=>`<option value="${c}">${c}</option>`).join('');
+  crPopSources();
+  if(editId){
+    const c=crById(editId);if(!c)return;
+    document.getElementById('crm-date').value=c.date;
+    document.getElementById('crm-amt').value=c.amount;
+    document.getElementById('crm-source-txt').value=c.source||'';
+    document.getElementById('crm-source-sel').value='';
+    document.getElementById('crm-source-txt').style.display='block';
+    document.getElementById('crm-purpose').value=c.purpose||'';
+    bcSel.value=c.budgetCat||'';cSel.value=c.category||'';
+    document.getElementById('crm-title').textContent='✏️ Edit credit';
+  } else {
+    document.getElementById('crm-date').value=new Date().toISOString().slice(0,10);
+    document.getElementById('crm-amt').value='';
+    document.getElementById('crm-source-txt').value='';
+    document.getElementById('crm-source-sel').value='';
+    document.getElementById('crm-source-txt').style.display='block';
+    document.getElementById('crm-purpose').value='';
+    bcSel.value='';cSel.value='';
+    document.getElementById('crm-title').textContent='💳 New credit';
+  }
+  document.getElementById('crm-msg').style.display='none';
+  document.getElementById('cr-overlay').classList.add('show');
+  setTimeout(()=>document.getElementById('crm-amt').focus(),100);
+}
+function closeCreditModal(){document.getElementById('cr-overlay').classList.remove('show');}
+function saveCreditModal(){
+  const date=document.getElementById('crm-date').value;
+  const amount=parseFloat(document.getElementById('crm-amt').value);
+  const source=document.getElementById('crm-source-txt').value.trim()||document.getElementById('crm-source-sel').value.trim();
+  const purpose=document.getElementById('crm-purpose').value.trim();
+  const budgetCat=document.getElementById('crm-bcat').value||null;
+  const category=document.getElementById('crm-cat').value||'';
+  if(!date){showMsg('crm-msg','Select a date.',false);return;}
+  if(!amount||amount<=0){showMsg('crm-msg','Enter a valid amount.',false);return;}
+  if(!source){showMsg('crm-msg','Enter where the credit is from.',false);return;}
+  if(!S.credits)S.credits=[];
+  const eid=document.getElementById('crm-id').value;
+  if(eid){const c=crById(eid);if(c)Object.assign(c,{date,amount,source,purpose,budgetCat,category});}
+  else{S.credits.push({id:'cr_'+Date.now(),date,amount,source,purpose,budgetCat,category,paid:false,paidDate:null,paidAmt:null,paidNotes:''});}
+  persist();closeCreditModal();renderCredits();
+}
+
+// ── Mark as paid ──────────────────────────────────────
+function openCrPay(id){
+  const c=crById(id);if(!c)return;
+  document.getElementById('crpay-id').value=id;
+  document.getElementById('crpay-date').value=new Date().toISOString().slice(0,10);
+  document.getElementById('crpay-amt').value=c.amount.toFixed(2);
+  document.getElementById('crpay-notes').value='';
+  document.getElementById('crpay-addexp').checked=true;
+  const bc=c.budgetCat?bcById(c.budgetCat):null;
+  document.getElementById('crpay-summary').innerHTML=
+    `<b>${c.source}</b> — ${fa(c.amount)}`+
+    (bc?` <span class="bcat-pill" style="background:${bc.color}22;color:${bc.color};margin-left:6px">${bc.icon} ${bc.name}</span>`:'');
+  document.getElementById('crpay-msg').style.display='none';
+  document.getElementById('crpay-overlay').classList.add('show');
+  setTimeout(()=>document.getElementById('crpay-amt').focus(),100);
+}
+function closeCrPay(){document.getElementById('crpay-overlay').classList.remove('show');}
+function confirmCrPay(){
+  const id=document.getElementById('crpay-id').value;
+  const c=crById(id);if(!c){showMsg('crpay-msg','Credit not found.',false);return;}
+  const date=document.getElementById('crpay-date').value;
+  const amt=parseFloat(document.getElementById('crpay-amt').value);
+  const notes=document.getElementById('crpay-notes').value.trim();
+  const addExp=document.getElementById('crpay-addexp').checked;
+  if(!date){showMsg('crpay-msg','Select a payment date.',false);return;}
+  if(!amt||amt<=0){showMsg('crpay-msg','Enter the amount paid.',false);return;}
+  c.paid=true;c.paidDate=date;c.paidAmt=amt;c.paidNotes=notes;
+  if(addExp){
+    S.expenses.push({amount:amt,category:c.category||S.categories[0]||'',date,shop:c.source,description:'Credit repayment: '+c.source+(c.purpose?' — '+c.purpose.slice(0,40):''),budgetCat:c.budgetCat||null});
+  }
+  persist();closeCrPay();renderCredits();
+  const fl=document.getElementById('sfl');fl.textContent='✓ Credit marked paid'+(addExp?' & expense added':'');fl.classList.add('show');setTimeout(()=>{fl.classList.remove('show');setTimeout(()=>fl.textContent='✓ Saved',400);},2200);
+}
+function crUnpay(id){const c=crById(id);if(!c)return;if(!confirm('Mark this credit as unpaid? The expense entry already added remains.'))return;c.paid=false;c.paidDate=null;c.paidAmt=null;c.paidNotes='';persist();renderCredits();}
+function deleteCr(id){if(!confirm('Remove this credit record?'))return;S.credits=S.credits.filter(c=>c.id!==id);persist();renderCredits();}
 
 // INIT
 document.getElementById('wdate').value=new Date().toISOString().slice(0,10);
