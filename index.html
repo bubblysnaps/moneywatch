@@ -9,7 +9,7 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>MoneyWatch v20</title>
+<title>MoneyWatch v20.1</title>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&family=Poppins:wght@300;400;500;600&family=Nunito:wght@300;400;600;700&family=Manrope:wght@300;400;500;600&family=Figtree:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Sora:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&family=Lato:wght@300;400;700&family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;500;600&display=swap');
@@ -244,11 +244,31 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
 .amt-eye{font-size:13px;color:var(--tx3);transition:opacity .2s;flex-shrink:0}
 .amt-hidden:hover .amt-eye{opacity:1;color:var(--ac)}
 /* ── BILLS ────────────────────────────────────────────── */
-.bill-card{background:var(--surf);border:1.5px solid var(--bd);border-radius:var(--rl);padding:18px;box-shadow:var(--sh);margin-bottom:12px;transition:all .18s;position:relative}
-.bill-card:hover{box-shadow:var(--sh2)}
-.bill-card.bill-overdue{border-color:rgba(220,38,38,.4);background:var(--dnbg)}
-.bill-card.bill-due-soon{border-color:rgba(217,119,6,.4);background:var(--wnbg)}
-.bill-card.bill-paid{opacity:.6}
+/* ── UTILITY CARDS ────────────────────────────────────── */
+.util-card{background:var(--surf);border:1.5px solid var(--bd);border-radius:var(--rl);padding:18px;box-shadow:var(--sh);margin-bottom:14px;transition:all .18s}
+.util-card:hover{box-shadow:var(--sh2)}
+.util-card-header{display:flex;align-items:flex-start;gap:11px;margin-bottom:14px}
+.util-icon{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.util-meta{flex:1;min-width:0}
+.util-name{font-size:16px;font-weight:700}
+.util-sub{font-size:12px;color:var(--tx3);margin-top:4px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+/* Bill entries table */
+.bill-entries-header{display:grid;grid-template-columns:auto 1fr auto auto auto;gap:6px;padding:5px 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--tx3);border-bottom:1px solid var(--bd);margin-bottom:5px}
+.bill-entry-row{display:grid;grid-template-columns:auto 1fr auto auto auto;gap:6px;align-items:center;padding:8px 10px;border-radius:9px;background:var(--surf2);border:1px solid var(--bd);margin-bottom:5px;transition:all .15s}
+.bill-entry-row:hover{border-color:var(--bd2)}
+.bill-entry-row.paid{background:var(--okbg);border-color:rgba(22,163,74,.2);opacity:.7}
+.bill-entry-row.overdue{background:var(--dnbg);border-color:rgba(220,38,38,.25)}
+.bill-entry-row.due-soon{background:var(--wnbg);border-color:rgba(217,119,6,.25)}
+.bill-entry-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:100px;white-space:nowrap}
+.bill-entry-badge.paid{background:var(--okbg);color:var(--okdk);border:1px solid rgba(22,163,74,.2)}
+.bill-entry-badge.overdue{background:var(--dnbg);color:var(--dn)}
+.bill-entry-badge.due-soon{background:var(--wnbg);color:var(--wn)}
+.bill-entry-badge.upcoming{background:var(--acbg);color:var(--ac)}
+.bill-entry-period{font-size:12px;color:var(--tx2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bill-entry-due{font-size:12px;color:var(--tx3);white-space:nowrap}
+.bill-entry-amt{font-size:13px;font-weight:700;color:var(--tx);white-space:nowrap;text-align:right}
+.bill-entry-actions{display:flex;gap:3px;justify-content:flex-end}
+@media(max-width:480px){.bill-entries-header{display:none}.bill-entry-row{grid-template-columns:auto 1fr auto;row-gap:3px}.bill-entry-period{grid-column:2/3}.bill-entry-due{display:none}.bill-entry-amt{text-align:left}.bill-entry-actions{grid-column:3/4;grid-row:1/3}}
 .bill-status-bar{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
 .bill-badge{font-size:10px;font-weight:700;padding:2px 9px;border-radius:100px;text-transform:uppercase;letter-spacing:.4px}
 .bill-badge.overdue{background:var(--dnbg);color:var(--dn);border:1px solid rgba(220,38,38,.25)}
@@ -681,18 +701,11 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
   <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px">
     <div>
       <h2 style="font-size:20px;font-weight:700">🧾 Bills</h2>
-      <div style="font-size:13px;color:var(--tx3);margin-top:2px">Track recurring bills and one-time payments</div>
+      <div style="font-size:13px;color:var(--tx3);margin-top:2px">Track utilities and recurring bill payments by account</div>
     </div>
-    <button class="btn bp" onclick="openBillModal()">＋ Add bill</button>
+    <button class="btn bp" onclick="openUtilModal()">＋ Add utility</button>
   </div>
   <div class="mets f4" id="bill-mets" style="margin-bottom:18px"></div>
-  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center">
-    <span style="font-size:12px;font-weight:600;color:var(--tx3);text-transform:uppercase;letter-spacing:.5px">Filter:</span>
-    <button class="ft on" id="billf-all"      onclick="setBillFilter('all')"      style="padding:4px 13px;font-size:12px">All</button>
-    <button class="ft"    id="billf-unpaid"   onclick="setBillFilter('unpaid')"   style="padding:4px 13px;font-size:12px">Unpaid</button>
-    <button class="ft"    id="billf-overdue"  onclick="setBillFilter('overdue')"  style="padding:4px 13px;font-size:12px">Overdue</button>
-    <button class="ft"    id="billf-paid"     onclick="setBillFilter('paid')"     style="padding:4px 13px;font-size:12px">Paid</button>
-  </div>
   <div id="bill-list"></div>
 </div>
 
@@ -1014,6 +1027,80 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
   </div>
 </div>
 
+<!-- ADD / EDIT UTILITY MODAL -->
+<div class="overlay" id="util-overlay">
+  <div class="modal-box" style="max-width:480px">
+    <div class="modal-header"><div class="modal-title" id="utilm-title">🧾 New utility</div><button class="modal-close" onclick="closeUtilModal()">✕</button></div>
+    <input type="hidden" id="utilm-id">
+    <div class="fg2">
+      <div><label>Utility name</label><input id="utilm-name" placeholder="e.g. Electricity, Water, Netflix" list="util-type-list" autocomplete="off"><datalist id="util-type-list"></datalist></div>
+      <div><label>Icon (emoji)</label><input id="utilm-icon" placeholder="💡" maxlength="4" style="font-size:22px;text-align:center"></div>
+    </div>
+    <div class="fg2">
+      <div><label>Reference / Account number</label><input id="utilm-ref" placeholder="e.g. 1234-5678-90"></div>
+      <div><label>Budget category</label><select id="utilm-bcat"></select></div>
+    </div>
+    <div class="fg2">
+      <div><label>Expense category</label><select id="utilm-cat"></select></div>
+      <div><label>Typical amount</label><input type="number" id="utilm-amt" placeholder="0.00" min="0" step="0.01"></div>
+    </div>
+    <div style="margin-bottom:16px"><label>Description</label><input id="utilm-desc" placeholder="e.g. Meralco residential, PLDT Fiber 100Mbps"></div>
+    <div style="display:flex;justify-content:flex-end;gap:9px"><button class="btn bg2" onclick="closeUtilModal()">Cancel</button><button class="btn bp" onclick="saveUtilModal()">✓ Save utility</button></div>
+    <div id="utilm-msg" class="msg"></div>
+  </div>
+</div>
+
+<!-- ADD / EDIT BILL ENTRY MODAL -->
+<div class="overlay" id="billentry-overlay">
+  <div class="modal-box" style="max-width:480px">
+    <div class="modal-header"><div class="modal-title" id="bem-title">Add bill entry</div><button class="modal-close" onclick="closeBillEntry()">✕</button></div>
+    <input type="hidden" id="bem-utilid">
+    <input type="hidden" id="bem-entryid">
+    <div style="background:var(--surf2);border:1px solid var(--bd);border-radius:10px;padding:10px 13px;margin-bottom:14px;font-size:13px;color:var(--tx2)" id="bem-util-info"></div>
+    <div class="fg2">
+      <div><label>Due date</label><input type="date" id="bem-due"></div>
+      <div><label>Amount due</label><input type="number" id="bem-amt" placeholder="0.00" min="0" step="0.01"></div>
+    </div>
+    <div class="fg2">
+      <div><label>Billing period</label><input id="bem-period" placeholder="e.g. June 2025, Jul 1–31"></div>
+      <div><label>Reminder <span style="font-weight:400;color:var(--tx3);font-size:11px">(days before due)</span></label>
+        <select id="bem-remind">
+          <option value="0">No reminder</option>
+          <option value="1">1 day before</option>
+          <option value="2">2 days before</option>
+          <option value="3" selected>3 days before</option>
+          <option value="5">5 days before</option>
+          <option value="7">1 week before</option>
+          <option value="14">2 weeks before</option>
+        </select>
+      </div>
+    </div>
+    <div style="margin-bottom:16px"><label>Notes</label><input id="bem-notes" placeholder="e.g. Reading: 1234 kWh"></div>
+    <div style="display:flex;justify-content:flex-end;gap:9px"><button class="btn bg2" onclick="closeBillEntry()">Cancel</button><button class="btn bp" onclick="saveBillEntry()">✓ Save</button></div>
+    <div id="bem-msg" class="msg"></div>
+  </div>
+</div>
+
+<!-- MARK BILL ENTRY AS PAID MODAL -->
+<div class="overlay" id="billpay-overlay">
+  <div class="modal-box" style="max-width:420px">
+    <div class="modal-header"><div class="modal-title">✅ Mark bill as paid</div><button class="modal-close" onclick="closeBillPay()">✕</button></div>
+    <input type="hidden" id="billpay-utilid">
+    <input type="hidden" id="billpay-entryid">
+    <div style="background:var(--surf2);border:1px solid var(--bd);border-radius:11px;padding:14px;margin-bottom:16px">
+      <div style="font-size:13px;color:var(--tx2);margin-bottom:6px">Adding expense for:</div>
+      <div id="billpay-summary" style="font-size:15px;font-weight:600;color:var(--tx)"></div>
+    </div>
+    <div class="fg2">
+      <div><label>Date paid</label><input type="date" id="billpay-date"></div>
+      <div><label>Amount paid</label><input type="number" id="billpay-amt" placeholder="0.00" min="0" step="0.01"></div>
+    </div>
+    <div style="margin-bottom:16px"><label>Shop / Provider</label><input id="billpay-shop" placeholder="e.g. Meralco, BDO online" list="shop-list" autocomplete="off"></div>
+    <div style="display:flex;justify-content:flex-end;gap:9px"><button class="btn bg2" onclick="closeBillPay()">Cancel</button><button class="btn bp" onclick="confirmBillPay()">✓ Mark paid & add expense</button></div>
+    <div id="billpay-msg" class="msg"></div>
+  </div>
+</div>
+
 <!-- BILL STATS MODAL -->
 <div class="overlay" id="bstat-overlay">
   <div class="modal-box bstat-modal">
@@ -1024,27 +1111,27 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
       </div>
       <button class="modal-close" onclick="closeBstat()">✕</button>
     </div>
-    <!-- Period selector -->
-    <div class="bstat-period-tabs">
-      <button class="bstat-period-tab on" onclick="setBstatPeriod(3)" id="bstp-3">3 Months</button>
-      <button class="bstat-period-tab" onclick="setBstatPeriod(6)" id="bstp-6">6 Months</button>
-      <button class="bstat-period-tab" onclick="setBstatPeriod(12)" id="bstp-12">1 Year</button>
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+      <div class="bstat-period-tabs" style="flex:1">
+        <button class="bstat-period-tab" onclick="setBstatPeriod(3)"  id="bstp-3">3 Months</button>
+        <button class="bstat-period-tab on" onclick="setBstatPeriod(6)" id="bstp-6">6 Months</button>
+        <button class="bstat-period-tab" onclick="setBstatPeriod(12)" id="bstp-12">1 Year</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <button class="btn bg2 bico" onclick="bstatShiftYear(-1)" title="Previous year" style="font-size:16px">◀</button>
+        <span id="bstat-year-lbl" style="font-size:13px;font-weight:600;min-width:50px;text-align:center"></span>
+        <button class="btn bg2 bico" onclick="bstatShiftYear(1)"  title="Next year"     style="font-size:16px">▶</button>
+      </div>
     </div>
-    <!-- Summary metrics -->
     <div class="bstat-summary-grid" id="bstat-mets"></div>
-    <!-- Bar chart -->
-    <div style="position:relative;height:200px;margin-bottom:16px">
-      <canvas id="bstat-chart"></canvas>
-    </div>
-    <!-- Payment history table -->
+    <div style="position:relative;height:210px;margin-bottom:14px"><canvas id="bstat-chart"></canvas></div>
     <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--tx3);margin-bottom:8px">Payment history</div>
-    <div id="bstat-history" style="max-height:220px;overflow-y:auto"></div>
+    <div id="bstat-history" style="max-height:200px;overflow-y:auto"></div>
     <div style="display:flex;justify-content:flex-end;margin-top:14px">
       <button class="btn bg2" onclick="closeBstat()">Close</button>
     </div>
   </div>
 </div>
-
 <!-- SOURCE PICKER MODAL (Drive vs Local) -->
 <div class="overlay" id="src-pick-overlay">
   <div class="sbox" style="max-width:380px">
@@ -1119,7 +1206,7 @@ const DEFBC=[
   {id:'personal',name:'Personal',icon:'👤',color:'#5b6af0',limit:0,desc:'Personal care, clothing, entertainment',locked:true},
   {id:'home',name:'Home',icon:'🏠',color:'#16a34a',limit:0,desc:'Rent, utilities, groceries, household',locked:true}
 ];
-const DS={expenses:[],categories:['Credit card','Grocery','School','Utilities','Transport'],budgetCats:JSON.parse(JSON.stringify(DEFBC)),savings:[],incomeData:{},wishlists:[],bills:[],credits:[],prefs:{name:'',currency:'₱',themeId:'indigo',cc:{},font:"'Inter',system-ui,sans-serif",fw:'400',fs:'15px',tz:'Asia/Manila',cf:'12',autosave:true,incLock:false,incPIN:''}};
+const DS={expenses:[],categories:['Credit card','Grocery','School','Utilities','Transport'],budgetCats:JSON.parse(JSON.stringify(DEFBC)),savings:[],incomeData:{},wishlists:[],utils:[],credits:[],prefs:{name:'',currency:'₱',themeId:'indigo',cc:{},font:"'Inter',system-ui,sans-serif",fw:'400',fs:'15px',tz:'Asia/Manila',cf:'12',autosave:true,incLock:false,incPIN:''}};
 let S=JSON.parse(JSON.stringify(DS));
 let AT='home',SV='overview',VY=new Date().getFullYear(),VM=new Date().getMonth();
 let svCatGroup='default'; // 'default' | 'category' | 'date'
@@ -1580,7 +1667,14 @@ function loadFile(e){
     catch(err){showMsg('pmsg','Invalid file.',false);}
   };r.readAsText(f);e.target.value='';
 }
-function _applyLoadedData(d){['expenses','categories','budgetCats','savings','incomeData','wishlists','bills','credits'].forEach(k=>{if(d[k])S[k]=d[k];});if(d.prefs)S.prefs=Object.assign(S.prefs,d.prefs);}
+function _applyLoadedData(d){
+  ['expenses','categories','budgetCats','savings','incomeData','wishlists','utils','credits'].forEach(k=>{if(d[k])S[k]=d[k];});
+  // backwards compat: migrate old flat bills[] to utils format
+  if(d.bills&&d.bills.length&&(!S.utils||!S.utils.length)){
+    S.utils=(d.bills||[]).map(b=>({id:'ut_'+b.id,name:b.name,icon:b.icon||'🧾',ref:'',desc:'',budgetCat:b.budgetCat||null,category:b.category||'',typicalAmt:b.amount,entries:b.paid?[{id:'be_'+b.id,due:b.due,amount:b.amount,period:'',remindDays:b.remindDays||3,notes:b.notes||'',paid:true,paidDate:b.paidDate,paidAmt:b.paidAmt||b.amount,shop:b.shop||''}]:[{id:'be_'+b.id,due:b.due,amount:b.amount,period:'',remindDays:b.remindDays||3,notes:b.notes||'',paid:false,paidDate:null,paidAmt:null,shop:''}]}));
+  }
+  if(d.prefs)S.prefs=Object.assign(S.prefs,d.prefs);
+}
 
 async function sessLoad(){
   document.getElementById('sess-overlay').classList.remove('show');
@@ -2856,183 +2950,219 @@ function wlCopy(id){
 // ══════════════════════════════════════════════════════
 // BILLS
 // ══════════════════════════════════════════════════════
-let billFilter='all';
-const FREQ_LABEL={monthly:'Monthly',weekly:'Weekly',quarterly:'Quarterly',annual:'Annual','one-time':'One-time'};
+// ══════════════════════════════════════════════════════
+// BILLS — UTILITY-BASED REDESIGN
+// Each Utility has:  {id, name, icon, ref, desc, budgetCat, category, typicalAmt, entries:[]}
+// Each Entry has:    {id, due, amount, period, notes, remindDays, paid, paidDate, paidAmt, shop}
+// ══════════════════════════════════════════════════════
 
-function setBillFilter(f){
-  billFilter=f;
-  ['all','unpaid','overdue','paid'].forEach(k=>{const b=document.getElementById('billf-'+k);if(b)b.classList.toggle('on',k===f);});
-  renderBills();
-}
+// ── Utility type suggestions ─────────────────────────
+const UTIL_TYPES=['💡 Electricity','💧 Water','🔥 Gas','📱 Mobile','☎️ Landline','📡 Internet','📺 Cable/TV','🏠 Rent','🏘 HOA','🚗 Car Loan','💊 Insurance','🎬 Netflix','🎵 Spotify','☁️ Cloud Storage'];
 
-// ── Helpers ───────────────────────────────────────────
-function billById(id){return(S.bills||[]).find(b=>b.id===id);}
-function daysDiff(dateStr){// positive = future, negative = past
-  const d=new Date(dateStr+'T00:00:00');const today=new Date();today.setHours(0,0,0,0);return Math.round((d-today)/(1000*60*60*24));}
-function billStatus(b){
-  if(b.paid)return'paid';
-  const diff=daysDiff(b.due);
-  if(diff<0)return'overdue';
-  if(diff<=b.remindDays)return'due-soon';
+// ── Helpers ──────────────────────────────────────────
+function utilById(id){return(S.utils||[]).find(u=>u.id===id);}
+function entryById(uid,eid){const u=utilById(uid);return u?u.entries.find(e=>e.id===eid):null;}
+function daysDiff(dateStr){const d=new Date(dateStr+'T00:00:00');const t=new Date();t.setHours(0,0,0,0);return Math.round((d-t)/(86400000));}
+function entryStatus(e){
+  if(e.paid)return'paid';
+  const d=daysDiff(e.due);
+  if(d<0)return'overdue';
+  if(d<=(e.remindDays||3))return'due-soon';
   return'upcoming';
 }
-function billStatusLabel(b){
-  if(b.paid)return{cls:'paid',txt:'✓ Paid'+(b.paidDate?' on '+new Date(b.paidDate+'T00:00:00').toLocaleDateString('en-PH',{month:'short',day:'numeric'}):'')}; 
-  const diff=daysDiff(b.due);
-  if(diff<0)return{cls:'overdue',txt:'Overdue by '+Math.abs(diff)+' day'+(Math.abs(diff)!==1?'s':'')};
-  if(diff===0)return{cls:'due-soon',txt:'Due today!'};
-  if(diff<=b.remindDays)return{cls:'due-soon',txt:'Due in '+diff+' day'+(diff!==1?'s':'')};
-  return{cls:'upcoming',txt:'Due in '+diff+' day'+(diff!==1?'s':'')};
+function entryStatusLabel(e){
+  if(e.paid)return{cls:'paid',txt:'✓ Paid'+(e.paidDate?' '+new Date(e.paidDate+'T00:00:00').toLocaleDateString('en-PH',{month:'short',day:'numeric'}):'')}; 
+  const d=daysDiff(e.due);
+  if(d<0)return{cls:'overdue',txt:'Overdue '+Math.abs(d)+'d'};
+  if(d===0)return{cls:'due-soon',txt:'Due TODAY'};
+  if(d<=(e.remindDays||3))return{cls:'due-soon',txt:'Due in '+d+'d'};
+  return{cls:'upcoming',txt:'Due in '+d+'d'};
 }
 
-// ── Render ─────────────────────────────────────────────
+// ── Render ────────────────────────────────────────────
 function renderBills(){
-  if(!S.bills)S.bills=[];
-  const today=new Date().toISOString().slice(0,10);
-  const all=S.bills;
-  const unpaid=all.filter(b=>!b.paid);
-  const overdue=unpaid.filter(b=>daysDiff(b.due)<0);
-  const dueSoon=unpaid.filter(b=>{const d=daysDiff(b.due);return d>=0&&d<=(b.remindDays||3);});
-  const totalUnpaid=unpaid.reduce((s,b)=>s+b.amount,0);
+  if(!S.utils)S.utils=[];
+  const allEntries=S.utils.flatMap(u=>u.entries||[]);
+  const unpaidAll=allEntries.filter(e=>!e.paid);
+  const overdueAll=allEntries.filter(e=>entryStatus(e)==='overdue');
+  const dueSoonAll=allEntries.filter(e=>entryStatus(e)==='due-soon');
+  const totUnpaid=unpaidAll.reduce((s,e)=>s+e.amount,0);
 
   document.getElementById('bill-mets').innerHTML=`
-    <div class="met"><div class="ml">Total bills</div><div class="mv">${all.length}</div><div class="ms">${unpaid.length} unpaid</div></div>
-    <div class="met ${overdue.length?'dn':''}"><div class="ml">Overdue</div><div class="mv" style="color:${overdue.length?'var(--dn)':'var(--tx)'}">${overdue.length}</div><div class="ms">${overdue.length?'needs attention':'-'}</div></div>
-    <div class="met"><div class="ml">Due soon</div><div class="mv" style="color:${dueSoon.length?'var(--wn)':'var(--tx)'}">${dueSoon.length}</div><div class="ms">${dueSoon.length?'within reminder period':'-'}</div></div>
-    <div class="met"><div class="ml">Unpaid total</div><div class="mv">${totalUnpaid>0?fa(totalUnpaid):'—'}</div><div class="ms">outstanding</div></div>`;
-
-  const filtered=all.filter(b=>{
-    const st=billStatus(b);
-    if(billFilter==='unpaid')return!b.paid;
-    if(billFilter==='overdue')return st==='overdue';
-    if(billFilter==='paid')return b.paid;
-    return true;
-  }).sort((a,b)=>{
-    // Overdue first, then due-soon, then upcoming, then paid
-    const order={overdue:0,'due-soon':1,upcoming:2,paid:3};
-    const oa=order[billStatus(a)]??2,ob=order[billStatus(b)]??2;
-    if(oa!==ob)return oa-ob;
-    return a.due.localeCompare(b.due);
-  });
+    <div class="met"><div class="ml">Utilities</div><div class="mv">${S.utils.length}</div><div class="ms">${allEntries.length} entries</div></div>
+    <div class="met"><div class="ml">Unpaid</div><div class="mv">${unpaidAll.length}</div><div class="ms">${fa(totUnpaid)}</div></div>
+    <div class="met ${overdueAll.length?'dn':''}"><div class="ml">Overdue</div><div class="mv" style="color:${overdueAll.length?'var(--dn)':'var(--tx)'}">${overdueAll.length}</div><div class="ms">${overdueAll.length?'needs attention':'-'}</div></div>
+    <div class="met"><div class="ml">Due soon</div><div class="mv" style="color:${dueSoonAll.length?'var(--wn)':'var(--tx)'}">${dueSoonAll.length}</div><div class="ms">${dueSoonAll.length?'this week':'-'}</div></div>`;
 
   const cont=document.getElementById('bill-list');
-  if(!filtered.length){cont.innerHTML='<div class="empty" style="padding:3rem">🧾 No bills here. Tap ＋ Add bill to get started.</div>';return;}
+  if(!S.utils.length){cont.innerHTML='<div class="empty" style="padding:3rem">🧾 No utilities yet. Tap ＋ Add utility to get started.</div>';return;}
 
-  cont.innerHTML=filtered.map(b=>{
-    const bc=b.budgetCat?bcById(b.budgetCat):null;
-    const st=billStatus(b);const stl=billStatusLabel(b);
-    const diff=daysDiff(b.due);
-    const cardCls=st==='overdue'?' bill-overdue':st==='due-soon'?' bill-due-soon':b.paid?' bill-paid':'';
+  cont.innerHTML=S.utils.map(u=>{
+    const bc=u.budgetCat?bcById(u.budgetCat):null;
+    const entries=(u.entries||[]).sort((a,b)=>b.due.localeCompare(a.due));
+    const unpaid=entries.filter(e=>!e.paid);
+    const latestEntry=entries[0];
+    const hasOverdue=entries.some(e=>entryStatus(e)==='overdue');
+    const hasDueSoon=entries.some(e=>entryStatus(e)==='due-soon');
+    const borderStyle=hasOverdue?'border-color:rgba(220,38,38,.4)':hasDueSoon?'border-color:rgba(217,119,6,.4)':'';
 
-    return`<div class="bill-card${cardCls}">
-      <div class="bill-status-bar">
-        <span class="bill-badge ${stl.cls}">${stl.txt}</span>
-        ${b.paid?'':`<span style="font-size:12px;color:var(--tx3)">${FREQ_LABEL[b.freq]||b.freq}</span>`}
-        ${b.remindDays>0&&!b.paid?`<span style="font-size:11px;color:var(--tx3)">🔔 ${b.remindDays}d reminder</span>`:''}
-      </div>
-      <div class="bill-header">
-        <div class="bill-icon" style="background:${bc?bc.color+'22':'var(--surf3)'};border:1.5px solid ${bc?bc.color+'40':'var(--bd)'}">${b.icon||'🧾'}</div>
-        <div class="bill-meta">
-          <div class="bill-name">${b.name}</div>
-          <div class="bill-sub">
+    const entriesHtml=entries.slice(0,5).map(e=>{
+      const st=entryStatus(e);const stl=entryStatusLabel(e);
+      return`<div class="bill-entry-row${e.paid?' paid':''}${st==='overdue'?' overdue':st==='due-soon'?' due-soon':''}">
+        <span class="bill-entry-badge ${stl.cls}">${stl.txt}</span>
+        <span class="bill-entry-period">${e.period||new Date(e.due+'T00:00:00').toLocaleDateString('en-PH',{month:'short',year:'numeric'})}</span>
+        <span class="bill-entry-due">${new Date(e.due+'T00:00:00').toLocaleDateString('en-PH',{month:'short',day:'numeric'})}</span>
+        <span class="bill-entry-amt">${fa(e.amount)}</span>
+        <div class="bill-entry-actions">
+          ${!e.paid?`<button class="btn bp bico" style="height:28px;width:28px;font-size:12px" onclick="openBillPay('${u.id}','${e.id}')" title="Mark paid">✅</button>`:''}
+          <button class="btn bg2 bico" style="height:28px;width:28px;font-size:12px" onclick="openBillEntry('${u.id}','${e.id}')" title="Edit">✏️</button>
+          <button class="bdel" onclick="deleteBillEntry('${u.id}','${e.id}')">🗑</button>
+        </div>
+      </div>`;
+    }).join('');
+
+    return`<div class="util-card" style="${borderStyle}">
+      <div class="util-card-header">
+        <div class="util-icon" style="background:${bc?bc.color+'22':'var(--surf3)'};border:1.5px solid ${bc?bc.color+'40':'var(--bd)'}">${u.icon||'🧾'}</div>
+        <div class="util-meta">
+          <div class="util-name">${u.name}</div>
+          <div class="util-sub">
+            ${u.ref?`<span style="font-family:monospace;font-size:11px;background:var(--surf3);padding:1px 6px;border-radius:4px;color:var(--tx2)">${u.ref}</span>`:''}
             ${bc?`<span class="bcat-pill" style="background:${bc.color}22;color:${bc.color}">${bc.icon} ${bc.name}</span>`:''}
-            <span class="cpill">${b.category||''}</span>
-            ${b.notes?`<span style="color:var(--tx3)">${b.notes}</span>`:''}
+            ${u.desc?`<span style="color:var(--tx3)">${u.desc}</span>`:''}
           </div>
         </div>
-        <div class="bill-amount">${fa(b.amount)}</div>
-      </div>
-      <div class="bill-dates">
-        <div class="bill-date-box">
-          <div class="bill-date-lbl">Due date</div>
-          <div class="bill-date-val" style="color:${st==='overdue'?'var(--dn)':st==='due-soon'?'var(--wn)':'var(--tx)'}">${new Date(b.due+'T00:00:00').toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'})}</div>
+        <div style="display:flex;gap:4px;flex-shrink:0">
+          <button class="btn bp bico" style="font-size:13px" onclick="openBillEntry('${u.id}')" title="Add bill entry">＋</button>
+          <button class="btn bg2 bico" style="font-size:13px" onclick="openUtilModal('${u.id}')" title="Edit utility">✏️</button>
+          <button class="btn bg2 bico" style="font-size:13px" onclick="openBstat('${u.id}')" title="Statistics">📊</button>
+          <button class="bdel" onclick="deleteUtil('${u.id}')">🗑</button>
         </div>
-        ${b.paid?`<div class="bill-date-box">
-          <div class="bill-date-lbl">Paid on</div>
-          <div class="bill-date-val" style="color:var(--ok)">${new Date(b.paidDate+'T00:00:00').toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'})}</div>
-        </div>`:''}
-        ${b.paid&&b.paidAmt&&b.paidAmt!==b.amount?`<div class="bill-date-box">
-          <div class="bill-date-lbl">Paid amount</div>
-          <div class="bill-date-val">${fa(b.paidAmt)}</div>
-        </div>`:''}
       </div>
-      <div class="bill-actions">
-        ${!b.paid?`<button class="btn bp" style="font-size:13px;padding:8px 16px" onclick="openBillPay('${b.id}')">✅ Mark paid</button>`:''}
-        <button class="btn bg2" style="font-size:13px;padding:8px 14px" onclick="openBillModal('${b.id}')">✏️ Edit</button>
-        <button class="btn bg2" style="font-size:13px;padding:8px 14px" onclick="openBstat('${b.id}')">📊 Stats</button>
-        ${b.paid?`<button class="btn bg2" style="font-size:13px;padding:8px 14px" onclick="billUnpay('${b.id}')">↺ Mark unpaid</button>`:''}
-        <button class="bdel" onclick="deleteBill('${b.id}')">🗑</button>
-      </div>
+      ${entries.length?`
+        <div class="bill-entries-header">
+          <span>Period</span><span>Due</span><span>Amount</span><span></span>
+        </div>
+        <div class="bill-entries-list">${entriesHtml}</div>
+        ${entries.length>5?`<div style="font-size:12px;color:var(--tx3);text-align:center;padding:6px 0;cursor:pointer" onclick="openBstat('${u.id}')">+ ${entries.length-5} more entries — view all in statistics</div>`:''}
+      `:`<div class="empty" style="padding:1.2rem;font-size:13px">No bill entries yet — tap ＋ to add the first one.</div>`}
     </div>`;
   }).join('');
 
-  // Check for notifications (browser notifications if permitted)
   _billCheckNotifications();
 }
 
-// ── Create / Edit Bill Modal ──────────────────────────
-function openBillModal(editId){
-  document.getElementById('billm-id').value=editId||'';
-  const bcSel=document.getElementById('billm-bcat');
+// ── Utility CRUD ──────────────────────────────────────
+function openUtilModal(eid){
+  document.getElementById('utilm-id').value=eid||'';
+  const bcSel=document.getElementById('utilm-bcat');
   bcSel.innerHTML='<option value="">— No budget category —</option>'+S.budgetCats.map(b=>`<option value="${b.id}">${b.icon} ${b.name}</option>`).join('');
-  const cSel=document.getElementById('billm-cat');
+  const cSel=document.getElementById('utilm-cat');
   cSel.innerHTML='<option value="">— Select category —</option>'+S.categories.map(c=>`<option value="${c}">${c}</option>`).join('');
-  if(editId){
-    const b=billById(editId);if(!b)return;
-    document.getElementById('billm-name').value=b.name;
-    document.getElementById('billm-icon').value=b.icon||'🧾';
-    document.getElementById('billm-amt').value=b.amount;
-    document.getElementById('billm-due').value=b.due;
-    document.getElementById('billm-freq').value=b.freq||'monthly';
-    document.getElementById('billm-remind').value=b.remindDays??3;
-    document.getElementById('billm-notes').value=b.notes||'';
-    bcSel.value=b.budgetCat||'';cSel.value=b.category||'';
-    document.getElementById('billm-title').textContent='✏️ Edit bill';
-  } else {
-    document.getElementById('billm-name').value='';document.getElementById('billm-icon').value='🧾';
-    document.getElementById('billm-amt').value='';document.getElementById('billm-due').value='';
-    document.getElementById('billm-freq').value='monthly';document.getElementById('billm-remind').value='3';
-    document.getElementById('billm-notes').value='';bcSel.value='';cSel.value='';
-    document.getElementById('billm-title').textContent='🧾 New bill';
-  }
-  document.getElementById('billm-msg').style.display='none';
-  document.getElementById('bill-overlay').classList.add('show');
-  setTimeout(()=>document.getElementById('billm-name').focus(),100);
-}
-function closeBillModal(){document.getElementById('bill-overlay').classList.remove('show');}
-function saveBillModal(){
-  const name=document.getElementById('billm-name').value.trim();
-  const icon=document.getElementById('billm-icon').value.trim()||'🧾';
-  const amount=parseFloat(document.getElementById('billm-amt').value);
-  const due=document.getElementById('billm-due').value;
-  const freq=document.getElementById('billm-freq').value;
-  const remindDays=parseInt(document.getElementById('billm-remind').value)||0;
-  const notes=document.getElementById('billm-notes').value.trim();
-  const budgetCat=document.getElementById('billm-bcat').value||null;
-  const category=document.getElementById('billm-cat').value;
-  if(!name){showMsg('billm-msg','Enter a bill name.',false);return;}
-  if(!amount||amount<=0){showMsg('billm-msg','Enter a valid amount.',false);return;}
-  if(!due){showMsg('billm-msg','Select a due date.',false);return;}
-  if(!S.bills)S.bills=[];
-  const eid=document.getElementById('billm-id').value;
+  // Populate suggestions
+  const dl=document.getElementById('util-type-list');
+  if(dl)dl.innerHTML=UTIL_TYPES.map(t=>`<option value="${t.replace(/^.+? /,'')}">`).join('');
   if(eid){
-    const b=billById(eid);if(b)Object.assign(b,{name,icon,amount,due,freq,remindDays,notes,budgetCat,category});
+    const u=utilById(eid);if(!u)return;
+    document.getElementById('utilm-name').value=u.name;
+    document.getElementById('utilm-icon').value=u.icon||'🧾';
+    document.getElementById('utilm-ref').value=u.ref||'';
+    document.getElementById('utilm-desc').value=u.desc||'';
+    document.getElementById('utilm-amt').value=u.typicalAmt||'';
+    bcSel.value=u.budgetCat||'';cSel.value=u.category||'';
+    document.getElementById('utilm-title').textContent='✏️ Edit utility';
   } else {
-    S.bills.push({id:'bill_'+Date.now(),name,icon,amount,due,freq,remindDays,notes,budgetCat,category,paid:false,paidDate:null,paidAmt:null,shop:''});
+    document.getElementById('utilm-name').value='';document.getElementById('utilm-icon').value='🧾';
+    document.getElementById('utilm-ref').value='';document.getElementById('utilm-desc').value='';
+    document.getElementById('utilm-amt').value='';bcSel.value='';cSel.value='';
+    document.getElementById('utilm-title').textContent='🧾 New utility';
   }
-  persist();closeBillModal();renderBills();
+  document.getElementById('utilm-msg').style.display='none';
+  document.getElementById('util-overlay').classList.add('show');
+  setTimeout(()=>document.getElementById('utilm-name').focus(),100);
+}
+function closeUtilModal(){document.getElementById('util-overlay').classList.remove('show');}
+function saveUtilModal(){
+  const name=document.getElementById('utilm-name').value.trim();
+  const icon=document.getElementById('utilm-icon').value.trim()||'🧾';
+  const ref=document.getElementById('utilm-ref').value.trim();
+  const desc=document.getElementById('utilm-desc').value.trim();
+  const typicalAmt=parseFloat(document.getElementById('utilm-amt').value)||0;
+  const budgetCat=document.getElementById('utilm-bcat').value||null;
+  const category=document.getElementById('utilm-cat').value||'';
+  if(!name){showMsg('utilm-msg','Enter a utility name.',false);return;}
+  if(!S.utils)S.utils=[];
+  const eid=document.getElementById('utilm-id').value;
+  if(eid){const u=utilById(eid);if(u)Object.assign(u,{name,icon,ref,desc,typicalAmt,budgetCat,category});}
+  else{S.utils.push({id:'ut_'+Date.now(),name,icon,ref,desc,typicalAmt,budgetCat,category,entries:[]});}
+  persist();closeUtilModal();renderBills();
+}
+function deleteUtil(id){
+  if(!confirm('Remove this utility and all its bill entries?'))return;
+  S.utils=S.utils.filter(u=>u.id!==id);persist();renderBills();
 }
 
-// ── Pay Bill ──────────────────────────────────────────
-function openBillPay(id){
-  const b=billById(id);if(!b)return;
-  const bc=b.budgetCat?bcById(b.budgetCat):null;
-  document.getElementById('billpay-id').value=id;
+// ── Bill Entry CRUD ───────────────────────────────────
+function openBillEntry(uid,eid){
+  const u=utilById(uid);if(!u)return;
+  document.getElementById('bem-utilid').value=uid;
+  document.getElementById('bem-entryid').value=eid||'';
+  document.getElementById('bem-util-info').innerHTML=`${u.icon} <b>${u.name}</b>${u.ref?' — '+u.ref:''}`;
+  if(eid){
+    const e=entryById(uid,eid);if(!e)return;
+    document.getElementById('bem-due').value=e.due;
+    document.getElementById('bem-amt').value=e.amount;
+    document.getElementById('bem-period').value=e.period||'';
+    document.getElementById('bem-remind').value=e.remindDays??3;
+    document.getElementById('bem-notes').value=e.notes||'';
+    document.getElementById('bem-title').textContent='✏️ Edit bill entry';
+  } else {
+    // Default due to today, amount to utility's typical
+    document.getElementById('bem-due').value=new Date().toISOString().slice(0,10);
+    document.getElementById('bem-amt').value=u.typicalAmt||'';
+    document.getElementById('bem-period').value='';
+    document.getElementById('bem-remind').value='3';
+    document.getElementById('bem-notes').value='';
+    document.getElementById('bem-title').textContent='➕ Add bill entry — '+u.name;
+  }
+  document.getElementById('bem-msg').style.display='none';
+  document.getElementById('billentry-overlay').classList.add('show');
+  setTimeout(()=>document.getElementById('bem-amt').focus(),100);
+}
+function closeBillEntry(){document.getElementById('billentry-overlay').classList.remove('show');}
+function saveBillEntry(){
+  const uid=document.getElementById('bem-utilid').value;
+  const eid=document.getElementById('bem-entryid').value;
+  const due=document.getElementById('bem-due').value;
+  const amount=parseFloat(document.getElementById('bem-amt').value);
+  const period=document.getElementById('bem-period').value.trim();
+  const remindDays=parseInt(document.getElementById('bem-remind').value)||0;
+  const notes=document.getElementById('bem-notes').value.trim();
+  if(!due){showMsg('bem-msg','Select a due date.',false);return;}
+  if(!amount||amount<=0){showMsg('bem-msg','Enter a valid amount.',false);return;}
+  const u=utilById(uid);if(!u){showMsg('bem-msg','Utility not found.',false);return;}
+  if(!u.entries)u.entries=[];
+  if(eid){const e=entryById(uid,eid);if(e)Object.assign(e,{due,amount,period,remindDays,notes});}
+  else{u.entries.push({id:'be_'+Date.now(),due,amount,period,remindDays,notes,paid:false,paidDate:null,paidAmt:null,shop:''});}
+  persist();closeBillEntry();renderBills();
+}
+function deleteBillEntry(uid,eid){
+  const u=utilById(uid);if(!u)return;
+  if(!confirm('Remove this bill entry?'))return;
+  u.entries=u.entries.filter(e=>e.id!==eid);persist();renderBills();
+}
+
+// ── Mark entry as paid ────────────────────────────────
+function openBillPay(uid,eid){
+  const u=utilById(uid);const e=entryById(uid,eid);if(!u||!e)return;
+  const bc=u.budgetCat?bcById(u.budgetCat):null;
+  document.getElementById('billpay-utilid').value=uid;
+  document.getElementById('billpay-entryid').value=eid;
   document.getElementById('billpay-date').value=new Date().toISOString().slice(0,10);
-  document.getElementById('billpay-amt').value=b.amount.toFixed(2);
-  document.getElementById('billpay-shop').value=b.shop||'';
+  document.getElementById('billpay-amt').value=e.amount.toFixed(2);
+  document.getElementById('billpay-shop').value=u.name;
   document.getElementById('billpay-summary').innerHTML=
-    `${b.icon} <b>${b.name}</b> — ${fa(b.amount)}`+
+    `${u.icon} <b>${u.name}</b>${e.period?' — '+e.period:''} — ${fa(e.amount)}`+
     (bc?` <span class="bcat-pill" style="background:${bc.color}22;color:${bc.color};margin-left:6px">${bc.icon} ${bc.name}</span>`:'');
   document.getElementById('billpay-msg').style.display='none';
   popShopList();
@@ -3041,337 +3171,52 @@ function openBillPay(id){
 }
 function closeBillPay(){document.getElementById('billpay-overlay').classList.remove('show');}
 function confirmBillPay(){
-  const id=document.getElementById('billpay-id').value;
-  const b=billById(id);if(!b){showMsg('billpay-msg','Bill not found.',false);return;}
+  const uid=document.getElementById('billpay-utilid').value;
+  const eid=document.getElementById('billpay-entryid').value;
+  const u=utilById(uid);const e=entryById(uid,eid);
+  if(!u||!e){showMsg('billpay-msg','Entry not found.',false);return;}
   const date=document.getElementById('billpay-date').value;
   const amt=parseFloat(document.getElementById('billpay-amt').value);
   const shop=document.getElementById('billpay-shop').value.trim();
   if(!date){showMsg('billpay-msg','Select a payment date.',false);return;}
   if(!amt||amt<=0){showMsg('billpay-msg','Enter the amount paid.',false);return;}
-  // Mark paid
-  b.paid=true;b.paidDate=date;b.paidAmt=amt;b.shop=shop;
-  // Add expense
-  S.expenses.push({amount:amt,category:b.category||S.categories[0],date,shop:shop||b.name,description:b.name,budgetCat:b.budgetCat||null});
+  e.paid=true;e.paidDate=date;e.paidAmt=amt;e.shop=shop;
+  S.expenses.push({amount:amt,category:u.category||S.categories[0]||'',date,shop:shop||u.name,description:u.name+(e.period?' — '+e.period:''),budgetCat:u.budgetCat||null});
   persist();closeBillPay();renderBills();
-  // Toast
-  const fl=document.getElementById('sfl');
-  fl.textContent='✓ Bill paid & expense added';fl.classList.add('show');
+  const fl=document.getElementById('sfl');fl.textContent='✓ Bill paid & expense added';fl.classList.add('show');
   setTimeout(()=>{fl.classList.remove('show');setTimeout(()=>fl.textContent='✓ Saved',400);},2200);
 }
-function billUnpay(id){
-  const b=billById(id);if(!b)return;
-  if(!confirm('Mark this bill as unpaid? The expense entry already added will remain.'))return;
-  b.paid=false;b.paidDate=null;b.paidAmt=null;persist();renderBills();
-}
-function deleteBill(id){if(!confirm('Remove this bill?'))return;S.bills=S.bills.filter(b=>b.id!==id);persist();renderBills();}
 
-// ── Browser Notifications ─────────────────────────────
+// ── Notifications ─────────────────────────────────────
 function _billCheckNotifications(){
   if(!('Notification' in window)||Notification.permission==='denied')return;
-  const dueOrSoon=(S.bills||[]).filter(b=>!b.paid&&daysDiff(b.due)>=0&&daysDiff(b.due)<=(b.remindDays||3));
-  if(!dueOrSoon.length)return;
-  if(Notification.permission==='granted'){_billNotify(dueOrSoon);}
-  else if(Notification.permission==='default'){
-    Notification.requestPermission().then(p=>{if(p==='granted')_billNotify(dueOrSoon);});
-  }
+  const due=(S.utils||[]).flatMap(u=>(u.entries||[]).filter(e=>!e.paid&&daysDiff(e.due)>=0&&daysDiff(e.due)<=(e.remindDays||3)).map(e=>({u,e})));
+  if(!due.length)return;
+  if(Notification.permission==='granted')_billNotify(due);
+  else if(Notification.permission==='default')Notification.requestPermission().then(p=>{if(p==='granted')_billNotify(due);});
 }
-function _billNotify(bills){
-  bills.forEach(b=>{
-    const key='bill_notif_'+b.id+'_'+new Date().toDateString();
-    if(localStorage.getItem(key))return;// only once per day
-    const diff=daysDiff(b.due);
-    const msg=diff===0?`${b.icon} ${b.name} is due TODAY (${fa(b.amount)})`:
-              diff<0?`${b.icon} ${b.name} is OVERDUE by ${Math.abs(diff)} day(s) (${fa(b.amount)})`:
-              `${b.icon} ${b.name} is due in ${diff} day(s) — ${fa(b.amount)}`;
-    try{new Notification('💰 MoneyWatch — Bill reminder',{body:msg,icon:'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">💰</text></svg>'});
-      localStorage.setItem(key,'1');}catch(e){}
+function _billNotify(items){
+  items.forEach(({u,e})=>{
+    const key='billnotif_'+e.id+'_'+new Date().toDateString();
+    if(localStorage.getItem(key))return;
+    const d=daysDiff(e.due);
+    const msg=d===0?`${u.icon} ${u.name} is due TODAY (${fa(e.amount)})`:
+              d<0?`${u.icon} ${u.name} is OVERDUE (${fa(e.amount)})`:
+              `${u.icon} ${u.name} due in ${d} day(s) — ${fa(e.amount)}`;
+    try{new Notification('💰 MoneyWatch — Bill reminder',{body:msg});localStorage.setItem(key,'1');}catch(err){}
   });
 }
 
 // ══════════════════════════════════════════════════════
-// RECEIPT / PHOTO ATTACHMENT
+// BILL STATISTICS (utility-based)
 // ══════════════════════════════════════════════════════
-let _rcptTargetIdx=null; // expense index we're attaching a receipt to
-let _lbIdx=null;         // expense index currently open in lightbox
+let _bstatId=null,_bstatPeriod=6,_bstatChart=null,_bstatYear=new Date().getFullYear();
 
-// ── Compress image via canvas ─────────────────────────
-function compressImage(file,maxW,maxH,quality){
-  return new Promise((resolve,reject)=>{
-    const img=new Image();const url=URL.createObjectURL(file);
-    img.onload=()=>{
-      URL.revokeObjectURL(url);
-      let w=img.width,h=img.height;
-      if(w>maxW){h=Math.round(h*maxW/w);w=maxW;}
-      if(h>maxH){w=Math.round(w*maxH/h);h=maxH;}
-      const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
-      const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,w,h);
-      resolve(canvas.toDataURL('image/jpeg',quality));
-    };
-    img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error('Image load failed'));};
-    img.src=url;
-  });
-}
-
-// ── Trigger file picker for a given expense index ─────
-function addReceipt(idx){
-  _rcptTargetIdx=idx;
-  const inp=document.getElementById('rcpt-file-inp');
-  if(inp){inp.value='';inp.click();}
-}
-
-// ── Handle selected file ──────────────────────────────
-async function handleReceiptFile(e){
-  const file=e.target.files[0];if(!file)return;
-  if(!file.type.startsWith('image/')){showMsg('mmsg','Please select an image file.',false);return;}
-  const idx=_rcptTargetIdx;if(idx==null||!S.expenses[idx])return;
-
-  // Show loading state on the button
-  const btn=document.querySelector(`[data-rcpt-idx="${idx}"]`);
-  if(btn){btn.textContent='⏳';btn.disabled=true;}
-
-  try{
-    // Compress: max 900×1200px, 82% quality → ~100-200KB typically
-    const b64=await compressImage(file,900,1200,0.82);
-    S.expenses[idx].receipt=b64;
-    persist();
-    // Refresh whichever view is active
-    if(AT==='list'&&calSelectedDate)renderDayPanel(calSelectedDate);
-    if(AT==='budget')_renderBcatDet();
-    if(AT==='summary')renderSV(SV);
-    showReceiptToast('📷 Receipt saved');
-  }catch(err){
-    console.warn('Receipt error:',err);
-    showReceiptToast('⚠ Could not save receipt');
-  }
-  e.target.value='';
-}
-
-function showReceiptToast(msg){
-  const fl=document.getElementById('sfl');
-  fl.textContent=msg;fl.classList.add('show');
-  setTimeout(()=>{fl.classList.remove('show');setTimeout(()=>fl.textContent='✓ Saved',400);},2000);
-}
-
-// ── Lightbox ──────────────────────────────────────────
-function openLightbox(idx){
-  const e=S.expenses[idx];if(!e||!e.receipt)return;
-  _lbIdx=idx;
-  document.getElementById('rcpt-lb-img').src=e.receipt;
-  const info=e.shop||(e.description||'')+' — '+new Date(e.date+'T00:00:00').toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'});
-  document.getElementById('rcpt-lb-info').textContent=info;
-  document.getElementById('rcpt-lightbox').classList.add('show');
-}
-function closeLightbox(){
-  document.getElementById('rcpt-lightbox').classList.remove('show');
-  document.getElementById('rcpt-lb-img').src='';
-  _lbIdx=null;
-}
-function delReceipt(){
-  if(_lbIdx==null)return;
-  if(!confirm('Remove this receipt photo?'))return;
-  delete S.expenses[_lbIdx].receipt;
-  persist();closeLightbox();
-  if(AT==='list'&&calSelectedDate)renderDayPanel(calSelectedDate);
-  if(AT==='budget')_renderBcatDet();
-  if(AT==='summary')renderSV(SV);
-}
-// Close lightbox on backdrop click
-document.addEventListener('click',e=>{if(e.target.id==='rcpt-lightbox')closeLightbox();});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('rcpt-lightbox').classList.contains('show'))closeLightbox();});
-
-// ── Receipt button/thumb HTML helper ─────────────────
-function rcptHtml(idx){
-  const e=S.expenses[idx];
-  if(e&&e.receipt){
-    return`<img src="${e.receipt}" class="rcpt-thumb" onclick="openLightbox(${idx})" title="View receipt" alt="Receipt">`;
-  }
-  return`<button class="rcpt-btn" data-rcpt-idx="${idx}" onclick="addReceipt(${idx})" title="Add receipt photo">📷</button>`;
-}
-
-// ── Storage usage helper (for prefs) ─────────────────
-function rcptStorageKB(){
-  const total=S.expenses.reduce((s,e)=>s+(e.receipt?e.receipt.length:0),0);
-  return Math.round(total/1024);
-}
-
-// ══════════════════════════════════════════════════════
-// CREDITS
-// ══════════════════════════════════════════════════════
-let crFilter='all';
-function setCrFilter(f){crFilter=f;['all','unpaid','paid'].forEach(k=>{const b=document.getElementById('crf-'+k);if(b)b.classList.toggle('on',k===f);});renderCredits();}
-function crById(id){return(S.credits||[]).find(c=>c.id===id);}
-
-// ── Source dropdown: populate from Savings ─────────────
-function crPopSources(){
-  const sel=document.getElementById('crm-source-sel');if(!sel)return;
-  sel.innerHTML='<option value="">— Type manually —</option>';
-  (S.savings||[]).forEach(sv=>{const o=document.createElement('option');o.value=sv.name;o.textContent='🐷 '+sv.name+' ('+fa(sv.amount)+')';sel.appendChild(o);});
-}
-function crSourceSelChange(){
-  const sel=document.getElementById('crm-source-sel');
-  const txt=document.getElementById('crm-source-txt');
-  if(sel.value){txt.value=sel.value;txt.style.display='none';}
-  else{txt.value='';txt.style.display='block';}
-}
-
-// ── Render ─────────────────────────────────────────────
-function renderCredits(){
-  if(!S.credits)S.credits=[];
-  const all=S.credits;
-  const unpaid=all.filter(c=>!c.paid);
-  const totalUnpaid=unpaid.reduce((s,c)=>s+c.amount,0);
-  const totalAll=all.reduce((s,c)=>s+c.amount,0);
-  const paidAmt=all.filter(c=>c.paid).reduce((s,c)=>s+(c.paidAmt||c.amount),0);
-
-  document.getElementById('cr-mets').innerHTML=`
-    <div class="met"><div class="ml">Total credits</div><div class="mv">${all.length}</div><div class="ms">${unpaid.length} unpaid</div></div>
-    <div class="met"><div class="ml">Total borrowed</div><div class="mv">${fa(totalAll)}</div><div class="ms">all time</div></div>
-    <div class="met dn"><div class="ml">Outstanding</div><div class="mv">${fa(totalUnpaid)}</div><div class="ms">to be paid</div></div>
-    <div class="met ok"><div class="ml">Paid back</div><div class="mv">${fa(paidAmt)}</div><div class="ms">${all.filter(c=>c.paid).length} settled</div></div>`;
-
-  const filtered=all.filter(c=>{
-    if(crFilter==='unpaid')return!c.paid;
-    if(crFilter==='paid')return c.paid;
-    return true;
-  }).sort((a,b)=>b.date.localeCompare(a.date));
-
-  const cont=document.getElementById('cr-list');
-  if(!filtered.length){cont.innerHTML='<div class="empty" style="padding:3rem">💳 No credits yet. Tap ＋ Add credit to start tracking.</div>';return;}
-
-  cont.innerHTML=filtered.map(c=>{
-    const bc=c.budgetCat?bcById(c.budgetCat):null;
-    return`<div class="credit-card${c.paid?' cr-paid':''}">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
-        <span class="cr-badge ${c.paid?'paid':'unpaid'}">${c.paid?'✓ Paid':'Unpaid'}</span>
-        <span style="font-size:12px;color:var(--tx3)">📅 ${new Date(c.date+'T00:00:00').toLocaleDateString('en-PH',{month:'long',day:'numeric',year:'numeric'})}</span>
-      </div>
-      <div class="cr-header">
-        <div class="cr-icon">${bc?bc.icon:'💳'}</div>
-        <div class="cr-meta">
-          <div class="cr-name">${c.source||'Unknown source'}</div>
-          <div class="cr-sub">
-            ${bc?`<span class="bcat-pill" style="background:${bc.color}22;color:${bc.color}">${bc.icon} ${bc.name}</span>`:''}
-            ${c.category?`<span class="cpill">${c.category}</span>`:''}
-          </div>
-        </div>
-        <div class="cr-amount ${c.paid?'paid':'unpaid'}">${fa(c.amount)}</div>
-      </div>
-      ${c.purpose?`<div class="cr-purpose">📝 ${c.purpose}</div>`:''}
-      <div class="cr-info-grid">
-        <div class="cr-info-box"><div class="cr-info-lbl">Date credited</div><div class="cr-info-val">${new Date(c.date+'T00:00:00').toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'})}</div></div>
-        <div class="cr-info-box"><div class="cr-info-lbl">Amount</div><div class="cr-info-val">${fa(c.amount)}</div></div>
-        ${c.paid?`<div class="cr-info-box"><div class="cr-info-lbl">Paid on</div><div class="cr-info-val" style="color:var(--ok)">${new Date(c.paidDate+'T00:00:00').toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'})}</div></div>`:''}
-        ${c.paid&&c.paidAmt?`<div class="cr-info-box"><div class="cr-info-lbl">Paid amount</div><div class="cr-info-val" style="color:var(--ok)">${fa(c.paidAmt)}</div></div>`:''}
-        ${c.paidNotes?`<div class="cr-info-box" style="grid-column:1/-1"><div class="cr-info-lbl">Payment notes</div><div class="cr-info-val">${c.paidNotes}</div></div>`:''}
-      </div>
-      <div class="cr-actions">
-        ${!c.paid?`<button class="btn bp" style="font-size:13px;padding:8px 16px" onclick="openCrPay('${c.id}')">✅ Mark as paid</button>`:''}
-        <button class="btn bg2" style="font-size:13px;padding:8px 14px" onclick="openCreditModal('${c.id}')">✏️ Edit</button>
-        ${c.paid?`<button class="btn bg2" style="font-size:13px;padding:8px 14px" onclick="crUnpay('${c.id}')">↺ Mark unpaid</button>`:''}
-        <button class="bdel" onclick="deleteCr('${c.id}')">🗑</button>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-// ── Create / Edit Credit Modal ────────────────────────
-function openCreditModal(editId){
-  document.getElementById('crm-id').value=editId||'';
-  // Populate selects
-  const bcSel=document.getElementById('crm-bcat');
-  bcSel.innerHTML='<option value="">— No budget category —</option>'+S.budgetCats.map(b=>`<option value="${b.id}">${b.icon} ${b.name}</option>`).join('');
-  const cSel=document.getElementById('crm-cat');
-  cSel.innerHTML='<option value="">— Select category —</option>'+S.categories.map(c=>`<option value="${c}">${c}</option>`).join('');
-  crPopSources();
-  if(editId){
-    const c=crById(editId);if(!c)return;
-    document.getElementById('crm-date').value=c.date;
-    document.getElementById('crm-amt').value=c.amount;
-    document.getElementById('crm-source-txt').value=c.source||'';
-    document.getElementById('crm-source-sel').value='';
-    document.getElementById('crm-source-txt').style.display='block';
-    document.getElementById('crm-purpose').value=c.purpose||'';
-    bcSel.value=c.budgetCat||'';cSel.value=c.category||'';
-    document.getElementById('crm-title').textContent='✏️ Edit credit';
-  } else {
-    document.getElementById('crm-date').value=new Date().toISOString().slice(0,10);
-    document.getElementById('crm-amt').value='';
-    document.getElementById('crm-source-txt').value='';
-    document.getElementById('crm-source-sel').value='';
-    document.getElementById('crm-source-txt').style.display='block';
-    document.getElementById('crm-purpose').value='';
-    bcSel.value='';cSel.value='';
-    document.getElementById('crm-title').textContent='💳 New credit';
-  }
-  document.getElementById('crm-msg').style.display='none';
-  document.getElementById('cr-overlay').classList.add('show');
-  setTimeout(()=>document.getElementById('crm-amt').focus(),100);
-}
-function closeCreditModal(){document.getElementById('cr-overlay').classList.remove('show');}
-function saveCreditModal(){
-  const date=document.getElementById('crm-date').value;
-  const amount=parseFloat(document.getElementById('crm-amt').value);
-  const source=document.getElementById('crm-source-txt').value.trim()||document.getElementById('crm-source-sel').value.trim();
-  const purpose=document.getElementById('crm-purpose').value.trim();
-  const budgetCat=document.getElementById('crm-bcat').value||null;
-  const category=document.getElementById('crm-cat').value||'';
-  if(!date){showMsg('crm-msg','Select a date.',false);return;}
-  if(!amount||amount<=0){showMsg('crm-msg','Enter a valid amount.',false);return;}
-  if(!source){showMsg('crm-msg','Enter where the credit is from.',false);return;}
-  if(!S.credits)S.credits=[];
-  const eid=document.getElementById('crm-id').value;
-  if(eid){const c=crById(eid);if(c)Object.assign(c,{date,amount,source,purpose,budgetCat,category});}
-  else{S.credits.push({id:'cr_'+Date.now(),date,amount,source,purpose,budgetCat,category,paid:false,paidDate:null,paidAmt:null,paidNotes:''});}
-  persist();closeCreditModal();renderCredits();
-}
-
-// ── Mark as paid ──────────────────────────────────────
-function openCrPay(id){
-  const c=crById(id);if(!c)return;
-  document.getElementById('crpay-id').value=id;
-  document.getElementById('crpay-date').value=new Date().toISOString().slice(0,10);
-  document.getElementById('crpay-amt').value=c.amount.toFixed(2);
-  document.getElementById('crpay-notes').value='';
-  document.getElementById('crpay-addexp').checked=true;
-  const bc=c.budgetCat?bcById(c.budgetCat):null;
-  document.getElementById('crpay-summary').innerHTML=
-    `<b>${c.source}</b> — ${fa(c.amount)}`+
-    (bc?` <span class="bcat-pill" style="background:${bc.color}22;color:${bc.color};margin-left:6px">${bc.icon} ${bc.name}</span>`:'');
-  document.getElementById('crpay-msg').style.display='none';
-  document.getElementById('crpay-overlay').classList.add('show');
-  setTimeout(()=>document.getElementById('crpay-amt').focus(),100);
-}
-function closeCrPay(){document.getElementById('crpay-overlay').classList.remove('show');}
-function confirmCrPay(){
-  const id=document.getElementById('crpay-id').value;
-  const c=crById(id);if(!c){showMsg('crpay-msg','Credit not found.',false);return;}
-  const date=document.getElementById('crpay-date').value;
-  const amt=parseFloat(document.getElementById('crpay-amt').value);
-  const notes=document.getElementById('crpay-notes').value.trim();
-  const addExp=document.getElementById('crpay-addexp').checked;
-  if(!date){showMsg('crpay-msg','Select a payment date.',false);return;}
-  if(!amt||amt<=0){showMsg('crpay-msg','Enter the amount paid.',false);return;}
-  c.paid=true;c.paidDate=date;c.paidAmt=amt;c.paidNotes=notes;
-  if(addExp){
-    S.expenses.push({amount:amt,category:c.category||S.categories[0]||'',date,shop:c.source,description:'Credit repayment: '+c.source+(c.purpose?' — '+c.purpose.slice(0,40):''),budgetCat:c.budgetCat||null});
-  }
-  persist();closeCrPay();renderCredits();
-  const fl=document.getElementById('sfl');fl.textContent='✓ Credit marked paid'+(addExp?' & expense added':'');fl.classList.add('show');setTimeout(()=>{fl.classList.remove('show');setTimeout(()=>fl.textContent='✓ Saved',400);},2200);
-}
-function crUnpay(id){const c=crById(id);if(!c)return;if(!confirm('Mark this credit as unpaid? The expense entry already added remains.'))return;c.paid=false;c.paidDate=null;c.paidAmt=null;c.paidNotes='';persist();renderCredits();}
-function deleteCr(id){if(!confirm('Remove this credit record?'))return;S.credits=S.credits.filter(c=>c.id!==id);persist();renderCredits();}
-
-// ══════════════════════════════════════════════════════
-// BILL STATISTICS
-// ══════════════════════════════════════════════════════
-let _bstatId=null,_bstatPeriod=6,_bstatChart=null;
-
-function openBstat(id){
-  const b=billById(id);if(!b)return;
-  _bstatId=id;_bstatPeriod=6;
-  document.getElementById('bstat-title').textContent=b.icon+' '+b.name;
-  document.getElementById('bstat-sub').textContent=FREQ_LABEL[b.freq]||b.freq;
-  // reset period tabs
+function openBstat(uid){
+  const u=utilById(uid);if(!u)return;
+  _bstatId=uid;_bstatPeriod=6;_bstatYear=new Date().getFullYear();
+  document.getElementById('bstat-title').textContent=u.icon+' '+u.name;
+  document.getElementById('bstat-sub').textContent=(u.ref?'Ref: '+u.ref+' · ':'')+(u.desc||'');
   [3,6,12].forEach(p=>{const t=document.getElementById('bstp-'+p);if(t)t.classList.toggle('on',p===6);});
   document.getElementById('bstat-overlay').classList.add('show');
   _renderBstat();
@@ -3386,54 +3231,61 @@ function setBstatPeriod(p){
   [3,6,12].forEach(n=>{const t=document.getElementById('bstp-'+n);if(t)t.classList.toggle('on',n===p);});
   _renderBstat();
 }
+function bstatShiftYear(d){_bstatYear+=d;_renderBstat();}
 
 function _renderBstat(){
-  const b=billById(_bstatId);if(!b)return;
+  const u=utilById(_bstatId);if(!u)return;
   const n=_bstatPeriod;
-  const now=new Date();
+  const yr=_bstatYear;
+  document.getElementById('bstat-year-lbl').textContent=n===12?yr:'';
 
-  // Build array of the past N months
+  // Build month slots
+  const now=new Date();
   const months=[];
-  for(let i=n-1;i>=0;i--){
-    let mo=now.getMonth()-i,yr=now.getFullYear();
-    while(mo<0){mo+=12;yr--;}
-    months.push({yr,mo,label:new Date(yr,mo,1).toLocaleDateString('en-PH',{month:'short',year:'2-digit'})});
+  if(n===12){
+    // Full calendar year
+    for(let mo=0;mo<12;mo++){
+      months.push({yr,mo,label:new Date(yr,mo,1).toLocaleDateString('en-PH',{month:'short'})});
+    }
+  } else {
+    // Last N months from today
+    for(let i=n-1;i>=0;i--){
+      let mo=now.getMonth()-i,y=now.getFullYear();
+      while(mo<0){mo+=12;y--;}
+      months.push({yr:y,mo,label:new Date(y,mo,1).toLocaleDateString('en-PH',{month:'short',year:'2-digit'})});
+    }
   }
 
-  // Match bill's past payments to months using paidDate
-  // A bill might be paid multiple times if it's recurring (multiple records) —
-  // here we look through ALL bills with the same name as a proxy for recurring history,
-  // plus check if this specific bill's paidDate falls in that month
-  const allSameName=(S.bills||[]).filter(bx=>bx.name===b.name&&bx.paid&&bx.paidDate);
-
-  const monthData=months.map(({yr,mo,label})=>{
-    const key=`${yr}-${String(mo+1).padStart(2,'0')}`;
-    // Match paid date year-month
-    const paid=allSameName.filter(bx=>{
-      const d=bx.paidDate||'';return d.slice(0,7)===key;
-    });
-    // Also check expenses linked to same bill (via description match)
-    const expMatch=S.expenses.filter(e=>{
-      const d=e.date||'';return d.slice(0,7)===key&&(e.description||'').toLowerCase().includes(b.name.toLowerCase());
-    });
-    const paidAmt=paid.length?paid.reduce((s,bx)=>s+(bx.paidAmt||bx.amount),0):
-                  expMatch.length?expMatch.reduce((s,e)=>s+e.amount,0):0;
-    const expected=b.amount;
-    return{label,yr,mo,key,paidAmt,expected,paid:paidAmt>0};
+  // Match utility entries to months
+  const entries=u.entries||[];
+  const monthData=months.map(({yr:my,mo,label})=>{
+    const key=`${my}-${String(mo+1).padStart(2,'0')}`;
+    const match=entries.filter(e=>e.due.slice(0,7)===key);
+    const paidEntry=match.find(e=>e.paid);
+    const anyEntry=match[0];
+    return{
+      label,key,my,mo,
+      expected:anyEntry?anyEntry.amount:(u.typicalAmt||0),
+      paidAmt:paidEntry?paidEntry.paidAmt||paidEntry.amount:0,
+      paid:!!paidEntry,
+      entry:anyEntry||null
+    };
   });
 
+  // Summary
   const paidMonths=monthData.filter(m=>m.paid);
   const totalPaid=paidMonths.reduce((s,m)=>s+m.paidAmt,0);
-  const totalExpected=monthData.reduce((s,m)=>s+m.expected,0);
+  const totalExp=monthData.filter(m=>m.entry).reduce((s,m)=>s+m.expected,0);
   const avgPaid=paidMonths.length?totalPaid/paidMonths.length:0;
-  const payRate=monthData.length?Math.round((paidMonths.length/monthData.length)*100):0;
+  const payRate=monthData.filter(m=>m.entry).length?Math.round(paidMonths.length/monthData.filter(m=>m.entry).length*100):0;
+  const highest=Math.max(...monthData.map(m=>m.paidAmt),u.typicalAmt||0);
+  const lowest=Math.min(...paidMonths.map(m=>m.paidAmt).filter(Boolean));
 
-  // Summary metrics
   document.getElementById('bstat-mets').innerHTML=`
-    <div class="bstat-box"><div class="bstat-lbl">Periods tracked</div><div class="bstat-val">${n}</div><div class="bstat-sub">months</div></div>
-    <div class="bstat-box"><div class="bstat-lbl">Times paid</div><div class="bstat-val">${paidMonths.length}</div><div class="bstat-sub">${payRate}% rate</div></div>
-    <div class="bstat-box"><div class="bstat-lbl">Total paid</div><div class="bstat-val" style="font-size:14px">${fa(totalPaid)}</div><div class="bstat-sub">vs ${fa(totalExpected)} expected</div></div>
-    <div class="bstat-box"><div class="bstat-lbl">Avg paid</div><div class="bstat-val" style="font-size:14px">${avgPaid>0?fa(avgPaid):'—'}</div><div class="bstat-sub">per period</div></div>`;
+    <div class="bstat-box"><div class="bstat-lbl">Periods tracked</div><div class="bstat-val">${monthData.filter(m=>m.entry).length}/${n}</div><div class="bstat-sub">${payRate}% paid</div></div>
+    <div class="bstat-box"><div class="bstat-lbl">Total paid</div><div class="bstat-val" style="font-size:14px">${fa(totalPaid)}</div><div class="bstat-sub">vs ${fa(totalExp)} billed</div></div>
+    <div class="bstat-box"><div class="bstat-lbl">Average</div><div class="bstat-val" style="font-size:14px">${avgPaid>0?fa(avgPaid):'—'}</div><div class="bstat-sub">per period</div></div>
+    <div class="bstat-box"><div class="bstat-lbl">High / Low</div><div class="bstat-val" style="font-size:13px">${highest>0?fa(highest):'—'}</div><div class="bstat-sub">${paidMonths.length>1?'low: '+fa(lowest):''}</div></div>`;
 
   // Chart
   if(_bstatChart){_bstatChart.destroy();_bstatChart=null;}
@@ -3445,34 +3297,29 @@ function _renderBstat(){
       data:{
         labels:monthData.map(m=>m.label),
         datasets:[
-          {label:'Expected',data:monthData.map(m=>m.expected),backgroundColor:cco.g,borderColor:th.ac,borderWidth:1.5,borderDash:[4,3],type:'line',pointRadius:0,fill:false,tension:.3,order:0},
-          {label:'Paid',data:monthData.map(m=>m.paidAmt),backgroundColor:monthData.map(m=>m.paid?th.ac+'cc':'rgba(200,200,200,.2)'),borderRadius:5,borderSkipped:false,order:1}
+          {label:'Billed',type:'line',data:monthData.map(m=>m.entry?m.expected:null),borderColor:th.ac+'88',borderDash:[5,4],borderWidth:1.5,pointRadius:3,pointBackgroundColor:th.ac,fill:false,tension:.3,spanGaps:false,order:0},
+          {label:'Paid',data:monthData.map(m=>m.paidAmt||null),backgroundColor:monthData.map(m=>m.paid?th.ac+'cc':'rgba(150,150,150,.2)'),borderRadius:4,borderSkipped:false,order:1}
         ]
       },
       options:{
         responsive:true,maintainAspectRatio:false,
-        plugins:{
-          legend:{display:true,position:'top',labels:{color:cco.t,font:{size:11},boxWidth:12}},
-          tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${fa(ctx.raw)}`}}
-        },
-        scales:{
-          x:{grid:{display:false},ticks:{color:cco.t,font:{size:10}}},
-          y:{ticks:{color:cco.t,font:{size:10},callback:v=>S.prefs.currency+v.toLocaleString()},grid:{color:cco.g},beginAtZero:true}
-        }
+        plugins:{legend:{display:true,position:'top',labels:{color:cco.t,font:{size:11},boxWidth:12}},tooltip:{callbacks:{label:ctx=>ctx.raw?`${ctx.dataset.label}: ${fa(ctx.raw)}`:null}}},
+        scales:{x:{grid:{display:false},ticks:{color:cco.t,font:{size:10}}},y:{ticks:{color:cco.t,font:{size:10},callback:v=>S.prefs.currency+v.toLocaleString()},grid:{color:cco.g},beginAtZero:true}}
       }
     });
   }
 
-  // History table
+  // History
   const rows=monthData.slice().reverse().map(m=>`
-    <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;background:${m.paid?'var(--okbg)':'var(--surf2)'};border:1px solid ${m.paid?'rgba(22,163,74,.2)':'var(--bd)'};margin-bottom:6px">
-      <span style="font-size:16px">${m.paid?'✅':'⬜'}</span>
-      <span style="flex:1;font-size:13px;font-weight:500;color:var(--tx)">${m.label}</span>
-      <span style="font-size:13px;font-weight:600;color:${m.paid?'var(--ok)':'var(--tx3)'}">${m.paid?fa(m.paidAmt):'Not paid'}</span>
-      ${m.paid&&m.paidAmt!==m.expected?`<span style="font-size:11px;color:var(--tx3)">(expected ${fa(m.expected)})</span>`:''}
+    <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;background:${m.paid?'var(--okbg)':m.entry?'var(--surf2)':'transparent'};border:1px solid ${m.paid?'rgba(22,163,74,.2)':m.entry?'var(--bd)':'transparent'};margin-bottom:5px">
+      <span style="font-size:15px">${m.paid?'✅':m.entry?'⏳':'—'}</span>
+      <span style="min-width:55px;font-size:12px;font-weight:600;color:var(--tx2)">${m.label}</span>
+      <span style="flex:1;font-size:12px;color:var(--tx3)">${m.entry?(m.entry.period||'Due '+new Date(m.entry.due+'T00:00:00').toLocaleDateString('en-PH',{month:'short',day:'numeric'})):'No entry'}</span>
+      <span style="font-size:13px;font-weight:600;color:${m.paid?'var(--ok)':m.entry?'var(--dn)':'var(--tx4)'}">${m.paid?fa(m.paidAmt):m.entry?fa(m.expected)+'?':'—'}</span>
     </div>`).join('');
-  document.getElementById('bstat-history').innerHTML=rows||'<div class="empty" style="padding:1rem">No payment data found.</div>';
+  document.getElementById('bstat-history').innerHTML=rows;
 }
+
 
 // INIT
 document.getElementById('wdate').value=new Date().toISOString().slice(0,10);
