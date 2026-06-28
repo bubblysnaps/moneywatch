@@ -9,7 +9,7 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>MoneyWatch v20.1</title>
+<title>MoneyWatch v20.2</title>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&family=Poppins:wght@300;400;500;600&family=Nunito:wght@300;400;600;700&family=Manrope:wght@300;400;500;600&family=Figtree:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Sora:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&family=Lato:wght@300;400;700&family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;500;600&display=swap');
@@ -303,7 +303,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
 .rcpt-lb-del:hover{filter:brightness(1.1)}
 .rcpt-lb-info{position:absolute;bottom:68px;left:50%;transform:translateX(-50%);font-size:12px;color:rgba(255,255,255,.6);white-space:nowrap}
 /* ── HOME BUTTON (standalone above nav) ──────────────── */
-.home-btn-row{padding:8px 0 0}
+.home-btn-row{padding:8px 0 0;display:flex;gap:8px;align-items:stretch}
 .home-btn{width:100%;padding:10px 16px;border:none;background:var(--surf);border-radius:var(--rl);font-family:var(--f);font-size:13px;font-weight:600;color:var(--tx2);cursor:pointer;display:flex;align-items:center;gap:10px;box-shadow:var(--sh);border:1px solid var(--bd);transition:all .18s}
 .home-btn:hover{background:var(--surf2);border-color:var(--ac);color:var(--ac)}
 .home-btn.on{background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;border-color:transparent;box-shadow:0 3px 12px rgba(91,106,240,.35)}
@@ -581,10 +581,13 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
 </div>
 <div class="nav-sticky">
   <div class="home-btn-row">
-    <button class="home-btn on" id="home-btn" onclick="go('home')">
+    <button class="home-btn on" id="home-btn" onclick="go('home')" style="flex:1">
       <span class="home-ico">🏠</span>
       <span class="home-btn-label">Home</span>
       <span class="home-btn-sub" id="home-btn-sub">Dashboard</span>
+    </button>
+    <button class="home-btn" onclick="saveFile()" title="Save" style="flex:0;min-width:52px;justify-content:center">
+      <span style="font-size:20px">💾</span>
     </button>
   </div>
   <nav class="nav" style="margin-top:6px">
