@@ -9,7 +9,7 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>MoneyWatch v19</title>
+<title>MoneyWatch v20</title>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&family=Poppins:wght@300;400;500;600&family=Nunito:wght@300;400;600;700&family=Manrope:wght@300;400;500;600&family=Figtree:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Sora:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&family=Lato:wght@300;400;700&family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;500;600&display=swap');
@@ -19,7 +19,9 @@
 html,body{font-family:var(--f);background:var(--bg);color:var(--tx);font-size:var(--fs);font-weight:var(--fw);line-height:1.6;min-height:100vh}
 .app{max-width:880px;margin:0 auto;padding:20px 16px 120px}
 .hero{padding:16px 2px 14px}.hero h2{font-size:clamp(17px,3.5vw,22px);font-weight:600;letter-spacing:-.2px;color:var(--tx2)}.hero h2 .hi{color:var(--ac)}.hero-sub{font-size:13px;color:var(--tx3);margin-top:4px}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 0 16px;border-top:1px solid var(--bd);margin-top:16px;flex-wrap:wrap;gap:10px}
+.topbar{padding:10px 0 14px;border-top:1px solid var(--bd);margin-top:12px}
+.topbar-info{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.topbar-btns{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:11px}.logo{width:38px;height:38px;background:linear-gradient(135deg,var(--ac),var(--ac2));border-radius:11px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;flex-shrink:0;box-shadow:var(--sh)}.brand-name{font-size:20px;font-weight:700;letter-spacing:-.3px;margin:0;line-height:1.2;color:var(--tx)}.brand-tag{font-size:11px;color:var(--tx3);margin-top:1px;font-style:italic}
 .tbr{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.clk{font-size:12px;color:var(--tx3);padding:5px 10px;background:var(--surf2);border-radius:8px;border:1px solid var(--bd);font-variant-numeric:tabular-nums}
 .ib{width:36px;height:36px;border-radius:10px;border:1px solid var(--bd);background:var(--surf);color:var(--tx2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;transition:all .18s;box-shadow:var(--sh)}.ib:hover{background:var(--surf2);border-color:var(--ac);color:var(--ac);transform:translateY(-1px)}.ib.on{border-color:var(--ac);color:var(--ac);background:var(--acbg)}
@@ -312,6 +314,17 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
 .cr-badge.unpaid{background:var(--dnbg);color:var(--dn);border:1px solid rgba(220,38,38,.2)}
 .cr-badge.paid{background:var(--okbg);color:var(--okdk);border:1px solid rgba(22,163,74,.2)}
 .cr-actions{display:flex;gap:7px;flex-wrap:wrap}
+/* ── BILL STATS MODAL ─────────────────────────────────── */
+.bstat-modal{max-width:680px}
+.bstat-period-tabs{display:flex;gap:6px;margin-bottom:16px}
+.bstat-period-tab{padding:6px 18px;border-radius:100px;font-size:13px;font-weight:500;border:1.5px solid var(--bd);background:var(--surf);color:var(--tx2);cursor:pointer;transition:all .18s}
+.bstat-period-tab.on{background:var(--ac);border-color:var(--ac);color:#fff}
+.bstat-summary-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:18px}
+@media(min-width:500px){.bstat-summary-grid{grid-template-columns:repeat(4,1fr)}}
+.bstat-box{background:var(--surf2);border:1px solid var(--bd);border-radius:11px;padding:12px 14px;text-align:center}
+.bstat-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--tx3);margin-bottom:4px}
+.bstat-val{font-size:18px;font-weight:700;color:var(--tx)}
+.bstat-sub{font-size:11px;color:var(--tx3);margin-top:2px}
 </style>
 <body>
 
@@ -413,8 +426,23 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
 <div class="app" id="app">
 <div class="hero"><h2 id="hh">Good morning, <span class="hi" id="hname">friend</span> 👋</h2><p class="hero-sub" id="hsub">Your financial overview.</p></div>
 <div class="topbar">
-  <div class="brand"><div class="logo">💰</div><div><h1 class="brand-name">MoneyWatch</h1><div class="brand-tag">Your money is watching you.</div></div></div>
-  <div class="tbr"><span class="sflash" id="sfl">✓ Saved</span><span id="drive-status" style="display:none"></span><span class="clk" id="clk"></span><button class="ib" id="load-btn" onclick="trigLoad()" title="Open from Google Drive or local file">📂</button><button class="ib" id="save-btn" onclick="saveFile()" title="Save">💾</button><button class="ib" onclick="location.reload()" title="Refresh page">🔃</button><button class="ib" id="topbar-lock" onclick="alLock()" title="Lock app">🔒</button><button class="ib on" id="pbtn" onclick="togPref()" title="Preferences">⚙</button></div>
+  <!-- Row 1: Brand + Drive status + Clock -->
+  <div class="topbar-info">
+    <div class="brand"><div class="logo">💰</div><div><h1 class="brand-name">MoneyWatch</h1><div class="brand-tag">Your money is watching you.</div></div></div>
+    <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
+      <span class="sflash" id="sfl">✓ Saved</span>
+      <span id="drive-status" style="display:none"></span>
+      <span class="clk" id="clk"></span>
+    </div>
+  </div>
+  <!-- Row 2: Action buttons centered -->
+  <div class="topbar-btns">
+    <button class="ib" id="load-btn" onclick="trigLoad()" title="Open from Google Drive or local file">📂</button>
+    <button class="ib" id="save-btn" onclick="saveFile()" title="Save">💾</button>
+    <button class="ib" onclick="location.reload()" title="Refresh page">🔃</button>
+    <button class="ib" id="topbar-lock" onclick="alLock()" title="Lock app">🔒</button>
+    <button class="ib on" id="pbtn" onclick="togPref()" title="Preferences">⚙</button>
+  </div>
 </div>
 <input type="file" id="fileinp" accept=".json" style="display:none" onchange="loadFile(event)">
 <!-- PREF MODAL (overlay) -->
@@ -983,6 +1011,37 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
     </div>
     <div style="display:flex;justify-content:flex-end;gap:9px"><button class="btn bg2" onclick="closeCrPay()">Cancel</button><button class="btn bp" onclick="confirmCrPay()">✓ Mark paid</button></div>
     <div id="crpay-msg" class="msg"></div>
+  </div>
+</div>
+
+<!-- BILL STATS MODAL -->
+<div class="overlay" id="bstat-overlay">
+  <div class="modal-box bstat-modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="bstat-title">Bill Statistics</div>
+        <div style="font-size:12px;color:var(--tx3);margin-top:2px" id="bstat-sub"></div>
+      </div>
+      <button class="modal-close" onclick="closeBstat()">✕</button>
+    </div>
+    <!-- Period selector -->
+    <div class="bstat-period-tabs">
+      <button class="bstat-period-tab on" onclick="setBstatPeriod(3)" id="bstp-3">3 Months</button>
+      <button class="bstat-period-tab" onclick="setBstatPeriod(6)" id="bstp-6">6 Months</button>
+      <button class="bstat-period-tab" onclick="setBstatPeriod(12)" id="bstp-12">1 Year</button>
+    </div>
+    <!-- Summary metrics -->
+    <div class="bstat-summary-grid" id="bstat-mets"></div>
+    <!-- Bar chart -->
+    <div style="position:relative;height:200px;margin-bottom:16px">
+      <canvas id="bstat-chart"></canvas>
+    </div>
+    <!-- Payment history table -->
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--tx3);margin-bottom:8px">Payment history</div>
+    <div id="bstat-history" style="max-height:220px;overflow-y:auto"></div>
+    <div style="display:flex;justify-content:flex-end;margin-top:14px">
+      <button class="btn bg2" onclick="closeBstat()">Close</button>
+    </div>
   </div>
 </div>
 
@@ -2900,6 +2959,7 @@ function renderBills(){
       <div class="bill-actions">
         ${!b.paid?`<button class="btn bp" style="font-size:13px;padding:8px 16px" onclick="openBillPay('${b.id}')">✅ Mark paid</button>`:''}
         <button class="btn bg2" style="font-size:13px;padding:8px 14px" onclick="openBillModal('${b.id}')">✏️ Edit</button>
+        <button class="btn bg2" style="font-size:13px;padding:8px 14px" onclick="openBstat('${b.id}')">📊 Stats</button>
         ${b.paid?`<button class="btn bg2" style="font-size:13px;padding:8px 14px" onclick="billUnpay('${b.id}')">↺ Mark unpaid</button>`:''}
         <button class="bdel" onclick="deleteBill('${b.id}')">🗑</button>
       </div>
@@ -3300,6 +3360,119 @@ function confirmCrPay(){
 }
 function crUnpay(id){const c=crById(id);if(!c)return;if(!confirm('Mark this credit as unpaid? The expense entry already added remains.'))return;c.paid=false;c.paidDate=null;c.paidAmt=null;c.paidNotes='';persist();renderCredits();}
 function deleteCr(id){if(!confirm('Remove this credit record?'))return;S.credits=S.credits.filter(c=>c.id!==id);persist();renderCredits();}
+
+// ══════════════════════════════════════════════════════
+// BILL STATISTICS
+// ══════════════════════════════════════════════════════
+let _bstatId=null,_bstatPeriod=6,_bstatChart=null;
+
+function openBstat(id){
+  const b=billById(id);if(!b)return;
+  _bstatId=id;_bstatPeriod=6;
+  document.getElementById('bstat-title').textContent=b.icon+' '+b.name;
+  document.getElementById('bstat-sub').textContent=FREQ_LABEL[b.freq]||b.freq;
+  // reset period tabs
+  [3,6,12].forEach(p=>{const t=document.getElementById('bstp-'+p);if(t)t.classList.toggle('on',p===6);});
+  document.getElementById('bstat-overlay').classList.add('show');
+  _renderBstat();
+}
+function closeBstat(){
+  document.getElementById('bstat-overlay').classList.remove('show');
+  if(_bstatChart){_bstatChart.destroy();_bstatChart=null;}
+  _bstatId=null;
+}
+function setBstatPeriod(p){
+  _bstatPeriod=p;
+  [3,6,12].forEach(n=>{const t=document.getElementById('bstp-'+n);if(t)t.classList.toggle('on',n===p);});
+  _renderBstat();
+}
+
+function _renderBstat(){
+  const b=billById(_bstatId);if(!b)return;
+  const n=_bstatPeriod;
+  const now=new Date();
+
+  // Build array of the past N months
+  const months=[];
+  for(let i=n-1;i>=0;i--){
+    let mo=now.getMonth()-i,yr=now.getFullYear();
+    while(mo<0){mo+=12;yr--;}
+    months.push({yr,mo,label:new Date(yr,mo,1).toLocaleDateString('en-PH',{month:'short',year:'2-digit'})});
+  }
+
+  // Match bill's past payments to months using paidDate
+  // A bill might be paid multiple times if it's recurring (multiple records) —
+  // here we look through ALL bills with the same name as a proxy for recurring history,
+  // plus check if this specific bill's paidDate falls in that month
+  const allSameName=(S.bills||[]).filter(bx=>bx.name===b.name&&bx.paid&&bx.paidDate);
+
+  const monthData=months.map(({yr,mo,label})=>{
+    const key=`${yr}-${String(mo+1).padStart(2,'0')}`;
+    // Match paid date year-month
+    const paid=allSameName.filter(bx=>{
+      const d=bx.paidDate||'';return d.slice(0,7)===key;
+    });
+    // Also check expenses linked to same bill (via description match)
+    const expMatch=S.expenses.filter(e=>{
+      const d=e.date||'';return d.slice(0,7)===key&&(e.description||'').toLowerCase().includes(b.name.toLowerCase());
+    });
+    const paidAmt=paid.length?paid.reduce((s,bx)=>s+(bx.paidAmt||bx.amount),0):
+                  expMatch.length?expMatch.reduce((s,e)=>s+e.amount,0):0;
+    const expected=b.amount;
+    return{label,yr,mo,key,paidAmt,expected,paid:paidAmt>0};
+  });
+
+  const paidMonths=monthData.filter(m=>m.paid);
+  const totalPaid=paidMonths.reduce((s,m)=>s+m.paidAmt,0);
+  const totalExpected=monthData.reduce((s,m)=>s+m.expected,0);
+  const avgPaid=paidMonths.length?totalPaid/paidMonths.length:0;
+  const payRate=monthData.length?Math.round((paidMonths.length/monthData.length)*100):0;
+
+  // Summary metrics
+  document.getElementById('bstat-mets').innerHTML=`
+    <div class="bstat-box"><div class="bstat-lbl">Periods tracked</div><div class="bstat-val">${n}</div><div class="bstat-sub">months</div></div>
+    <div class="bstat-box"><div class="bstat-lbl">Times paid</div><div class="bstat-val">${paidMonths.length}</div><div class="bstat-sub">${payRate}% rate</div></div>
+    <div class="bstat-box"><div class="bstat-lbl">Total paid</div><div class="bstat-val" style="font-size:14px">${fa(totalPaid)}</div><div class="bstat-sub">vs ${fa(totalExpected)} expected</div></div>
+    <div class="bstat-box"><div class="bstat-lbl">Avg paid</div><div class="bstat-val" style="font-size:14px">${avgPaid>0?fa(avgPaid):'—'}</div><div class="bstat-sub">per period</div></div>`;
+
+  // Chart
+  if(_bstatChart){_bstatChart.destroy();_bstatChart=null;}
+  const cco=gCC();const th=THEMES.find(t=>t.id===S.prefs.themeId)||THEMES[0];
+  const canvas=document.getElementById('bstat-chart');
+  if(canvas){
+    _bstatChart=new Chart(canvas,{
+      type:'bar',
+      data:{
+        labels:monthData.map(m=>m.label),
+        datasets:[
+          {label:'Expected',data:monthData.map(m=>m.expected),backgroundColor:cco.g,borderColor:th.ac,borderWidth:1.5,borderDash:[4,3],type:'line',pointRadius:0,fill:false,tension:.3,order:0},
+          {label:'Paid',data:monthData.map(m=>m.paidAmt),backgroundColor:monthData.map(m=>m.paid?th.ac+'cc':'rgba(200,200,200,.2)'),borderRadius:5,borderSkipped:false,order:1}
+        ]
+      },
+      options:{
+        responsive:true,maintainAspectRatio:false,
+        plugins:{
+          legend:{display:true,position:'top',labels:{color:cco.t,font:{size:11},boxWidth:12}},
+          tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${fa(ctx.raw)}`}}
+        },
+        scales:{
+          x:{grid:{display:false},ticks:{color:cco.t,font:{size:10}}},
+          y:{ticks:{color:cco.t,font:{size:10},callback:v=>S.prefs.currency+v.toLocaleString()},grid:{color:cco.g},beginAtZero:true}
+        }
+      }
+    });
+  }
+
+  // History table
+  const rows=monthData.slice().reverse().map(m=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;background:${m.paid?'var(--okbg)':'var(--surf2)'};border:1px solid ${m.paid?'rgba(22,163,74,.2)':'var(--bd)'};margin-bottom:6px">
+      <span style="font-size:16px">${m.paid?'✅':'⬜'}</span>
+      <span style="flex:1;font-size:13px;font-weight:500;color:var(--tx)">${m.label}</span>
+      <span style="font-size:13px;font-weight:600;color:${m.paid?'var(--ok)':'var(--tx3)'}">${m.paid?fa(m.paidAmt):'Not paid'}</span>
+      ${m.paid&&m.paidAmt!==m.expected?`<span style="font-size:11px;color:var(--tx3)">(expected ${fa(m.expected)})</span>`:''}
+    </div>`).join('');
+  document.getElementById('bstat-history').innerHTML=rows||'<div class="empty" style="padding:1rem">No payment data found.</div>';
+}
 
 // INIT
 document.getElementById('wdate').value=new Date().toISOString().slice(0,10);
