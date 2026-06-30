@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<link rel="icon" type="image/x-icon" href="https://bubblysnaps.github.io/moneywatch/favicon.ico">
-<link rel="apple-touch-icon" sizes="180x180" href="https://bubblysnaps.github.io/moneywatch/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://bubblysnaps.github.io/moneywatch/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="https://bubblysnaps.github.io/moneywatch/favicon-16x16.png">
-<link rel="manifest" href="https://bubblysnaps.github.io/moneywatch/site.webmanifest">
+<link rel="icon" type="image/x-icon" href="https://bubblysnaps.github.io/dos/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="https://bubblysnaps.github.io/dos/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://bubblysnaps.github.io/dos/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://bubblysnaps.github.io/dos/favicon-16x16.png">
+<link rel="manifest" href="https://bubblysnaps.github.io/dos/site.webmanifest">
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>MoneyWatch v20.6</title>
-
+<title>MoneyWatch v20.7</title>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&family=Poppins:wght@300;400;500;600&family=Nunito:wght@300;400;600;700&family=Manrope:wght@300;400;500;600&family=Figtree:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Sora:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&family=Lato:wght@300;400;700&family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;500;600&display=swap');
@@ -664,11 +663,22 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
   </div>
   <div class="mets f3" id="wl-mets" style="margin-bottom:18px"></div>
   <!-- Filter bar -->
-  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center">
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;align-items:center">
     <span style="font-size:12px;font-weight:600;color:var(--tx3);text-transform:uppercase;letter-spacing:.5px">Filter:</span>
     <button class="ft on" id="wlf-all"   onclick="setWlFilter('all')"   style="padding:4px 13px;font-size:12px">All</button>
     <button class="ft"    id="wlf-open"  onclick="setWlFilter('open')"  style="padding:4px 13px;font-size:12px">Open</button>
     <button class="ft"    id="wlf-done"  onclick="setWlFilter('done')"  style="padding:4px 13px;font-size:12px">Completed</button>
+  </div>
+  <!-- Sort bar -->
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center">
+    <span style="font-size:12px;font-weight:600;color:var(--tx3);text-transform:uppercase;letter-spacing:.5px">Sort:</span>
+    <button class="ft on wlsort-btn" data-sort="date-desc" onclick="setWlSort('date-desc')" style="padding:4px 13px;font-size:12px">Date ↓</button>
+    <button class="ft wlsort-btn" data-sort="date-asc" onclick="setWlSort('date-asc')" style="padding:4px 13px;font-size:12px">Date ↑</button>
+    <button class="ft wlsort-btn" data-sort="name-asc" onclick="setWlSort('name-asc')" style="padding:4px 13px;font-size:12px">Name A–Z</button>
+    <button class="ft wlsort-btn" data-sort="name-desc" onclick="setWlSort('name-desc')" style="padding:4px 13px;font-size:12px">Name Z–A</button>
+    <span style="flex:1"></span>
+    <button class="ib" style="width:32px;height:32px" onclick="setAllWlCollapsed(false)" title="Expand all">⬇</button>
+    <button class="ib" style="width:32px;height:32px" onclick="setAllWlCollapsed(true)" title="Collapse all">⬆</button>
   </div>
   <div id="wl-lists"></div>
 </div>
@@ -698,8 +708,8 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
     <button class="ft on" id="utilsort-asc"  onclick="setUtilSort('asc')"  style="padding:4px 13px;font-size:12px">Name A–Z</button>
     <button class="ft"    id="utilsort-desc" onclick="setUtilSort('desc')" style="padding:4px 13px;font-size:12px">Name Z–A</button>
     <span style="flex:1"></span>
-    <button class="btn bg2" style="font-size:12px;padding:5px 12px" onclick="setAllUtilCollapsed(false)">⬇ Expand all</button>
-    <button class="btn bg2" style="font-size:12px;padding:5px 12px" onclick="setAllUtilCollapsed(true)">⬆ Collapse all</button>
+    <button class="ib" style="width:32px;height:32px" onclick="setAllUtilCollapsed(false)" title="Expand all">⬇</button>
+    <button class="ib" style="width:32px;height:32px" onclick="setAllUtilCollapsed(true)" title="Collapse all">⬆</button>
   </div>
   <div id="bill-list"></div>
 </div>
@@ -714,11 +724,21 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
     <button class="btn bp" onclick="openCreditModal()">＋ Add credit</button>
   </div>
   <div class="mets f4" id="cr-mets" style="margin-bottom:18px"></div>
-  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center">
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;align-items:center">
     <span style="font-size:12px;font-weight:600;color:var(--tx3);text-transform:uppercase;letter-spacing:.5px">Filter:</span>
     <button class="ft on" id="crf-all"    onclick="setCrFilter('all')"    style="padding:4px 13px;font-size:12px">All</button>
     <button class="ft"    id="crf-unpaid" onclick="setCrFilter('unpaid')" style="padding:4px 13px;font-size:12px">Unpaid</button>
     <button class="ft"    id="crf-paid"   onclick="setCrFilter('paid')"   style="padding:4px 13px;font-size:12px">Paid</button>
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center">
+    <span style="font-size:12px;font-weight:600;color:var(--tx3);text-transform:uppercase;letter-spacing:.5px">Sort:</span>
+    <button class="ft on crsort-btn" data-sort="date-desc" onclick="setCrSort('date-desc')" style="padding:4px 13px;font-size:12px">Date ↓</button>
+    <button class="ft crsort-btn" data-sort="date-asc" onclick="setCrSort('date-asc')" style="padding:4px 13px;font-size:12px">Date ↑</button>
+    <button class="ft crsort-btn" data-sort="amt-desc" onclick="setCrSort('amt-desc')" style="padding:4px 13px;font-size:12px">Amount ↓</button>
+    <button class="ft crsort-btn" data-sort="amt-asc" onclick="setCrSort('amt-asc')" style="padding:4px 13px;font-size:12px">Amount ↑</button>
+    <span style="flex:1"></span>
+    <button class="ib" style="width:32px;height:32px" onclick="setAllCrCollapsed(false)" title="Expand all">⬇</button>
+    <button class="ib" style="width:32px;height:32px" onclick="setAllCrCollapsed(true)" title="Collapse all">⬆</button>
   </div>
   <div id="cr-list"></div>
 </div>
@@ -2314,12 +2334,17 @@ savePrefs=function(){
 // WISHLIST
 // ══════════════════════════════════════════════════════
 let wlFilter='all';
+let _wlSort='date-desc';
+let _wlCollapsed={};
 
 function setWlFilter(f){
   wlFilter=f;
   ['all','open','done'].forEach(k=>{const b=document.getElementById('wlf-'+k);if(b)b.classList.toggle('on',k===f);});
   renderWishlist();
 }
+function setWlSort(s){_wlSort=s;document.querySelectorAll('.wlsort-btn').forEach(b=>b.classList.toggle('on',b.dataset.sort===s));renderWishlist();}
+function toggleWlCollapse(id){_wlCollapsed[id]=!_wlCollapsed[id];renderWishlist();}
+function setAllWlCollapsed(collapsed){(S.wishlists||[]).forEach(w=>{_wlCollapsed[w.id]=collapsed;});renderWishlist();}
 
 // ── Helpers ───────────────────────────────────────────
 function wlById(id){return(S.wishlists||[]).find(w=>w.id===id);}
@@ -2332,11 +2357,18 @@ function wlBoughtCount(list){return list.items.filter(i=>i.bought).length;}
 // ── Render ────────────────────────────────────────────
 function renderWishlist(){
   if(!S.wishlists)S.wishlists=[];
-  const lists=S.wishlists.filter(w=>{
+  let lists=S.wishlists.filter(w=>{
     if(wlFilter==='open')return!wlIsComplete(w);
     if(wlFilter==='done')return wlIsComplete(w);
     return true;
-  }).sort((a,b)=>b.date.localeCompare(a.date));
+  });
+  lists=lists.slice().sort((a,b)=>{
+    if(_wlSort==='date-desc')return b.date.localeCompare(a.date);
+    if(_wlSort==='date-asc')return a.date.localeCompare(b.date);
+    if(_wlSort==='name-asc')return a.name.localeCompare(b.name,undefined,{sensitivity:'base'});
+    if(_wlSort==='name-desc')return b.name.localeCompare(a.name,undefined,{sensitivity:'base'});
+    return 0;
+  });
 
   const all=S.wishlists;
   const totalItems=all.reduce((s,w)=>s+w.items.length,0);
@@ -2359,6 +2391,7 @@ function renderWishlist(){
     const progColor=pct===100?'var(--ok)':bc?bc.color:'var(--ac)';
     const est=wlTotalEst(w);const spent=wlTotalBought(w);
     const complete=wlIsComplete(w);
+    const isCollapsed=!!_wlCollapsed[w.id];
 
     const itemsHtml=w.items.map(item=>{
       const itemBc=bc;
@@ -2378,8 +2411,9 @@ function renderWishlist(){
 
     return`<div class="wl-list-card${complete?' wl-done':''}">
       <div class="wl-card-header">
+        <button class="drag-handle" style="cursor:pointer;font-size:14px;flex-shrink:0;margin-top:2px" onclick="toggleWlCollapse('${w.id}')" title="${isCollapsed?'Expand':'Collapse'}">${isCollapsed?'▶':'▼'}</button>
         <div class="wl-card-icon" style="background:${bc?bc.color+'22':'var(--surf3)'};border:1.5px solid ${bc?bc.color+'40':'var(--bd)'}">${w.icon||'🛒'}</div>
-        <div class="wl-card-meta">
+        <div class="wl-card-meta" style="cursor:pointer" onclick="toggleWlCollapse('${w.id}')">
           <div class="wl-card-title">${w.name}</div>
           <div class="wl-card-sub">
             ${bc?`<span class="bcat-pill" style="background:${bc.color}22;color:${bc.color}">${bc.icon} ${bc.name}</span>`:''}
@@ -2395,12 +2429,13 @@ function renderWishlist(){
           <button class="bdel" onclick="wlDelList('${w.id}')" title="Delete">🗑</button>
         </div>
       </div>
+      ${isCollapsed?'':`
       ${total>0?`<div class="wl-progress"><div class="wl-progressf" style="width:${pct}%;background:${progColor}"></div></div>`:'' }
       <div class="wl-items">${itemsHtml}</div>
       <div class="wl-add-item-row">
         <input id="wlq-${w.id}" placeholder="Quick add item name…" style="flex:2;min-width:140px" onkeydown="if(event.key==='Enter')wlQuickAdd('${w.id}')">
         <button class="btn bp" style="font-size:13px;padding:8px 13px;white-space:nowrap" onclick="openWliModal('${w.id}')">＋ Add item</button>
-      </div>
+      </div>`}
     </div>`;
   }).join('');
 }
@@ -3065,6 +3100,194 @@ function _renderBstat(){
   document.getElementById('bstat-history').innerHTML=rows;
 }
 
+
+// ══════════════════════════════════════════════════════
+// CREDITS
+// ══════════════════════════════════════════════════════
+let crFilter='all';
+let _crSort='date-desc'; // 'date-desc' | 'date-asc' | 'amt-desc' | 'amt-asc'
+let _crCollapsed={};
+
+function setCrFilter(f){crFilter=f;['all','unpaid','paid'].forEach(k=>{const b=document.getElementById('crf-'+k);if(b)b.classList.toggle('on',k===f);});renderCredits();}
+function setCrSort(s){_crSort=s;document.querySelectorAll('.crsort-btn').forEach(b=>b.classList.toggle('on',b.dataset.sort===s));renderCredits();}
+function toggleCrCollapse(id){_crCollapsed[id]=!_crCollapsed[id];renderCredits();}
+function setAllCrCollapsed(collapsed){(S.credits||[]).forEach(c=>{_crCollapsed[c.id]=collapsed;});renderCredits();}
+function crById(id){return(S.credits||[]).find(c=>c.id===id);}
+
+// ── Source dropdown: populate from Savings ─────────────
+function crPopSources(){
+  const sel=document.getElementById('crm-source-sel');if(!sel)return;
+  sel.innerHTML='<option value="">— Type manually —</option>';
+  (S.savings||[]).forEach(sv=>{const o=document.createElement('option');o.value=sv.name;o.textContent='🐷 '+sv.name+' ('+fa(sv.amount)+')';sel.appendChild(o);});
+}
+function crSourceSelChange(){
+  const sel=document.getElementById('crm-source-sel');
+  const txt=document.getElementById('crm-source-txt');
+  if(sel.value){txt.value=sel.value;txt.style.display='none';}
+  else{txt.value='';txt.style.display='block';}
+}
+
+// ── Render ─────────────────────────────────────────────
+function renderCredits(){
+  if(!S.credits)S.credits=[];
+  const all=S.credits;
+  const unpaid=all.filter(c=>!c.paid);
+  const totalUnpaid=unpaid.reduce((s,c)=>s+c.amount,0);
+  const totalAll=all.reduce((s,c)=>s+c.amount,0);
+  const paidAmt=all.filter(c=>c.paid).reduce((s,c)=>s+(c.paidAmt||c.amount),0);
+
+  document.getElementById('cr-mets').innerHTML=`
+    <div class="met"><div class="ml">Total credits</div><div class="mv">${all.length}</div><div class="ms">${unpaid.length} unpaid</div></div>
+    <div class="met"><div class="ml">Total borrowed</div><div class="mv">${fa(totalAll)}</div><div class="ms">all time</div></div>
+    <div class="met dn"><div class="ml">Outstanding</div><div class="mv">${fa(totalUnpaid)}</div><div class="ms">to be paid</div></div>
+    <div class="met ok"><div class="ml">Paid back</div><div class="mv">${fa(paidAmt)}</div><div class="ms">${all.filter(c=>c.paid).length} settled</div></div>`;
+
+  let filtered=all.filter(c=>{
+    if(crFilter==='unpaid')return!c.paid;
+    if(crFilter==='paid')return c.paid;
+    return true;
+  });
+
+  filtered=filtered.slice().sort((a,b)=>{
+    if(_crSort==='date-desc')return b.date.localeCompare(a.date);
+    if(_crSort==='date-asc')return a.date.localeCompare(b.date);
+    if(_crSort==='amt-desc')return b.amount-a.amount;
+    if(_crSort==='amt-asc')return a.amount-b.amount;
+    return 0;
+  });
+
+  const cont=document.getElementById('cr-list');
+  if(!filtered.length){cont.innerHTML='<div class="empty" style="padding:3rem">💳 No credits yet. Tap ＋ Add credit to start tracking.</div>';return;}
+
+  cont.innerHTML=filtered.map(c=>{
+    const bc=c.budgetCat?bcById(c.budgetCat):null;
+    const isCollapsed=!!_crCollapsed[c.id];
+    return`<div class="credit-card${c.paid?' cr-paid':''}">
+      <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:${isCollapsed?'0':'12px'};flex-wrap:wrap">
+        <button class="drag-handle" style="cursor:pointer;font-size:14px;flex-shrink:0;margin-top:2px" onclick="toggleCrCollapse('${c.id}')" title="${isCollapsed?'Expand':'Collapse'}">${isCollapsed?'▶':'▼'}</button>
+        <div style="flex:1;min-width:0;cursor:pointer" onclick="toggleCrCollapse('${c.id}')">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <span class="cr-badge ${c.paid?'paid':'unpaid'}">${c.paid?'✓ Paid':'Unpaid'}</span>
+            <span style="font-size:12px;color:var(--tx3)">📅 ${new Date(c.date+'T00:00:00').toLocaleDateString('en-PH',{month:'long',day:'numeric',year:'numeric'})}</span>
+            ${isCollapsed?`<span style="font-size:13px;font-weight:600;color:var(--tx)">${c.source||'Unknown source'}</span><span style="font-size:13px;font-weight:700;color:${c.paid?'var(--ok)':'var(--dn)'}">${fa(c.amount)}</span>`:''}
+          </div>
+        </div>
+      </div>
+      ${isCollapsed?'':`
+      <div class="cr-header">
+        <div class="cr-icon">${bc?bc.icon:'💳'}</div>
+        <div class="cr-meta">
+          <div class="cr-name">${c.source||'Unknown source'}</div>
+          <div class="cr-sub">
+            ${bc?`<span class="bcat-pill" style="background:${bc.color}22;color:${bc.color}">${bc.icon} ${bc.name}</span>`:''}
+            ${c.category?`<span class="cpill">${c.category}</span>`:''}
+          </div>
+        </div>
+        <div class="cr-amount ${c.paid?'paid':'unpaid'}">${fa(c.amount)}</div>
+      </div>
+      ${c.purpose?`<div class="cr-purpose">📝 ${c.purpose}</div>`:''}
+      <div class="cr-info-grid">
+        <div class="cr-info-box"><div class="cr-info-lbl">Date credited</div><div class="cr-info-val">${new Date(c.date+'T00:00:00').toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'})}</div></div>
+        <div class="cr-info-box"><div class="cr-info-lbl">Amount</div><div class="cr-info-val">${fa(c.amount)}</div></div>
+        ${c.paid?`<div class="cr-info-box"><div class="cr-info-lbl">Paid on</div><div class="cr-info-val" style="color:var(--ok)">${new Date(c.paidDate+'T00:00:00').toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'})}</div></div>`:''}
+        ${c.paid&&c.paidAmt?`<div class="cr-info-box"><div class="cr-info-lbl">Paid amount</div><div class="cr-info-val" style="color:var(--ok)">${fa(c.paidAmt)}</div></div>`:''}
+        ${c.paidNotes?`<div class="cr-info-box" style="grid-column:1/-1"><div class="cr-info-lbl">Payment notes</div><div class="cr-info-val">${c.paidNotes}</div></div>`:''}
+      </div>
+      <div class="cr-actions">
+        ${!c.paid?`<button class="btn bp" style="font-size:13px;padding:8px 16px" onclick="openCrPay('${c.id}')">✅ Mark as paid</button>`:''}
+        <button class="btn bg2" style="font-size:13px;padding:8px 14px" onclick="openCreditModal('${c.id}')">✏️ Edit</button>
+        ${c.paid?`<button class="btn bg2" style="font-size:13px;padding:8px 14px" onclick="crUnpay('${c.id}')">↺ Mark unpaid</button>`:''}
+        <button class="bdel" onclick="deleteCr('${c.id}')">🗑</button>
+      </div>`}
+    </div>`;
+  }).join('');
+}
+
+// ── Create / Edit Credit Modal ────────────────────────
+function openCreditModal(editId){
+  document.getElementById('crm-id').value=editId||'';
+  const bcSel=document.getElementById('crm-bcat');
+  bcSel.innerHTML='<option value="">— No budget category —</option>'+S.budgetCats.map(b=>`<option value="${b.id}">${b.icon} ${b.name}</option>`).join('');
+  const cSel=document.getElementById('crm-cat');
+  cSel.innerHTML='<option value="">— Select category —</option>'+S.categories.map(c=>`<option value="${c}">${c}</option>`).join('');
+  crPopSources();
+  if(editId){
+    const c=crById(editId);if(!c)return;
+    document.getElementById('crm-date').value=c.date;
+    document.getElementById('crm-amt').value=c.amount;
+    document.getElementById('crm-source-txt').value=c.source||'';
+    document.getElementById('crm-source-sel').value='';
+    document.getElementById('crm-source-txt').style.display='block';
+    document.getElementById('crm-purpose').value=c.purpose||'';
+    bcSel.value=c.budgetCat||'';cSel.value=c.category||'';
+    document.getElementById('crm-title').textContent='✏️ Edit credit';
+  } else {
+    document.getElementById('crm-date').value=new Date().toISOString().slice(0,10);
+    document.getElementById('crm-amt').value='';
+    document.getElementById('crm-source-txt').value='';
+    document.getElementById('crm-source-sel').value='';
+    document.getElementById('crm-source-txt').style.display='block';
+    document.getElementById('crm-purpose').value='';
+    bcSel.value='';cSel.value='';
+    document.getElementById('crm-title').textContent='💳 New credit';
+  }
+  document.getElementById('crm-msg').style.display='none';
+  document.getElementById('cr-overlay').classList.add('show');
+  setTimeout(()=>document.getElementById('crm-amt').focus(),100);
+}
+function closeCreditModal(){document.getElementById('cr-overlay').classList.remove('show');}
+function saveCreditModal(){
+  const date=document.getElementById('crm-date').value;
+  const amount=parseFloat(document.getElementById('crm-amt').value);
+  const source=document.getElementById('crm-source-txt').value.trim()||document.getElementById('crm-source-sel').value.trim();
+  const purpose=document.getElementById('crm-purpose').value.trim();
+  const budgetCat=document.getElementById('crm-bcat').value||null;
+  const category=document.getElementById('crm-cat').value||'';
+  if(!date){showMsg('crm-msg','Select a date.',false);return;}
+  if(!amount||amount<=0){showMsg('crm-msg','Enter a valid amount.',false);return;}
+  if(!source){showMsg('crm-msg','Enter where the credit is from.',false);return;}
+  if(!S.credits)S.credits=[];
+  const eid=document.getElementById('crm-id').value;
+  if(eid){const c=crById(eid);if(c)Object.assign(c,{date,amount,source,purpose,budgetCat,category});}
+  else{S.credits.push({id:'cr_'+Date.now(),date,amount,source,purpose,budgetCat,category,paid:false,paidDate:null,paidAmt:null,paidNotes:''});}
+  persist();closeCreditModal();renderCredits();
+}
+
+// ── Mark as paid ──────────────────────────────────────
+function openCrPay(id){
+  const c=crById(id);if(!c)return;
+  document.getElementById('crpay-id').value=id;
+  document.getElementById('crpay-date').value=new Date().toISOString().slice(0,10);
+  document.getElementById('crpay-amt').value=c.amount.toFixed(2);
+  document.getElementById('crpay-notes').value='';
+  document.getElementById('crpay-addexp').checked=true;
+  const bc=c.budgetCat?bcById(c.budgetCat):null;
+  document.getElementById('crpay-summary').innerHTML=
+    `<b>${c.source}</b> — ${fa(c.amount)}`+
+    (bc?` <span class="bcat-pill" style="background:${bc.color}22;color:${bc.color};margin-left:6px">${bc.icon} ${bc.name}</span>`:'');
+  document.getElementById('crpay-msg').style.display='none';
+  document.getElementById('crpay-overlay').classList.add('show');
+  setTimeout(()=>document.getElementById('crpay-amt').focus(),100);
+}
+function closeCrPay(){document.getElementById('crpay-overlay').classList.remove('show');}
+function confirmCrPay(){
+  const id=document.getElementById('crpay-id').value;
+  const c=crById(id);if(!c){showMsg('crpay-msg','Credit not found.',false);return;}
+  const date=document.getElementById('crpay-date').value;
+  const amt=parseFloat(document.getElementById('crpay-amt').value);
+  const notes=document.getElementById('crpay-notes').value.trim();
+  const addExp=document.getElementById('crpay-addexp').checked;
+  if(!date){showMsg('crpay-msg','Select a payment date.',false);return;}
+  if(!amt||amt<=0){showMsg('crpay-msg','Enter the amount paid.',false);return;}
+  c.paid=true;c.paidDate=date;c.paidAmt=amt;c.paidNotes=notes;
+  if(addExp){
+    S.expenses.push({amount:amt,category:c.category||S.categories[0]||'',date,shop:c.source,description:'Credit repayment: '+c.source+(c.purpose?' — '+c.purpose.slice(0,40):''),budgetCat:c.budgetCat||null});
+  }
+  persist();closeCrPay();renderCredits();
+  const fl=document.getElementById('sfl');fl.textContent='✓ Credit marked paid'+(addExp?' & expense added':'');fl.classList.add('show');setTimeout(()=>{fl.classList.remove('show');setTimeout(()=>fl.textContent='✓ Saved',400);},2200);
+}
+function crUnpay(id){const c=crById(id);if(!c)return;if(!confirm('Mark this credit as unpaid? The expense entry already added remains.'))return;c.paid=false;c.paidDate=null;c.paidAmt=null;c.paidNotes='';persist();renderCredits();}
+function deleteCr(id){if(!confirm('Remove this credit record?'))return;S.credits=S.credits.filter(c=>c.id!==id);persist();renderCredits();}
 
 // INIT
 document.getElementById('wdate').value=new Date().toISOString().slice(0,10);
