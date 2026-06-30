@@ -9,7 +9,7 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>MoneyWatch v20.3</title>
+<title>MoneyWatch v20.4&5</title>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&family=Poppins:wght@300;400;500;600&family=Nunito:wght@300;400;600;700&family=Manrope:wght@300;400;500;600&family=Figtree:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Sora:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&family=Lato:wght@300;400;700&family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;500;600&display=swap');
@@ -185,12 +185,6 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
 /* idle warning banner */
 #idle-warn{position:fixed;top:0;left:0;right:0;z-index:8999;background:var(--wn);color:#fff;font-size:13px;font-weight:600;text-align:center;padding:10px 16px;display:none;box-shadow:0 2px 8px rgba(0,0,0,.2);align-items:center;justify-content:center;gap:10px}
 #idle-warn.show{display:flex}
-/* ── GOOGLE DRIVE INDICATOR ──────────────────────────── */
-.drive-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:100px;background:#e8f0fe;color:#1a73e8;border:1px solid #c5d8fb;margin-left:6px;vertical-align:middle}
-[data-dk] .drive-badge{background:#1a2a4a;color:#7baaf7;border-color:#2a4080}
-.drive-badge.connected{background:#e6f4ea;color:#1e8e3e;border-color:#a8d5b0}
-[data-dk] .drive-badge.connected{background:#0d2a18;color:#34a853;border-color:#1a5c30}
-#drive-status{font-size:11px;color:var(--tx3);padding:3px 8px;background:var(--surf2);border-radius:6px;border:1px solid var(--bd);white-space:nowrap;max-width:160px;overflow:hidden;text-overflow:ellipsis}
 /* ── WISHLIST ──────────────────────────────────────────── */
 .wl-list-card{background:var(--surf);border:1.5px solid var(--bd);border-radius:var(--rl);padding:18px;box-shadow:var(--sh);margin-bottom:14px;transition:all .18s}
 .wl-list-card:hover{box-shadow:var(--sh2)}
@@ -451,13 +445,12 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
     <div class="brand"><div class="logo">💰</div><div><h1 class="brand-name">MoneyWatch</h1><div class="brand-tag">Your money is watching you.</div></div></div>
     <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
       <span class="sflash" id="sfl">✓ Saved</span>
-      <span id="drive-status" style="display:none"></span>
       <span class="clk" id="clk"></span>
     </div>
   </div>
   <!-- Row 2: Action buttons centered -->
   <div class="topbar-btns">
-    <button class="ib" id="load-btn" onclick="trigLoad()" title="Open from Google Drive or local file">📂</button>
+    <button class="ib" id="load-btn" onclick="trigLoad()" title="Open local file">📂</button>
     <button class="ib" id="save-btn" onclick="saveFile()" title="Save">💾</button>
     <button class="ib" onclick="location.reload()" title="Refresh page">🔃</button>
     <button class="ib" id="topbar-lock" onclick="alLock()" title="Lock app">🔒</button>
@@ -494,16 +487,6 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
           </div>
           <button class="btn bg2" style="font-size:13px;padding:7px 13px;color:var(--dn);border-color:var(--dn)" onclick="clearAllReceipts()">🗑 Clear all</button>
         </div>
-      </div>
-      <div class="pst" style="margin-top:0">Google Drive sync</div>
-      <div style="background:var(--surf2);border:1px solid var(--bd);border-radius:11px;padding:14px 16px;margin-bottom:10px">
-        <div style="font-size:13px;color:var(--tx2);margin-bottom:12px;line-height:1.5">Connect to Google Drive to load and auto-save your data file in the cloud.</div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button class="btn bp" style="font-size:13px;padding:8px 14px" onclick="closePref();gdLoadPickerThenOpen()">📂 Open Drive file</button>
-          <button class="btn bg2" style="font-size:13px;padding:8px 14px" onclick="closePref();gdCreateNew()">➕ Create new in Drive</button>
-          <button class="btn bg2" style="font-size:13px;padding:8px 14px;color:var(--dn);border-color:var(--dn)" onclick="gdSignOut()">🔓 Sign out Drive</button>
-        </div>
-        <div id="pref-drive-status" style="font-size:12px;color:var(--tx3);margin-top:10px"></div>
       </div>
       <div class="divl"></div>
       <div class="pst" style="margin-top:0">App lock & security</div>
@@ -960,25 +943,6 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
   </div>
 </div>
 
-<!-- CONFIRM BILL PAYMENT MODAL -->
-<div class="overlay" id="billpay-overlay">
-  <div class="modal-box" style="max-width:420px">
-    <div class="modal-header"><div class="modal-title">✅ Mark as paid</div><button class="modal-close" onclick="closeBillPay()">✕</button></div>
-    <input type="hidden" id="billpay-id">
-    <div style="background:var(--surf2);border:1px solid var(--bd);border-radius:11px;padding:14px;margin-bottom:16px">
-      <div style="font-size:13px;color:var(--tx2);margin-bottom:6px">Adding expense for:</div>
-      <div id="billpay-summary" style="font-size:15px;font-weight:600;color:var(--tx)"></div>
-    </div>
-    <div class="fg2">
-      <div><label>Date paid</label><input type="date" id="billpay-date"></div>
-      <div><label>Amount paid</label><input type="number" id="billpay-amt" placeholder="0.00" min="0" step="0.01"></div>
-    </div>
-    <div style="margin-bottom:16px"><label>Shop / Provider</label><input id="billpay-shop" placeholder="e.g. Meralco, Grab" list="shop-list" autocomplete="off"></div>
-    <div style="display:flex;justify-content:flex-end;gap:9px"><button class="btn bg2" onclick="closeBillPay()">Cancel</button><button class="btn bp" onclick="confirmBillPay()">✓ Mark paid & add expense</button></div>
-    <div id="billpay-msg" class="msg"></div>
-  </div>
-</div>
-
 <!-- CREATE / EDIT CREDIT MODAL -->
 <div class="overlay" id="cr-overlay">
   <div class="modal-box" style="max-width:500px">
@@ -1098,6 +1062,21 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
       <div><label>Date paid</label><input type="date" id="billpay-date"></div>
       <div><label>Amount paid</label><input type="number" id="billpay-amt" placeholder="0.00" min="0" step="0.01"></div>
     </div>
+    <div class="fg2">
+      <div><label>OR # <span style="font-weight:400;color:var(--tx3);font-size:11px">(official receipt)</span></label><input id="billpay-orno" placeholder="e.g. OR-0012345"></div>
+      <div>
+        <label>Mode of payment</label>
+        <div style="display:flex;gap:7px">
+          <select id="billpay-mop-sel" style="flex:1" onchange="billpayMopChange()"></select>
+          <button class="btn bp bico" onclick="billpayToggleAddMop()" title="Add new payment mode" style="font-size:18px;height:40px;width:40px;border-radius:10px;padding:0;flex-shrink:0">＋</button>
+        </div>
+        <div id="billpay-mop-new" style="display:none;gap:7px;margin-top:7px">
+          <input id="billpay-mop-new-inp" placeholder="New payment mode name" onkeydown="if(event.key==='Enter'){event.preventDefault();billpaySaveNewMop();}" style="flex:1">
+          <button class="btn bp" onclick="billpaySaveNewMop()" style="padding:9px 14px">Add</button>
+          <button class="btn bg2" onclick="billpayToggleAddMop()" style="padding:9px 12px">✕</button>
+        </div>
+      </div>
+    </div>
     <div style="margin-bottom:16px"><label>Shop / Provider</label><input id="billpay-shop" placeholder="e.g. Meralco, BDO online" list="shop-list" autocomplete="off"></div>
     <div style="display:flex;justify-content:flex-end;gap:9px"><button class="btn bg2" onclick="closeBillPay()">Cancel</button><button class="btn bp" onclick="confirmBillPay()">✓ Mark paid & add expense</button></div>
     <div id="billpay-msg" class="msg"></div>
@@ -1149,28 +1128,6 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
     <div style="display:flex;justify-content:flex-end;margin-top:14px">
       <button class="btn bg2" onclick="closeBillHist()">Close</button>
     </div>
-  </div>
-</div>
-
-<!-- SOURCE PICKER MODAL (Drive vs Local) -->
-<div class="overlay" id="src-pick-overlay">
-  <div class="sbox" style="max-width:380px">
-    <div style="font-size:28px;margin-bottom:12px">📂</div>
-    <div class="stit" id="src-pick-title">Open file</div>
-    <div class="ssub" id="src-pick-sub">Choose where to open from:</div>
-    <div class="sopts">
-      <div class="sopt" id="src-pick-drive" onclick="srcPickDrive()">
-        <div class="soico" style="background:#e8f0fe;color:#1a73e8;font-size:22px">
-          <svg width="22" height="22" viewBox="0 0 87.3 78" xmlns="http://www.w3.org/2000/svg"><path d="m6.6 66.85 3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8h-27.5c0 1.55.4 3.1 1.2 4.5z" fill="#0066da"/><path d="m43.65 25-13.75-23.8c-1.35.8-2.5 1.9-3.3 3.3l-25.4 44a9.06 9.06 0 0 0 -1.2 4.5h27.5z" fill="#00ac47"/><path d="m73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5h-27.502l5.852 11.5z" fill="#ea4335"/><path d="m43.65 25 13.75-23.8c-1.35-.8-2.9-1.2-4.5-1.2h-18.5c-1.6 0-3.15.45-4.5 1.2z" fill="#00832d"/><path d="m59.8 53h-32.3l-13.75 23.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z" fill="#2684fc"/><path d="m73.4 26.5-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3l-13.75 23.8 16.15 28h27.45c0-1.55-.4-3.1-1.2-4.5z" fill="#ffba00"/></svg>
-        </div>
-        <div><div class="sotit">Google Drive</div><div class="sodesc" id="src-pick-drive-desc">Sign in and pick a file from Drive</div></div>
-      </div>
-      <div class="sopt" onclick="srcPickLocal()">
-        <div class="soico amber">💾</div>
-        <div><div class="sotit">Local file</div><div class="sodesc">Open a .json file from this device</div></div>
-      </div>
-    </div>
-    <button class="btn bg2" style="width:100%;justify-content:center;margin-top:12px;font-size:13px" onclick="closeSrcPick()">Cancel</button>
   </div>
 </div>
 
@@ -1226,7 +1183,7 @@ const DEFBC=[
   {id:'personal',name:'Personal',icon:'👤',color:'#5b6af0',limit:0,desc:'Personal care, clothing, entertainment',locked:true},
   {id:'home',name:'Home',icon:'🏠',color:'#16a34a',limit:0,desc:'Rent, utilities, groceries, household',locked:true}
 ];
-const DS={expenses:[],categories:['Credit card','Grocery','School','Utilities','Transport'],budgetCats:JSON.parse(JSON.stringify(DEFBC)),savings:[],incomeData:{},wishlists:[],utils:[],credits:[],prefs:{name:'',currency:'₱',themeId:'indigo',cc:{},font:"'Inter',system-ui,sans-serif",fw:'400',fs:'15px',tz:'Asia/Manila',cf:'12',autosave:true,incLock:false,incPIN:''}};
+const DS={expenses:[],categories:['Credit card','Grocery','School','Utilities','Transport'],budgetCats:JSON.parse(JSON.stringify(DEFBC)),savings:[],incomeData:{},wishlists:[],utils:[],credits:[],paymentModes:['Maya','GCash','Bank Transfer','OTC (Over the Counter)','Cash'],prefs:{name:'',currency:'₱',themeId:'indigo',cc:{},font:"'Inter',system-ui,sans-serif",fw:'400',fs:'15px',tz:'Asia/Manila',cf:'12',autosave:true,incLock:false,incPIN:''}};
 let S=JSON.parse(JSON.stringify(DS));
 let AT='home',SV='overview',VY=new Date().getFullYear(),VM=new Date().getMonth();
 let svCatGroup='default'; // 'default' | 'category' | 'date'
@@ -1258,14 +1215,78 @@ function sessNew(){S=JSON.parse(JSON.stringify(DS));document.getElementById('ses
 function sessCont(){if(!localStorage.getItem('mw_v2'))return;try{const p=JSON.parse(localStorage.getItem('mw_v2')||'{}');['expenses','categories','budgetCats','savings','incomeData'].forEach(k=>{if(p[k])S[k]=p[k];});if(p.prefs)S.prefs=Object.assign(S.prefs,p.prefs);}catch(e){}document.getElementById('sess-overlay').classList.remove('show');finishInit();}
 function finishInit(){applyPrefs();go('home');if(S.prefs.incLock&&S.prefs.incPIN)buildSetupNP();}
 
-// PERSIST — always saves to localStorage; also writes to file/Drive
+function _applyLoadedData(d){
+  ['expenses','categories','budgetCats','savings','incomeData','wishlists','utils','credits','paymentModes'].forEach(k=>{if(d[k])S[k]=d[k];});
+  if(d.bills&&d.bills.length&&(!S.utils||!S.utils.length)){
+    S.utils=(d.bills||[]).map(b=>({id:'ut_'+b.id,name:b.name,icon:b.icon||'🧾',ref:'',desc:'',budgetCat:b.budgetCat||null,category:b.category||'',typicalAmt:b.amount,entries:b.paid?[{id:'be_'+b.id,due:b.due,amount:b.amount,period:'',remindDays:b.remindDays||3,notes:b.notes||'',paid:true,paidDate:b.paidDate,paidAmt:b.paidAmt||b.amount,shop:b.shop||''}]:[{id:'be_'+b.id,due:b.due,amount:b.amount,period:'',remindDays:b.remindDays||3,notes:b.notes||'',paid:false,paidDate:null,paidAmt:null,shop:''}]}));
+  }
+  if(d.prefs)S.prefs=Object.assign(S.prefs,d.prefs);
+}
+
+// ── FILE HANDLE (File System Access API — local files) ──
+let activeFileHandle=null;
+function hasFileApi(){return'showOpenFilePicker'in window;}
+function setFileHandle(handle){
+  activeFileHandle=handle;
+  const btn=document.getElementById('save-btn');
+  if(btn){
+    if(handle){btn.title='Save to: '+handle.name;btn.style.color='var(--ok)';btn.style.borderColor='var(--ok)';}
+    else{btn.title='Save file';btn.style.color='';btn.style.borderColor='';}
+  }
+}
+
+async function saveFile(){
+  if(activeFileHandle){clearTimeout(_saveTimer);await _writeToFile();return;}
+  // No file loaded — just download
+  const b=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
+  const u=URL.createObjectURL(b);const a=document.createElement('a');
+  a.href=u;a.download='moneywatch_'+new Date().toISOString().slice(0,10)+'.json';
+  a.click();URL.revokeObjectURL(u);flash();
+}
+
+async function trigLoad(){
+  if(hasFileApi()){
+    try{
+      const [handle]=await window.showOpenFilePicker({types:[{description:'MoneyWatch data',accept:{'application/json':['.json']}}],multiple:false});
+      const perm=await handle.requestPermission({mode:'readwrite'});
+      const file=await handle.getFile();const text=await file.text();
+      _applyLoadedData(JSON.parse(text));setFileHandle(perm==='granted'?handle:null);incUnlocked=false;
+      try{localStorage.setItem('mw_v2',JSON.stringify(S));}catch(e){}
+      applyPrefs();go(AT);showMsg('pmsg','Loaded: '+handle.name,true);return;
+    }catch(e){if(e.name==='AbortError')return;}
+  }
+  document.getElementById('fileinp').click();
+}
+function loadFile(e){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();r.onload=ev=>{
+    try{_applyLoadedData(JSON.parse(ev.target.result));setFileHandle(null);incUnlocked=false;persist();applyPrefs();go(AT);showMsg('pmsg','Data loaded!',true);}
+    catch(err){showMsg('pmsg','Invalid file.',false);}
+  };r.readAsText(f);e.target.value='';
+}
+
+async function sessLoad(){
+  document.getElementById('sess-overlay').classList.remove('show');
+  if(hasFileApi()){
+    try{
+      const [handle]=await window.showOpenFilePicker({types:[{description:'MoneyWatch data',accept:{'application/json':['.json']}}],multiple:false});
+      const perm=await handle.requestPermission({mode:'readwrite'});
+      const file=await handle.getFile();const text=await file.text();
+      _applyLoadedData(JSON.parse(text));setFileHandle(perm==='granted'?handle:null);
+      finishInit();return;
+    }catch(e){if(e.name==='AbortError'){initSess();return;}}
+  }
+  const inp=document.createElement('input');inp.type='file';inp.accept='.json';
+  inp.onchange=e=>{const f=e.target.files[0];if(!f){initSess();return;}const r=new FileReader();r.onload=ev=>{try{_applyLoadedData(JSON.parse(ev.target.result));setFileHandle(null);}catch(err){}finishInit();};r.readAsText(f);};
+  inp.oncancel=()=>initSess();inp.click();
+}
+
+// PERSIST — always saves to localStorage; also writes to file if loaded
 let _saveTimer=null;
 function persist(){
   try{localStorage.setItem('mw_v2',JSON.stringify(S));}catch(e){}
   clearTimeout(_saveTimer);
-  if(gdSignedIn&&gdFileId){
-    _saveTimer=setTimeout(()=>gdSave().then(ok=>{if(ok)flash();}),600);
-  } else if(activeFileHandle){
+  if(activeFileHandle){
     _saveTimer=setTimeout(()=>_writeToFile(),300);
   } else {
     flash();
@@ -1305,401 +1326,6 @@ function showFileStatus(msg,warn){
 }
 
 function flash(){const e=document.getElementById('sfl');if(!e)return;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),1800);}
-
-// ══════════════════════════════════════════════════════
-// GOOGLE DRIVE INTEGRATION
-// ══════════════════════════════════════════════════════
-const GD_API_KEY  = 'AIzaSyChSFM6VvSYg_kMoY1xY2WLWANQb-BpvRs';
-const GD_CLIENT_ID= '225056616792-vj7j5tpbb788m7u6ud0muire7fa5fepo.apps.googleusercontent.com';
-const GD_SCOPES   = 'https://www.googleapis.com/auth/drive.file';
-const GD_DISC_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
-const GD_MIME     = 'application/json';
-const GD_FILENAME = 'moneywatch_data.json';
-
-let gdReady=false,gdSignedIn=false,gdFileId=null,gdFileName=null,gdTokenClient=null;
-
-// ── Init Google APIs ─────────────────────────────────
-// ── Dynamic Google API loader ────────────────────────────
-let _gapiReady=false,_gisReady=false;
-
-function _loadScript(src){
-  return new Promise((resolve,reject)=>{
-    // Check if already loaded
-    if(document.querySelector(`script[src="${src}"]`)){resolve();return;}
-    const s=document.createElement('script');
-    s.src=src;s.async=true;
-    s.onload=()=>resolve();
-    s.onerror=(e)=>reject(new Error('Failed to load: '+src));
-    document.head.appendChild(s);
-  });
-}
-
-async function _initGoogleAPIs(){
-  // ── Check protocol ──────────────────────────────────
-  const proto=location.protocol;
-  if(proto==='file:'){
-    _gdBlockReason='Drive requires a web server (HTTPS). Open the app via GitHub Pages, Netlify, or localhost — not as a local file.';
-    setDriveStatus('blocked');return;
-  }
-  if(proto==='http:'&&location.hostname!=='localhost'&&location.hostname!=='127.0.0.1'){
-    _gdBlockReason='Drive requires HTTPS. Deploy to GitHub Pages or Netlify to use Drive sync.';
-    setDriveStatus('blocked');return;
-  }
-
-  setDriveStatus('loading');
-
-  // ── Load scripts ────────────────────────────────────
-  try{
-    await Promise.all([
-      _loadScript('https://apis.google.com/js/api.js'),
-      _loadScript('https://accounts.google.com/gsi/client')
-    ]);
-  }catch(e){
-    _gdBlockReason='Could not load Google scripts ('+e.message+'). An ad blocker or network restriction may be blocking apis.google.com or accounts.google.com.';
-    console.warn('Google script load failed:',e.message);
-    setDriveStatus('blocked');return;
-  }
-
-  // ── Wait for globals ─────────────────────────────────
-  let tries=0;
-  await new Promise(resolve=>{
-    const poll=()=>{
-      if(typeof gapi!=='undefined'&&typeof google!=='undefined'&&typeof google.accounts!=='undefined')return resolve();
-      if(++tries>20)return resolve();
-      setTimeout(poll,500);
-    };poll();
-  });
-
-  if(typeof gapi==='undefined'){
-    _gdBlockReason='gapi global not found after script load. Check browser console for errors from apis.google.com.';
-    setDriveStatus('blocked');return;
-  }
-  if(typeof google==='undefined'||typeof google.accounts==='undefined'){
-    _gdBlockReason='google.accounts not found after script load. Check browser console for errors from accounts.google.com.';
-    setDriveStatus('blocked');return;
-  }
-
-  gdInit();
-}
-
-let _gdBlockReason='';
-
-function gdInit(){
-  gapi.load('client',async()=>{
-    try{
-      await gapi.client.init({apiKey:GD_API_KEY,discoveryDocs:[GD_DISC_DOC]});
-    }catch(e){console.warn('gapi client init error',e);setDriveStatus('blocked');return;}
-    gdReady=true;
-    gdTokenClient=google.accounts.oauth2.initTokenClient({
-      client_id:GD_CLIENT_ID,scope:GD_SCOPES,
-      callback:async(resp)=>{
-        if(resp.error){
-          console.warn('GD token error',resp);
-          if(resp.error==='popup_blocked_by_browser')showMsg('pmsg','Pop-up blocked — please allow pop-ups for this site.',false);
-          return;
-        }
-        gdSignedIn=true;setDriveStatus('connected');
-        if(_gdPendingAction){const a=_gdPendingAction;_gdPendingAction=null;a();}
-      }
-    });
-    const tok=gapi.client.getToken();
-    if(tok&&tok.access_token){gdSignedIn=true;}
-    setDriveStatus(gdSignedIn?'connected':'ready');
-    gdReconnect();
-  });
-}
-// dummy callbacks in case any stray onload fires
-function gapiScriptLoaded(){}
-function gisScriptLoaded(){}
-let _gdPendingAction=null;
-function gdEnsureAuth(then){
-  if(!gdReady){
-    showMsg('pmsg','Google Drive is not available. Check that apis.google.com is not blocked.',false);
-    return;
-  }
-  if(gdSignedIn){then();return;}
-  _gdPendingAction=then;
-  gdTokenClient.requestAccessToken({prompt:''});
-}
-function gdSignOut(){
-  const tok=gapi.client.getToken();
-  if(tok){google.accounts.oauth2.revoke(tok.access_token,()=>{});gapi.client.setToken(null);}
-  gdSignedIn=false;gdFileId=null;gdFileName=null;setDriveStatus('');
-  setFileHandle(null);showMsg('pmsg','Signed out of Google Drive.',true);
-}
-
-// ── Drive status indicator ────────────────────────────
-function gdRetry(){
-  _gdBlockReason='';gdReady=false;gdSignedIn=false;
-  const btn=document.getElementById('drive-retry-btn');
-  if(btn){btn.style.display='none';}
-  _initGoogleAPIs();
-}
-
-function setDriveStatus(state,name){
-  const el=document.getElementById('drive-status');
-  const retryBtn=document.getElementById('drive-retry-btn');
-  const map={
-    loading: '⏳ Drive loading…',
-    ready:   '☁ Drive ready',
-    connected:'🟢 Drive ready',
-    file:    '📄 '+(name||gdFileName||'Drive file'),
-    saving:  '⏳ Saving…',
-    saved:   '✅ Saved to Drive',
-    error:   '⚠ Drive save error',
-    blocked: '⚠ Drive unavailable',
-    '':      null
-  };
-  const text=state in map?map[state]:state;
-  if(!text){
-    if(el){el.style.display='none';el.textContent='';}
-    if(retryBtn)retryBtn.style.display='none';
-    return;
-  }
-  if(el){
-    el.textContent=text;el.style.display='inline';
-    el.style.color=state==='blocked'||state==='error'?'var(--dn)':
-                   state==='saved'||state==='connected'||state==='file'?'var(--ok)':
-                   'var(--tx3)';
-  }
-  // Show retry button when blocked, loading (stuck), or error
-  if(retryBtn){
-    retryBtn.style.display=(state==='blocked'||state==='error'||state==='loading')?'flex':'none';
-    retryBtn.title=state==='blocked'?'Retry Google Drive connection':
-                   state==='error'?'Retry Drive save':
-                   'Retry loading Google APIs';
-  }
-  // Update pref panel status
-  const pel=document.getElementById('pref-drive-status');
-  if(pel){
-    if(state==='blocked'){
-      const reason=_gdBlockReason||'Google scripts could not be loaded.';
-      pel.innerHTML=`<div style="color:var(--dn);line-height:1.5;margin-bottom:8px">⚠ ${reason}</div>`+
-        `<button class="btn bg2" style="font-size:12px;padding:6px 12px" onclick="gdRetry()">↺ Retry</button>`;
-    }
-    else if(state==='connected'||state==='ready'){pel.innerHTML='<span style="color:var(--ok)">✓ Google Drive connected</span>';}
-    else if(state==='file'){pel.innerHTML='<span style="color:var(--ok)">✓ Active file: '+(name||gdFileName||'')+'</span>';}
-    else{pel.textContent=text;}
-  }
-}
-
-// ── OPEN (Picker) ─────────────────────────────────────
-function gdOpenPicker(){
-  gdEnsureAuth(()=>{
-    const tok=gapi.client.getToken();
-    const picker=new google.picker.PickerBuilder()
-      .addView(new google.picker.DocsView(google.picker.ViewId.DOCS)
-        .setMimeTypes(GD_MIME).setMode(google.picker.DocsViewMode.LIST))
-      .addView(new google.picker.DocsUploadView().setMimeTypes(GD_MIME))
-      .setOAuthToken(tok.access_token)
-      .setDeveloperKey(GD_API_KEY)
-      .setTitle('Select your MoneyWatch data file')
-      .setCallback(async data=>{
-        if(data.action===google.picker.Action.PICKED){
-          const doc=data.docs[0];
-          gdFileId=doc.id;gdFileName=doc.name;
-          try{
-            const resp=await gapi.client.drive.files.get({fileId:gdFileId,alt:'media'});
-            _applyLoadedData(JSON.parse(resp.body));
-            setFileHandle(null);// drive handles saving, not FSAPI
-            incUnlocked=false;
-            try{localStorage.setItem('mw_v2',JSON.stringify(S));}catch(e){}
-            localStorage.setItem('mw_gdfileid',gdFileId);
-            localStorage.setItem('mw_gdfilename',gdFileName);
-            setDriveStatus('file',gdFileName);
-            applyPrefs();go(AT);showMsg('pmsg','Loaded from Drive: '+gdFileName,true);
-          }catch(err){showMsg('pmsg','Could not read file: '+err.message,false);}
-        } else if(data.action===google.picker.Action.CANCEL){
-          // user cancelled — no-op
-        }
-      })
-      .build();
-    // load picker API if not loaded
-    if(typeof google.picker==='undefined'){
-      gapi.load('picker',()=>picker.setVisible(true));
-    } else {picker.setVisible(true);}
-  });
-}
-
-// ── SAVE TO DRIVE ─────────────────────────────────────
-async function gdSave(){
-  if(!gdSignedIn||!gdFileId)return false;
-  const json=JSON.stringify(S,null,2);
-  try{
-    setDriveStatus('saving');
-    await gapi.client.request({
-      path:`/upload/drive/v3/files/${gdFileId}`,
-      method:'PATCH',
-      params:{uploadType:'media'},
-      headers:{'Content-Type':GD_MIME},
-      body:json
-    });
-    setDriveStatus('saved',gdFileName);
-    setTimeout(()=>setDriveStatus('file',gdFileName),2500);
-    return true;
-  }catch(err){
-    console.warn('Drive save error:',err);
-    setDriveStatus('error');
-    setTimeout(()=>setDriveStatus('file',gdFileName),3000);
-    return false;
-  }
-}
-
-// ── CREATE NEW FILE IN DRIVE ──────────────────────────
-async function gdCreateNew(){
-  gdEnsureAuth(async()=>{
-    try{
-      const json=JSON.stringify(S,null,2);
-      // Step 1: create metadata
-      const meta=await gapi.client.drive.files.create({resource:{name:GD_FILENAME,mimeType:GD_MIME},fields:'id,name'});
-      gdFileId=meta.result.id;gdFileName=meta.result.name;
-      // Step 2: upload content
-      await gapi.client.request({
-        path:`/upload/drive/v3/files/${gdFileId}`,
-        method:'PATCH',params:{uploadType:'media'},
-        headers:{'Content-Type':GD_MIME},body:json
-      });
-      localStorage.setItem('mw_gdfileid',gdFileId);
-      localStorage.setItem('mw_gdfilename',gdFileName);
-      setDriveStatus('file',gdFileName);
-      showMsg('pmsg','Saved new file to Drive: '+gdFileName,true);
-    }catch(err){showMsg('pmsg','Drive error: '+err.message,false);}
-  });
-}
-
-// ── RECONNECT SAVED FILE ID ───────────────────────────
-function gdReconnect(){
-  const id=localStorage.getItem('mw_gdfileid');const name=localStorage.getItem('mw_gdfilename');
-  if(id&&name){gdFileId=id;gdFileName=name;if(gdSignedIn)setDriveStatus('file',name);}
-}
-
-// ── LOAD PICKER API LAZILY ────────────────────────────
-function gdLoadPickerThenOpen(){
-  if(!gdReady){showMsg('pmsg','Google Drive is not available — check that apis.google.com is not blocked.',false);return;}
-  if(typeof google.picker==='undefined'){
-    gapi.load('picker',()=>gdOpenPicker());
-  } else {gdOpenPicker();}
-}
-
-// ══════════════════════════════════════════════════════
-// SOURCE PICKER (Drive vs Local)
-// ══════════════════════════════════════════════════════
-let _srcPickMode='load';// 'load' | 'session'
-let _srcPickResolve=null;
-
-function openSrcPick(mode){
-  _srcPickMode=mode;
-  document.getElementById('src-pick-title').textContent=mode==='session'?'Open saved file':'Open file';
-  document.getElementById('src-pick-sub').textContent='Choose where to open from:';
-  const drvDesc=document.getElementById('src-pick-drive-desc');
-  if(drvDesc){
-    if(_gdBlockReason)drvDesc.textContent='⚠ Unavailable — tap to see why';
-    else if(gdReady&&gdSignedIn)drvDesc.textContent='Signed in — pick a file from Drive';
-    else if(gdReady)drvDesc.textContent='Sign in to Google, then pick a file';
-    else drvDesc.textContent='Loading Google APIs…';
-  }
-  document.getElementById('src-pick-overlay').classList.add('show');
-}
-function closeSrcPick(){document.getElementById('src-pick-overlay').classList.remove('show');}
-function srcPickDrive(){
-  if(!gdReady&&_gdBlockReason){
-    closeSrcPick();
-    // Show reason in a friendly way
-    const msg=_gdBlockReason;
-    showMsg('pmsg',msg,false);
-    // Also open prefs to Drive section
-    togPref();
-    return;
-  }
-  closeSrcPick();
-  if(_srcPickMode==='session'){document.getElementById('sess-overlay').classList.remove('show');}
-  gdLoadPickerThenOpen();
-}
-function srcPickLocal(){
-  closeSrcPick();
-  if(_srcPickMode==='session'){
-    // Session load local
-    if(hasFileApi()){
-      window.showOpenFilePicker({types:[{description:'MoneyWatch data',accept:{'application/json':['.json']}}],multiple:false})
-        .then(async([handle])=>{
-          const perm=await handle.requestPermission({mode:'readwrite'});
-          const file=await handle.getFile();const text=await file.text();
-          _applyLoadedData(JSON.parse(text));setFileHandle(perm==='granted'?handle:null);
-          gdFileId=null;gdFileName=null;localStorage.removeItem('mw_gdfileid');
-          finishInit();
-        }).catch(e=>{if(e.name!=='AbortError')initSess();else initSess();});
-    } else {
-      const inp=document.createElement('input');inp.type='file';inp.accept='.json';
-      inp.onchange=e=>{const f=e.target.files[0];if(!f){initSess();return;}const r=new FileReader();r.onload=ev=>{try{_applyLoadedData(JSON.parse(ev.target.result));setFileHandle(null);}catch(err){}finishInit();};r.readAsText(f);};
-      inp.oncancel=()=>initSess();inp.click();
-    }
-  } else {
-    // Mid-session load local
-    if(hasFileApi()){
-      window.showOpenFilePicker({types:[{description:'MoneyWatch data',accept:{'application/json':['.json']}}],multiple:false})
-        .then(async([handle])=>{
-          const perm=await handle.requestPermission({mode:'readwrite'});
-          const file=await handle.getFile();const text=await file.text();
-          _applyLoadedData(JSON.parse(text));setFileHandle(perm==='granted'?handle:null);
-          gdFileId=null;gdFileName=null;localStorage.removeItem('mw_gdfileid');
-          incUnlocked=false;persist();applyPrefs();go(AT);showMsg('pmsg','Loaded: '+handle.name,true);
-        }).catch(()=>{});
-    } else {document.getElementById('fileinp').click();}
-  }
-}
-
-// ══════════════════════════════════════════════════════
-// FILE HANDLE (File System Access API — local files)
-// ══════════════════════════════════════════════════════
-let activeFileHandle=null;
-function hasFileApi(){return'showOpenFilePicker'in window;}
-function setFileHandle(handle){
-  activeFileHandle=handle;
-  const btn=document.getElementById('save-btn');
-  if(btn){
-    if(handle){btn.title='Save to: '+handle.name;btn.style.color='var(--ok)';btn.style.borderColor='var(--ok)';}
-    else if(!gdFileId){btn.title='Save file';btn.style.color='';btn.style.borderColor='';}
-  }
-}
-
-async function saveFile(){
-  // Priority: Drive file > local FSAPI handle > download
-  if(gdSignedIn&&gdFileId){
-    clearTimeout(_saveTimer);
-    await gdSave();flash();return;
-  }
-  if(activeFileHandle){clearTimeout(_saveTimer);await _writeToFile();return;}
-  // No file — download
-  const b=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
-  const u=URL.createObjectURL(b);const a=document.createElement('a');
-  a.href=u;a.download='moneywatch_'+new Date().toISOString().slice(0,10)+'.json';
-  a.click();URL.revokeObjectURL(u);flash();
-}
-
-async function trigLoad(){openSrcPick('load');}
-
-function loadFile(e){
-  const f=e.target.files[0];if(!f)return;
-  const r=new FileReader();r.onload=ev=>{
-    try{_applyLoadedData(JSON.parse(ev.target.result));setFileHandle(null);
-      gdFileId=null;gdFileName=null;localStorage.removeItem('mw_gdfileid');
-      incUnlocked=false;persist();applyPrefs();go(AT);showMsg('pmsg','Data loaded!',true);}
-    catch(err){showMsg('pmsg','Invalid file.',false);}
-  };r.readAsText(f);e.target.value='';
-}
-function _applyLoadedData(d){
-  ['expenses','categories','budgetCats','savings','incomeData','wishlists','utils','credits'].forEach(k=>{if(d[k])S[k]=d[k];});
-  // backwards compat: migrate old flat bills[] to utils format
-  if(d.bills&&d.bills.length&&(!S.utils||!S.utils.length)){
-    S.utils=(d.bills||[]).map(b=>({id:'ut_'+b.id,name:b.name,icon:b.icon||'🧾',ref:'',desc:'',budgetCat:b.budgetCat||null,category:b.category||'',typicalAmt:b.amount,entries:b.paid?[{id:'be_'+b.id,due:b.due,amount:b.amount,period:'',remindDays:b.remindDays||3,notes:b.notes||'',paid:true,paidDate:b.paidDate,paidAmt:b.paidAmt||b.amount,shop:b.shop||''}]:[{id:'be_'+b.id,due:b.due,amount:b.amount,period:'',remindDays:b.remindDays||3,notes:b.notes||'',paid:false,paidDate:null,paidAmt:null,shop:''}]}));
-  }
-  if(d.prefs)S.prefs=Object.assign(S.prefs,d.prefs);
-}
-
-async function sessLoad(){
-  document.getElementById('sess-overlay').classList.remove('show');
-  openSrcPick('session');
-}
 
 // HELPERS
 const fa=n=>S.prefs.currency+Number(n).toLocaleString('en-PH',{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -3185,6 +2811,7 @@ function openBillHist(uid){
     return`<div class="bill-entry-row${e.paid?' paid':''}${st==='overdue'?' overdue':st==='due-soon'?' due-soon':''}" style="margin-bottom:6px">
       <span class="bill-entry-badge ${stl.cls}">${stl.txt}</span>
       <span class="bill-entry-period">${e.period||new Date(e.due+'T00:00:00').toLocaleDateString('en-PH',{month:'short',year:'numeric'})}</span>
+      <span class="bill-entry-period">${e.period||new Date(e.due+'T00:00:00').toLocaleDateString('en-PH',{month:'short',year:'numeric'})}${e.paid&&(e.mop||e.orNo)?` <span style="color:var(--tx3);font-size:10px">${e.mop?'· '+e.mop:''}${e.orNo?' · OR#'+e.orNo:''}</span>`:''}</span>
       <span class="bill-entry-due">${new Date(e.due+'T00:00:00').toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'})}</span>
       <span class="bill-entry-amt">${fa(e.amount)}${e.paidAmt&&e.paidAmt!==e.amount?` <span style="font-size:10px;color:var(--tx3)">(paid ${fa(e.paidAmt)})</span>`:''}</span>
       <div class="bill-entry-actions">
@@ -3207,6 +2834,10 @@ function openBillPay(uid,eid){
   document.getElementById('billpay-date').value=new Date().toISOString().slice(0,10);
   document.getElementById('billpay-amt').value=e.amount.toFixed(2);
   document.getElementById('billpay-shop').value=u.name;
+  document.getElementById('billpay-orno').value=e.orNo||'';
+  billpayPopMop();
+  document.getElementById('billpay-mop-sel').value=e.mop||(S.paymentModes[0]||'');
+  document.getElementById('billpay-mop-new').style.display='none';
   document.getElementById('billpay-summary').innerHTML=
     `${u.icon} <b>${u.name}</b>${e.period?' — '+e.period:''} — ${fa(e.amount)}`+
     (bc?` <span class="bcat-pill" style="background:${bc.color}22;color:${bc.color};margin-left:6px">${bc.icon} ${bc.name}</span>`:'');
@@ -3214,6 +2845,34 @@ function openBillPay(uid,eid){
   popShopList();
   document.getElementById('billpay-overlay').classList.add('show');
   setTimeout(()=>document.getElementById('billpay-amt').focus(),100);
+}
+function billpayPopMop(){
+  const sel=document.getElementById('billpay-mop-sel');if(!sel)return;
+  const pv=sel.value;
+  sel.innerHTML=(S.paymentModes||[]).map(m=>`<option value="${m}">${m}</option>`).join('');
+  if(pv&&S.paymentModes.includes(pv))sel.value=pv;
+}
+function billpayMopChange(){/* placeholder for future per-mode UI tweaks */}
+function billpayToggleAddMop(){
+  const el=document.getElementById('billpay-mop-new');
+  const showing=el.style.display==='flex';
+  el.style.display=showing?'none':'flex';
+  if(!showing){
+    document.getElementById('billpay-mop-new-inp').value='';
+    setTimeout(()=>document.getElementById('billpay-mop-new-inp').focus(),50);
+  }
+}
+function billpaySaveNewMop(){
+  const inp=document.getElementById('billpay-mop-new-inp');
+  const name=(inp.value||'').trim();
+  if(!name){inp.focus();return;}
+  if(!S.paymentModes)S.paymentModes=[];
+  const exists=S.paymentModes.find(m=>m.toLowerCase()===name.toLowerCase());
+  if(!exists){S.paymentModes.push(name);persist();}
+  billpayPopMop();
+  document.getElementById('billpay-mop-sel').value=exists||name;
+  document.getElementById('billpay-mop-new').style.display='none';
+  inp.value='';
 }
 function closeBillPay(){document.getElementById('billpay-overlay').classList.remove('show');}
 function confirmBillPay(){
@@ -3224,10 +2883,15 @@ function confirmBillPay(){
   const date=document.getElementById('billpay-date').value;
   const amt=parseFloat(document.getElementById('billpay-amt').value);
   const shop=document.getElementById('billpay-shop').value.trim();
+  const orNo=document.getElementById('billpay-orno').value.trim();
+  const mop=document.getElementById('billpay-mop-sel').value;
   if(!date){showMsg('billpay-msg','Select a payment date.',false);return;}
   if(!amt||amt<=0){showMsg('billpay-msg','Enter the amount paid.',false);return;}
-  e.paid=true;e.paidDate=date;e.paidAmt=amt;e.shop=shop;
-  S.expenses.push({amount:amt,category:u.category||S.categories[0]||'',date,shop:shop||u.name,description:u.name+(e.period?' — '+e.period:''),budgetCat:u.budgetCat||null});
+  e.paid=true;e.paidDate=date;e.paidAmt=amt;e.shop=shop;e.orNo=orNo;e.mop=mop;
+  const descParts=[u.name+(e.period?' — '+e.period:'')];
+  if(mop)descParts.push('via '+mop);
+  if(orNo)descParts.push('OR# '+orNo);
+  S.expenses.push({amount:amt,category:u.category||S.categories[0]||'',date,shop:shop||u.name,description:descParts.join(' · '),budgetCat:u.budgetCat||null});
   persist();closeBillPay();renderBills();
   const fl=document.getElementById('sfl');fl.textContent='✓ Bill paid & expense added';fl.classList.add('show');
   setTimeout(()=>{fl.classList.remove('show');setTimeout(()=>fl.textContent='✓ Saved',400);},2200);
@@ -3371,10 +3035,6 @@ function _renderBstat(){
 document.getElementById('wdate').value=new Date().toISOString().slice(0,10);
 function initSess(){}
 alBoot();
-// Load Google APIs dynamically after app boot (non-blocking)
-setTimeout(()=>_initGoogleAPIs(),1000);
-// If still loading after 15s show retry button
-setTimeout(()=>{if(!gdReady){const b=document.getElementById('drive-retry-btn');if(b)b.style.display='flex';}},15000);
 
 </script>
 </body></html>
