@@ -9,7 +9,8 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>MoneyWatch v20.4&5</title>
+<title>MoneyWatch v20.6</title>
+
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&family=Poppins:wght@300;400;500;600&family=Nunito:wght@300;400;600;700&family=Manrope:wght@300;400;500;600&family=Figtree:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Sora:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&family=Lato:wght@300;400;700&family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;500;600&display=swap');
@@ -692,6 +693,14 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
     <button class="btn bp" onclick="openUtilModal()">＋ Add utility</button>
   </div>
   <div class="mets f4" id="bill-mets" style="margin-bottom:18px"></div>
+  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+    <span style="font-size:12px;font-weight:600;color:var(--tx3);text-transform:uppercase;letter-spacing:.5px">Sort:</span>
+    <button class="ft on" id="utilsort-asc"  onclick="setUtilSort('asc')"  style="padding:4px 13px;font-size:12px">Name A–Z</button>
+    <button class="ft"    id="utilsort-desc" onclick="setUtilSort('desc')" style="padding:4px 13px;font-size:12px">Name Z–A</button>
+    <span style="flex:1"></span>
+    <button class="btn bg2" style="font-size:12px;padding:5px 12px" onclick="setAllUtilCollapsed(false)">⬇ Expand all</button>
+    <button class="btn bg2" style="font-size:12px;padding:5px 12px" onclick="setAllUtilCollapsed(true)">⬆ Collapse all</button>
+  </div>
   <div id="bill-list"></div>
 </div>
 
@@ -2626,6 +2635,24 @@ function entryStatusLabel(e){
 }
 
 // ── Render ────────────────────────────────────────────
+let _utilSort='asc'; // 'asc' | 'desc'
+let _utilCollapsed={}; // {utilId: true/false}
+
+function setUtilSort(dir){
+  _utilSort=dir;
+  document.getElementById('utilsort-asc').classList.toggle('on',dir==='asc');
+  document.getElementById('utilsort-desc').classList.toggle('on',dir==='desc');
+  renderBills();
+}
+function toggleUtilCollapse(id){
+  _utilCollapsed[id]=!_utilCollapsed[id];
+  renderBills();
+}
+function setAllUtilCollapsed(collapsed){
+  (S.utils||[]).forEach(u=>{_utilCollapsed[u.id]=collapsed;});
+  renderBills();
+}
+
 function renderBills(){
   if(!S.utils)S.utils=[];
   const allEntries=S.utils.flatMap(u=>u.entries||[]);
@@ -2643,7 +2670,12 @@ function renderBills(){
   const cont=document.getElementById('bill-list');
   if(!S.utils.length){cont.innerHTML='<div class="empty" style="padding:3rem">🧾 No utilities yet. Tap ＋ Add utility to get started.</div>';return;}
 
-  cont.innerHTML=S.utils.map(u=>{
+  const sortedUtils=S.utils.slice().sort((a,b)=>{
+    const cmp=a.name.localeCompare(b.name,undefined,{sensitivity:'base'});
+    return _utilSort==='asc'?cmp:-cmp;
+  });
+
+  cont.innerHTML=sortedUtils.map(u=>{
     const bc=u.budgetCat?bcById(u.budgetCat):null;
     const entries=(u.entries||[]).sort((a,b)=>b.due.localeCompare(a.due));
     const unpaid=entries.filter(e=>!e.paid);
@@ -2651,6 +2683,7 @@ function renderBills(){
     const hasOverdue=entries.some(e=>entryStatus(e)==='overdue');
     const hasDueSoon=entries.some(e=>entryStatus(e)==='due-soon');
     const borderStyle=hasOverdue?'border-color:rgba(220,38,38,.4)':hasDueSoon?'border-color:rgba(217,119,6,.4)':'';
+    const isCollapsed=!!_utilCollapsed[u.id];
 
     const entriesHtml=entries.slice(0,5).map(e=>{
       const st=entryStatus(e);const stl=entryStatusLabel(e);
@@ -2670,13 +2703,15 @@ function renderBills(){
 
     return`<div class="util-card" style="${borderStyle}">
       <div class="util-card-header">
+        <button class="drag-handle" style="cursor:pointer;font-size:14px;flex-shrink:0;margin-top:2px" onclick="toggleUtilCollapse('${u.id}')" title="${isCollapsed?'Expand':'Collapse'}">${isCollapsed?'▶':'▼'}</button>
         <div class="util-icon" style="background:${bc?bc.color+'22':'var(--surf3)'};border:1.5px solid ${bc?bc.color+'40':'var(--bd)'}">${u.icon||'🧾'}</div>
-        <div class="util-meta">
+        <div class="util-meta" style="cursor:pointer" onclick="toggleUtilCollapse('${u.id}')">
           <div class="util-name">${u.name}</div>
           <div class="util-sub">
             ${u.ref?`<span style="font-family:monospace;font-size:11px;background:var(--surf3);padding:1px 6px;border-radius:4px;color:var(--tx2)">${u.ref}</span>`:''}
             ${bc?`<span class="bcat-pill" style="background:${bc.color}22;color:${bc.color}">${bc.icon} ${bc.name}</span>`:''}
             ${u.desc?`<span style="color:var(--tx3)">${u.desc}</span>`:''}
+            ${isCollapsed?`<span style="color:var(--tx3)">· ${entries.length} entr${entries.length!==1?'ies':'y'}${unpaid.length?' · '+unpaid.length+' unpaid':''}</span>`:''}
           </div>
         </div>
         <div style="display:flex;gap:4px;flex-shrink:0">
@@ -2686,13 +2721,13 @@ function renderBills(){
           <button class="bdel" onclick="deleteUtil('${u.id}')">🗑</button>
         </div>
       </div>
-      ${entries.length?`
+      ${isCollapsed?'':(entries.length?`
         <div class="bill-entries-header">
           <span>Period</span><span>Due</span><span>Amount</span><span></span>
         </div>
         <div class="bill-entries-list">${entriesHtml}</div>
         ${hasMore?`<button class="btn bg2" style="width:100%;justify-content:center;margin-top:6px;font-size:12px" onclick="openBillHist('${u.id}')">📋 View all ${entries.length} entries →</button>`:''}
-      `:`<div class="empty" style="padding:1.2rem;font-size:13px">No bill entries yet — tap ＋ to add the first one.</div>`}
+      `:`<div class="empty" style="padding:1.2rem;font-size:13px">No bill entries yet — tap ＋ to add the first one.</div>`)}
     </div>`;
   }).join('');
 
