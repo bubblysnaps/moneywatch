@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<link rel="icon" type="image/x-icon" href="https://bubblysnaps.github.io/dos/favicon.ico">
-<link rel="apple-touch-icon" sizes="180x180" href="https://bubblysnaps.github.io/dos/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://bubblysnaps.github.io/dos/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="https://bubblysnaps.github.io/dos/favicon-16x16.png">
-<link rel="manifest" href="https://bubblysnaps.github.io/dos/site.webmanifest">
+<link rel="icon" type="image/x-icon" href="https://bubblysnaps.github.io/moneywatch/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="https://bubblysnaps.github.io/moneywatch/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://bubblysnaps.github.io/moneywatch/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://bubblysnaps.github.io/moneywatch/favicon-16x16.png">
+<link rel="manifest" href="https://bubblysnaps.github.io/moneywatch/site.webmanifest">
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>MoneyWatch v20.8</title>
+<title>MoneyWatch v20.9</title>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&family=Poppins:wght@300;400;500;600&family=Nunito:wght@300;400;600;700&family=Manrope:wght@300;400;500;600&family=Figtree:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Sora:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&family=Lato:wght@300;400;700&family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;500;600&display=swap');
@@ -476,7 +476,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
       <div class="pr2"><div><label>Your name</label><input id="pn" placeholder="e.g. Maria Santos"></div><div><label>Currency symbol</label><input id="pc" placeholder="₱"></div></div>
       <div class="divl"></div>
       <div class="pst" style="margin-top:0">Auto-save</div>
-      <div class="tog-row"><label class="tw"><input type="checkbox" id="astog" onchange="togAS()"><span class="tt"></span></label><div><div style="font-size:14px;font-weight:500">Auto-save to browser</div><div style="font-size:12px;color:var(--tx3)">Saves every change automatically</div></div></div>
+      <div class="tog-row"><label class="tw"><input type="checkbox" id="astog" onchange="togAS()"><span class="tt"></span></label><div><div style="font-size:14px;font-weight:500">Auto-save</div><div style="font-size:12px;color:var(--tx3)" id="file-handle-status">Saves every change to browser and linked file automatically</div></div></div>
       <div class="divl"></div>
       <div class="pst" style="margin-top:0">Receipt photos</div>
       <div style="background:var(--surf2);border:1px solid var(--bd);border-radius:11px;padding:14px 16px;margin-bottom:10px">
@@ -995,6 +995,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
     </div>
     <div class="fg2">
       <div><label>Expense category</label><select id="utilm-cat"></select></div>
+      <div><label>Consumption unit <span style="font-weight:400;color:var(--tx3);font-size:11px">(optional)</span></label><input id="utilm-unit" placeholder="e.g. kWh, m³, liters, cu.m" list="util-unit-list" autocomplete="off"><datalist id="util-unit-list"><option value="kWh"><option value="m³"><option value="cu.m"><option value="liters"><option value="gallons"><option value="kg"><option value="Mbps"></datalist></div>
       <div><label>Typical amount</label><input type="number" id="utilm-amt" placeholder="0.00" min="0" step="0.01"></div>
     </div>
     <div style="margin-bottom:16px"><label>Description</label><input id="utilm-desc" placeholder="e.g. Meralco residential, PLDT Fiber 100Mbps"></div>
@@ -1016,24 +1017,25 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
     </div>
     <div class="fg2">
       <div><label>Billing period</label><input id="bem-period" placeholder="e.g. June 2025, Jul 1–31"></div>
-      <div><label>Reminder <span style="font-weight:400;color:var(--tx3);font-size:11px">(days before due)</span></label>
-        <select id="bem-remind">
-          <option value="0">No reminder</option>
-          <option value="1">1 day before</option>
-          <option value="2">2 days before</option>
-          <option value="3" selected>3 days before</option>
-          <option value="5">5 days before</option>
-          <option value="7">1 week before</option>
-          <option value="14">2 weeks before</option>
-        </select>
-      </div>
+      <div><label>Consumption <span id="bem-unit-lbl" style="font-weight:400;color:var(--tx3);font-size:11px"></span></label><input type="number" id="bem-consump" placeholder="e.g. 312" min="0" step="0.01"></div>
+    </div>
+    <div style="margin-bottom:12px">
+      <label>Reminder <span style="font-weight:400;color:var(--tx3);font-size:11px">(days before due)</span></label>
+      <select id="bem-remind">
+        <option value="0">No reminder</option>
+        <option value="1">1 day before</option>
+        <option value="2">2 days before</option>
+        <option value="3" selected>3 days before</option>
+        <option value="5">5 days before</option>
+        <option value="7">1 week before</option>
+        <option value="14">2 weeks before</option>
+      </select>
     </div>
     <div style="margin-bottom:16px"><label>Notes</label><input id="bem-notes" placeholder="e.g. Reading: 1234 kWh"></div>
-    <div style="display:flex;justify-content:flex-end;gap:9px"><button class="btn bg2" onclick="closeBillEntry()">Cancel</button><button class="btn bp" onclick="saveBillEntry()">✓ Save</button></div>
+    <div style="display:flex;justify-content:flex-end;gap:9px"><button class="btn bg2" onclick="closeBillEntry()">Cancel</button><button class="btn bp" onclick="saveBillEntry()">&#10003; Save</button></div>
     <div id="bem-msg" class="msg"></div>
   </div>
 </div>
-
 <!-- MARK BILL ENTRY AS PAID MODAL -->
 <div class="overlay" id="billpay-overlay">
   <div class="modal-box" style="max-width:420px">
@@ -1124,9 +1126,10 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
     <div class="sopts">
       <div class="sopt" onclick="sessNew()"><div class="soico blue">✨</div><div><div class="sotit">Start fresh</div><div class="sodesc">Begin a new empty session</div></div></div>
       <div class="sopt" id="sopt-cont" onclick="sessCont()"><div class="soico green">▶</div><div><div class="sotit">Continue last session</div><div class="sodesc" id="sopt-desc">Resume where you left off</div></div></div>
-      <div class="sopt" onclick="sessLoad()"><div class="soico amber">📂</div><div><div class="sotit">Load saved file</div><div class="sodesc">Open a MoneyWatch .json backup</div></div></div>
+      <div class="sopt" id="sopt-reconnect" onclick="sessReconnect()" style="display:none"><div class="soico" style="background:var(--okbg);color:var(--ok)">📄</div><div><div class="sotit">Resume with file</div><div class="sodesc" id="sopt-reconnect-desc">Tap to re-link and load your file</div></div></div>
+      <div class="sopt" onclick="sessLoad()"><div class="soico amber">📂</div><div><div class="sotit">Open a file</div><div class="sodesc">Pick a MoneyWatch .json file</div></div></div>
     </div>
-    <div class="snote">Your data is stored only in this browser.</div>
+    <div class="snote" id="sess-note">Your data is stored only in this browser.</div>
   </div>
 </div>
 
@@ -1210,16 +1213,190 @@ function _applyLoadedData(d){
 }
 
 // ── FILE HANDLE (File System Access API — local files) ──
+// ══════════════════════════════════════════════════════
+// FILE HANDLE — with IndexedDB persistence across sessions
+// ══════════════════════════════════════════════════════
 let activeFileHandle=null;
 function hasFileApi(){return'showOpenFilePicker'in window;}
+
+// ── IndexedDB store for the file handle ───────────────
+const _IDB_NAME='mw_fh',_IDB_STORE='handles',_IDB_KEY='active';
+function _idb(mode){
+  return new Promise((res,rej)=>{
+    const req=indexedDB.open(_IDB_NAME,1);
+    req.onupgradeneeded=e=>e.target.result.createObjectStore(_IDB_STORE);
+    req.onsuccess=e=>res(e.target.result.transaction(_IDB_STORE,mode).objectStore(_IDB_STORE));
+    req.onerror=e=>rej(e.target.error);
+  });
+}
+async function _storeHandle(handle){
+  try{const s=await _idb('readwrite');s.put(handle,_IDB_KEY);}catch(e){}
+}
+async function _loadStoredHandle(){
+  try{const s=await _idb('readonly');return new Promise((res,rej)=>{const r=s.get(_IDB_KEY);r.onsuccess=e=>res(e.target.result||null);r.onerror=()=>res(null);});}
+  catch(e){return null;}
+}
+async function _clearStoredHandle(){
+  try{const s=await _idb('readwrite');s.delete(_IDB_KEY);}catch(e){}
+}
+
+// ── Set file handle + persist in IDB ─────────────────
 function setFileHandle(handle){
   activeFileHandle=handle;
+  if(handle)_storeHandle(handle);else _clearStoredHandle();
   const btn=document.getElementById('save-btn');
   if(btn){
-    if(handle){btn.title='Save to: '+handle.name;btn.style.color='var(--ok)';btn.style.borderColor='var(--ok)';}
+    if(handle){btn.title='Auto-saving to: '+handle.name;btn.style.color='var(--ok)';btn.style.borderColor='var(--ok)';}
     else{btn.title='Save file';btn.style.color='';btn.style.borderColor='';}
   }
+  // Update prefs label if visible
+  const lbl=document.getElementById('file-handle-status');
+  if(lbl)lbl.textContent=handle?'📄 '+handle.name:'No file linked — changes saved to browser only.';
 }
+
+// ── Try to silently reconnect a stored handle ─────────
+async function tryReconnectHandle(){
+  if(!hasFileApi())return false;
+  const handle=await _loadStoredHandle();
+  if(!handle)return false;
+  try{
+    const perm=await handle.queryPermission({mode:'readwrite'});
+    if(perm==='granted'){
+      // Already have permission — read file and continue
+      const file=await handle.getFile();
+      const text=await file.text();
+      _applyLoadedData(JSON.parse(text));
+      activeFileHandle=handle;// set directly, no storeHandle (already stored)
+      const btn=document.getElementById('save-btn');
+      if(btn){btn.title='Auto-saving to: '+handle.name;btn.style.color='var(--ok)';btn.style.borderColor='var(--ok)';}
+      return true;
+    }
+    // perm==='prompt' — we need user interaction, can't auto-reconnect silently
+    // Store handle reference for use in session picker
+    activeFileHandle=handle;
+    return 'needs-permission';
+  }catch(e){
+    await _clearStoredHandle();
+    return false;
+  }
+}
+
+// ── Save ──────────────────────────────────────────────
+async function saveFile(){
+  if(activeFileHandle){clearTimeout(_saveTimer);await _writeToFile();return;}
+  // No file — prompt to pick one first, then save to it
+  if(hasFileApi()){
+    try{
+      const [handle]=await window.showOpenFilePicker({types:[{description:'MoneyWatch data',accept:{'application/json':['.json']}}],multiple:false});
+      const perm=await handle.requestPermission({mode:'readwrite'});
+      if(perm==='granted'){setFileHandle(handle);await _writeToFile();return;}
+    }catch(e){if(e.name==='AbortError'){/* user cancelled — fall through to download */}}
+  }
+  // Fallback download
+  const b=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
+  const u=URL.createObjectURL(b);const a=document.createElement('a');
+  a.href=u;a.download='moneywatch_'+new Date().toISOString().slice(0,10)+'.json';
+  a.click();URL.revokeObjectURL(u);flash();
+}
+
+// ── Open/Load ─────────────────────────────────────────
+async function trigLoad(){
+  if(hasFileApi()){
+    try{
+      const [handle]=await window.showOpenFilePicker({types:[{description:'MoneyWatch data',accept:{'application/json':['.json']}}],multiple:false});
+      const perm=await handle.requestPermission({mode:'readwrite'});
+      const file=await handle.getFile();const text=await file.text();
+      _applyLoadedData(JSON.parse(text));setFileHandle(perm==='granted'?handle:null);incUnlocked=false;
+      try{localStorage.setItem('mw_v2',JSON.stringify(S));}catch(e){}
+      applyPrefs();go(AT);showMsg('pmsg','Loaded & linked: '+handle.name,true);return;
+    }catch(e){if(e.name==='AbortError')return;}
+  }
+  document.getElementById('fileinp').click();
+}
+function loadFile(e){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();r.onload=ev=>{
+    try{_applyLoadedData(JSON.parse(ev.target.result));setFileHandle(null);incUnlocked=false;persist();applyPrefs();go(AT);showMsg('pmsg','Data loaded (browser-only — no auto-save).',true);}
+    catch(err){showMsg('pmsg','Invalid file.',false);}
+  };r.readAsText(f);e.target.value='';
+}
+
+// ── Session load ──────────────────────────────────────
+async function sessLoad(){
+  document.getElementById('sess-overlay').classList.remove('show');
+  if(hasFileApi()){
+    try{
+      const [handle]=await window.showOpenFilePicker({types:[{description:'MoneyWatch data',accept:{'application/json':['.json']}}],multiple:false});
+      const perm=await handle.requestPermission({mode:'readwrite'});
+      const file=await handle.getFile();const text=await file.text();
+      _applyLoadedData(JSON.parse(text));setFileHandle(perm==='granted'?handle:null);
+      finishInit();return;
+    }catch(e){if(e.name==='AbortError'){initSess();return;}}
+  }
+  const inp=document.createElement('input');inp.type='file';inp.accept='.json';
+  inp.onchange=e=>{const f=e.target.files[0];if(!f){initSess();return;}const r=new FileReader();r.onload=ev=>{try{_applyLoadedData(JSON.parse(ev.target.result));setFileHandle(null);}catch(err){}finishInit();};r.readAsText(f);};
+  inp.oncancel=()=>initSess();inp.click();
+}
+
+// ── Session reconnect (from session picker) ───────────
+async function sessReconnect(){
+  document.getElementById('sess-overlay').classList.remove('show');
+  try{
+    const perm=await activeFileHandle.requestPermission({mode:'readwrite'});
+    if(perm==='granted'){
+      const file=await activeFileHandle.getFile();
+      _applyLoadedData(JSON.parse(await file.text()));
+      _storeHandle(activeFileHandle);
+      const btn=document.getElementById('save-btn');
+      if(btn){btn.title='Auto-saving to: '+activeFileHandle.name;btn.style.color='var(--ok)';btn.style.borderColor='var(--ok)';}
+    } else {
+      activeFileHandle=null;await _clearStoredHandle();
+    }
+  }catch(e){activeFileHandle=null;await _clearStoredHandle();}
+  finishInit();
+}
+
+// ── PERSIST ───────────────────────────────────────────
+let _saveTimer=null;
+function persist(){
+  try{localStorage.setItem('mw_v2',JSON.stringify(S));}catch(e){}
+  clearTimeout(_saveTimer);
+  if(activeFileHandle&&S.prefs.autosave){
+    _saveTimer=setTimeout(()=>_writeToFile(),600);
+  } else if(activeFileHandle){
+    flash();// file linked but autosave off — show saved indicator (localStorage)
+  } else {
+    flash();
+  }
+}
+
+async function _writeToFile(){
+  if(!activeFileHandle)return;
+  try{
+    let perm=await activeFileHandle.queryPermission({mode:'readwrite'});
+    if(perm==='prompt'){perm=await activeFileHandle.requestPermission({mode:'readwrite'});}
+    if(perm!=='granted'){setFileHandle(null);showFileStatus('⚠ File permission lost — changes saved to browser only.',true);flash();return;}
+    const w=await activeFileHandle.createWritable();
+    await w.write(JSON.stringify(S,null,2));
+    await w.close();
+    flash();showFileStatus('');
+  }catch(e){
+    console.warn('File write error:',e.message||e);
+    if(e.name==='NotAllowedError'||e.name==='SecurityError'){setFileHandle(null);}
+    flash();
+  }
+}
+
+function showFileStatus(msg,warn){
+  let el=document.getElementById('file-status');
+  if(!el){el=document.createElement('div');el.id='file-status';el.style.cssText='font-size:11px;padding:4px 10px;border-radius:6px;margin-top:4px;text-align:center;display:none;';document.getElementById('sfl').parentNode.appendChild(el);}
+  if(msg){el.textContent=msg;el.style.display='block';el.style.background=warn?'var(--wnbg)':'var(--okbg)';el.style.color=warn?'var(--wn)':'var(--okdk)';if(!warn)setTimeout(()=>el.style.display='none',3000);}
+  else{el.style.display='none';}
+}
+
+function flash(){const e=document.getElementById('sfl');if(!e)return;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),1800);}
+
+
 
 async function saveFile(){
   if(activeFileHandle){clearTimeout(_saveTimer);await _writeToFile();return;}
@@ -1267,17 +1444,6 @@ async function sessLoad(){
   inp.oncancel=()=>initSess();inp.click();
 }
 
-// PERSIST — always saves to localStorage; also writes to file if loaded
-let _saveTimer=null;
-function persist(){
-  try{localStorage.setItem('mw_v2',JSON.stringify(S));}catch(e){}
-  clearTimeout(_saveTimer);
-  if(activeFileHandle){
-    _saveTimer=setTimeout(()=>_writeToFile(),300);
-  } else {
-    flash();
-  }
-}
 
 async function _writeToFile(){
   if(!activeFileHandle)return;
@@ -2265,11 +2431,30 @@ function showIdleWarn(secs){
 function hideIdleWarn(){const w=document.getElementById('idle-warn');if(w)w.classList.remove('show');clearInterval(idleCountInterval);}
 
 // ── SESSION PICKER (called after unlock) ─────────────────
-function showSessionPicker(){
+async function showSessionPicker(){
   const has=!!localStorage.getItem('mw_v2');
   const btn=document.getElementById('sopt-cont');
   if(!has){btn.style.opacity='.45';btn.style.cursor='not-allowed';btn.onclick=null;document.getElementById('sopt-desc').textContent='No previous session found';}
   else{try{const p=JSON.parse(localStorage.getItem('mw_v2')||'{}');const nm=(p.prefs&&p.prefs.name)?p.prefs.name:'';const cnt=(p.expenses||[]).length;document.getElementById('sopt-desc').textContent=(nm?nm+' · ':'')+cnt+' expense'+(cnt!==1?'s':'')+' stored';}catch(e){}}
+
+  // Check for a stored file handle
+  if(hasFileApi()){
+    const result=await tryReconnectHandle();
+    if(result===true){
+      // Permission already granted — auto-continue, no picker needed
+      document.getElementById('sess-note').textContent='Auto-loading from file…';
+      finishInit();return;
+    } else if(result==='needs-permission'){
+      // Handle exists but needs one tap to re-authorize
+      const reconBtn=document.getElementById('sopt-reconnect');
+      const reconDesc=document.getElementById('sopt-reconnect-desc');
+      if(reconBtn&&reconDesc){
+        try{const f=await activeFileHandle.getFile();reconDesc.textContent='Tap to re-link: '+f.name;}catch(e){}
+        reconBtn.style.display='flex';
+      }
+      document.getElementById('sess-note').textContent='A previous file is linked — tap “Resume with file” to reconnect.';
+    }
+  }
   document.getElementById('sess-overlay').classList.add('show');
 }
 
@@ -2681,7 +2866,7 @@ function renderBills(){
       const st=entryStatus(e);const stl=entryStatusLabel(e);
       return`<div class="bill-entry-row${e.paid?' paid':''}${st==='overdue'?' overdue':st==='due-soon'?' due-soon':''}">
         <span class="bill-entry-badge ${stl.cls}">${stl.txt}</span>
-        <span class="bill-entry-period">${e.period||new Date(e.due+'T00:00:00').toLocaleDateString('en-PH',{month:'short',year:'numeric'})}</span>
+        <span class="bill-entry-period">${e.period||new Date(e.due+'T00:00:00').toLocaleDateString('en-PH',{month:'short',year:'numeric'})}${e.consump!=null&&u.consumpUnit?` <span style="color:var(--tx3);font-size:10px">· ${e.consump} ${u.consumpUnit}</span>`:''}</span>
         <span class="bill-entry-due">${new Date(e.due+'T00:00:00').toLocaleDateString('en-PH',{month:'short',day:'numeric'})}</span>
         <span class="bill-entry-amt">${fa(e.amount)}</span>
         <div class="bill-entry-actions">
@@ -2743,12 +2928,13 @@ function openUtilModal(eid){
     document.getElementById('utilm-ref').value=u.ref||'';
     document.getElementById('utilm-desc').value=u.desc||'';
     document.getElementById('utilm-amt').value=u.typicalAmt||'';
+    document.getElementById('utilm-unit').value=u.consumpUnit||'';
     bcSel.value=u.budgetCat||'';cSel.value=u.category||'';
     document.getElementById('utilm-title').textContent='✏️ Edit utility';
   } else {
     document.getElementById('utilm-name').value='';document.getElementById('utilm-icon').value='🧾';
     document.getElementById('utilm-ref').value='';document.getElementById('utilm-desc').value='';
-    document.getElementById('utilm-amt').value='';bcSel.value='';cSel.value='';
+    document.getElementById('utilm-amt').value='';document.getElementById('utilm-unit').value='';bcSel.value='';cSel.value='';
     document.getElementById('utilm-title').textContent='🧾 New utility';
   }
   document.getElementById('utilm-msg').style.display='none';
@@ -2762,13 +2948,14 @@ function saveUtilModal(){
   const ref=document.getElementById('utilm-ref').value.trim();
   const desc=document.getElementById('utilm-desc').value.trim();
   const typicalAmt=parseFloat(document.getElementById('utilm-amt').value)||0;
+  const consumpUnit=document.getElementById('utilm-unit').value.trim();
   const budgetCat=document.getElementById('utilm-bcat').value||null;
   const category=document.getElementById('utilm-cat').value||'';
   if(!name){showMsg('utilm-msg','Enter a utility name.',false);return;}
   if(!S.utils)S.utils=[];
   const eid=document.getElementById('utilm-id').value;
-  if(eid){const u=utilById(eid);if(u)Object.assign(u,{name,icon,ref,desc,typicalAmt,budgetCat,category});}
-  else{S.utils.push({id:'ut_'+Date.now(),name,icon,ref,desc,typicalAmt,budgetCat,category,entries:[]});}
+  if(eid){const u=utilById(eid);if(u)Object.assign(u,{name,icon,ref,desc,typicalAmt,consumpUnit,budgetCat,category});}
+  else{S.utils.push({id:'ut_'+Date.now(),name,icon,ref,desc,typicalAmt,consumpUnit,budgetCat,category,entries:[]});}
   persist();closeUtilModal();renderBills();
 }
 function deleteUtil(id){
@@ -2782,19 +2969,22 @@ function openBillEntry(uid,eid){
   document.getElementById('bem-utilid').value=uid;
   document.getElementById('bem-entryid').value=eid||'';
   document.getElementById('bem-util-info').innerHTML=`${u.icon} <b>${u.name}</b>${u.ref?' — '+u.ref:''}`;
+  const unitLbl=document.getElementById('bem-unit-lbl');
+  if(unitLbl)unitLbl.textContent=u.consumpUnit?'('+u.consumpUnit+')':'(optional)';
   if(eid){
     const e=entryById(uid,eid);if(!e)return;
     document.getElementById('bem-due').value=e.due;
     document.getElementById('bem-amt').value=e.amount;
     document.getElementById('bem-period').value=e.period||'';
+    document.getElementById('bem-consump').value=e.consump!=null?e.consump:'';
     document.getElementById('bem-remind').value=e.remindDays??3;
     document.getElementById('bem-notes').value=e.notes||'';
     document.getElementById('bem-title').textContent='✏️ Edit bill entry';
   } else {
-    // Default due to today, amount to utility's typical
     document.getElementById('bem-due').value=new Date().toISOString().slice(0,10);
     document.getElementById('bem-amt').value=u.typicalAmt||'';
     document.getElementById('bem-period').value='';
+    document.getElementById('bem-consump').value='';
     document.getElementById('bem-remind').value='3';
     document.getElementById('bem-notes').value='';
     document.getElementById('bem-title').textContent='➕ Add bill entry — '+u.name;
@@ -2810,14 +3000,16 @@ function saveBillEntry(){
   const due=document.getElementById('bem-due').value;
   const amount=parseFloat(document.getElementById('bem-amt').value);
   const period=document.getElementById('bem-period').value.trim();
+  const consumpStr=document.getElementById('bem-consump').value;
+  const consump=consumpStr!==''?parseFloat(consumpStr):null;
   const remindDays=parseInt(document.getElementById('bem-remind').value)||0;
   const notes=document.getElementById('bem-notes').value.trim();
   if(!due){showMsg('bem-msg','Select a due date.',false);return;}
   if(!amount||amount<=0){showMsg('bem-msg','Enter a valid amount.',false);return;}
   const u=utilById(uid);if(!u){showMsg('bem-msg','Utility not found.',false);return;}
   if(!u.entries)u.entries=[];
-  if(eid){const e=entryById(uid,eid);if(e)Object.assign(e,{due,amount,period,remindDays,notes});}
-  else{u.entries.push({id:'be_'+Date.now(),due,amount,period,remindDays,notes,paid:false,paidDate:null,paidAmt:null,shop:''});}
+  if(eid){const e=entryById(uid,eid);if(e)Object.assign(e,{due,amount,period,consump,remindDays,notes});}
+  else{u.entries.push({id:'be_'+Date.now(),due,amount,period,consump,remindDays,notes,paid:false,paidDate:null,paidAmt:null,shop:''});}
   persist();closeBillEntry();renderBills();
 }
 function deleteBillEntry(uid,eid){
@@ -2838,7 +3030,7 @@ function openBillHist(uid){
     return`<div class="bill-entry-row${e.paid?' paid':''}${st==='overdue'?' overdue':st==='due-soon'?' due-soon':''}" style="margin-bottom:6px">
       <span class="bill-entry-badge ${stl.cls}">${stl.txt}</span>
       <span class="bill-entry-period">${e.period||new Date(e.due+'T00:00:00').toLocaleDateString('en-PH',{month:'short',year:'numeric'})}</span>
-      <span class="bill-entry-period">${e.period||new Date(e.due+'T00:00:00').toLocaleDateString('en-PH',{month:'short',year:'numeric'})}${e.paid&&(e.mop||e.orNo)?` <span style="color:var(--tx3);font-size:10px">${e.mop?'· '+e.mop:''}${e.orNo?' · OR#'+e.orNo:''}</span>`:''}</span>
+      <span class="bill-entry-period">${e.period||new Date(e.due+'T00:00:00').toLocaleDateString('en-PH',{month:'short',year:'numeric'})}${e.paid&&(e.mop||e.orNo)?` <span style="color:var(--tx3);font-size:10px">${e.mop?'· '+e.mop:''}${e.orNo?' · OR#'+e.orNo:''}</span>`:''}${e.consump!=null&&u.consumpUnit?` <span style="color:#f59e0b;font-size:10px">· ${e.consump} ${u.consumpUnit}</span>`:''}</span>
       <span class="bill-entry-due">${new Date(e.due+'T00:00:00').toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'})}</span>
       <span class="bill-entry-amt">${fa(e.amount)}${e.paidAmt&&e.paidAmt!==e.amount?` <span style="font-size:10px;color:var(--tx3)">(paid ${fa(e.paidAmt)})</span>`:''}</span>
       <div class="bill-entry-actions">
@@ -3005,11 +3197,12 @@ function _renderBstat(){
       expected:anyEntry?anyEntry.amount:(u.typicalAmt||0),
       paidAmt:paidEntry?paidEntry.paidAmt||paidEntry.amount:0,
       paid:!!paidEntry,
-      entry:anyEntry||null
+      entry:anyEntry||null  // full entry object, includes .consump
     };
   });
 
   // Summary
+  const unit=u.consumpUnit||'';
   const paidMonths=monthData.filter(m=>m.paid);
   const totalPaid=paidMonths.reduce((s,m)=>s+m.paidAmt,0);
   const totalExp=monthData.filter(m=>m.entry).reduce((s,m)=>s+m.expected,0);
@@ -3017,41 +3210,54 @@ function _renderBstat(){
   const payRate=monthData.filter(m=>m.entry).length?Math.round(paidMonths.length/monthData.filter(m=>m.entry).length*100):0;
   const highest=Math.max(...monthData.map(m=>m.paidAmt),u.typicalAmt||0);
   const lowest=Math.min(...paidMonths.map(m=>m.paidAmt).filter(Boolean));
+  const consumpEntries=monthData.filter(m=>m.entry&&m.entry.consump!=null);
+  const avgConsump=consumpEntries.length?consumpEntries.reduce((s,m)=>s+m.entry.consump,0)/consumpEntries.length:0;
+  const maxConsump=consumpEntries.length?Math.max(...consumpEntries.map(m=>m.entry.consump)):0;
 
   document.getElementById('bstat-mets').innerHTML=`
     <div class="bstat-box"><div class="bstat-lbl">Periods tracked</div><div class="bstat-val">${monthData.filter(m=>m.entry).length}/${n}</div><div class="bstat-sub">${payRate}% paid</div></div>
     <div class="bstat-box"><div class="bstat-lbl">Total paid</div><div class="bstat-val" style="font-size:14px">${fa(totalPaid)}</div><div class="bstat-sub">vs ${fa(totalExp)} billed</div></div>
-    <div class="bstat-box"><div class="bstat-lbl">Average</div><div class="bstat-val" style="font-size:14px">${avgPaid>0?fa(avgPaid):'—'}</div><div class="bstat-sub">per period</div></div>
-    <div class="bstat-box"><div class="bstat-lbl">High / Low</div><div class="bstat-val" style="font-size:13px">${highest>0?fa(highest):'—'}</div><div class="bstat-sub">${paidMonths.length>1?'low: '+fa(lowest):''}</div></div>`;
+    <div class="bstat-box"><div class="bstat-lbl">Avg amount</div><div class="bstat-val" style="font-size:14px">${avgPaid>0?fa(avgPaid):'—'}</div><div class="bstat-sub">high: ${highest>0?fa(highest):'—'}</div></div>
+    ${unit&&consumpEntries.length?`<div class="bstat-box"><div class="bstat-lbl">Avg ${unit}</div><div class="bstat-val" style="font-size:14px">${avgConsump>0?avgConsump.toFixed(1):'—'}</div><div class="bstat-sub">peak: ${maxConsump>0?maxConsump.toFixed(1):''} ${unit}</div></div>`:`<div class="bstat-box"><div class="bstat-lbl">High / Low</div><div class="bstat-val" style="font-size:13px">${highest>0?fa(highest):'—'}</div><div class="bstat-sub">${paidMonths.length>1?'low: '+fa(lowest):''}</div></div>`}`;
 
   // Chart
   if(_bstatChart){_bstatChart.destroy();_bstatChart=null;}
   const cco=gCC();const th=THEMES.find(t=>t.id===S.prefs.themeId)||THEMES[0];
+  const hasConsump=monthData.some(m=>m.entry&&m.entry.consump!=null);
   const canvas=document.getElementById('bstat-chart');
   if(canvas){
+    const datasets=[
+      {label:'Billed',type:'line',data:monthData.map(m=>m.entry?m.expected:null),borderColor:th.ac+'88',borderDash:[5,4],borderWidth:1.5,pointRadius:3,pointBackgroundColor:th.ac,fill:false,tension:.3,spanGaps:false,order:0,yAxisID:'y'},
+      {label:'Paid',data:monthData.map(m=>m.paidAmt||null),backgroundColor:monthData.map(m=>m.paid?th.ac+'cc':'rgba(150,150,150,.2)'),borderRadius:4,borderSkipped:false,order:1,yAxisID:'y'}
+    ];
+    if(hasConsump){
+      datasets.push({label:unit?'Consumption ('+unit+')':'Consumption',type:'line',data:monthData.map(m=>m.entry&&m.entry.consump!=null?m.entry.consump:null),borderColor:'#f59e0b',backgroundColor:'#f59e0b22',fill:false,tension:.4,pointRadius:4,pointBackgroundColor:'#f59e0b',borderWidth:2,spanGaps:false,order:0,yAxisID:'y1'});
+    }
+    const scales={
+      x:{grid:{display:false},ticks:{color:cco.t,font:{size:10}}},
+      y:{position:'left',ticks:{color:cco.t,font:{size:10},callback:v=>S.prefs.currency+v.toLocaleString()},grid:{color:cco.g},beginAtZero:true}
+    };
+    if(hasConsump){
+      scales.y1={position:'right',grid:{drawOnChartArea:false},ticks:{color:'#f59e0b',font:{size:10},callback:v=>v+(unit?' '+unit:'')},beginAtZero:true};
+    }
     _bstatChart=new Chart(canvas,{
       type:'bar',
-      data:{
-        labels:monthData.map(m=>m.label),
-        datasets:[
-          {label:'Billed',type:'line',data:monthData.map(m=>m.entry?m.expected:null),borderColor:th.ac+'88',borderDash:[5,4],borderWidth:1.5,pointRadius:3,pointBackgroundColor:th.ac,fill:false,tension:.3,spanGaps:false,order:0},
-          {label:'Paid',data:monthData.map(m=>m.paidAmt||null),backgroundColor:monthData.map(m=>m.paid?th.ac+'cc':'rgba(150,150,150,.2)'),borderRadius:4,borderSkipped:false,order:1}
-        ]
-      },
+      data:{labels:monthData.map(m=>m.label),datasets},
       options:{
         responsive:true,maintainAspectRatio:false,
-        plugins:{legend:{display:true,position:'top',labels:{color:cco.t,font:{size:11},boxWidth:12}},tooltip:{callbacks:{label:ctx=>ctx.raw?`${ctx.dataset.label}: ${fa(ctx.raw)}`:null}}},
-        scales:{x:{grid:{display:false},ticks:{color:cco.t,font:{size:10}}},y:{ticks:{color:cco.t,font:{size:10},callback:v=>S.prefs.currency+v.toLocaleString()},grid:{color:cco.g},beginAtZero:true}}
+        plugins:{legend:{display:true,position:'top',labels:{color:cco.t,font:{size:11},boxWidth:12}},tooltip:{callbacks:{label:ctx=>{if(!ctx.raw)return null;if(ctx.dataset.yAxisID==='y1')return `${ctx.dataset.label}: ${ctx.raw}${unit?' '+unit:''}`;return `${ctx.dataset.label}: ${fa(ctx.raw)}`;
+        }}}},
+        scales
       }
     });
   }
 
-  // History
+  // History — show consumption if available
   const rows=monthData.slice().reverse().map(m=>`
     <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;background:${m.paid?'var(--okbg)':m.entry?'var(--surf2)':'transparent'};border:1px solid ${m.paid?'rgba(22,163,74,.2)':m.entry?'var(--bd)':'transparent'};margin-bottom:5px">
       <span style="font-size:15px">${m.paid?'✅':m.entry?'⏳':'—'}</span>
       <span style="min-width:55px;font-size:12px;font-weight:600;color:var(--tx2)">${m.label}</span>
-      <span style="flex:1;font-size:12px;color:var(--tx3)">${m.entry?(m.entry.period||'Due '+new Date(m.entry.due+'T00:00:00').toLocaleDateString('en-PH',{month:'short',day:'numeric'})):'No entry'}</span>
+      <span style="flex:1;font-size:12px;color:var(--tx3)">${m.entry?(m.entry.period||'Due '+new Date(m.entry.due+'T00:00:00').toLocaleDateString('en-PH',{month:'short',day:'numeric'})):'No entry'}${m.entry&&m.entry.consump!=null?` · <span style="color:#f59e0b;font-weight:600">${m.entry.consump}${unit?' '+unit:''}</span>`:''}</span>
       <span style="font-size:13px;font-weight:600;color:${m.paid?'var(--ok)':m.entry?'var(--dn)':'var(--tx4)'}">${m.paid?fa(m.paidAmt):m.entry?fa(m.expected)+'?':'—'}</span>
     </div>`).join('');
   document.getElementById('bstat-history').innerHTML=rows;
