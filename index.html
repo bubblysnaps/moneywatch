@@ -9,7 +9,7 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>MoneyWatch v20.9</title>
+<title>MoneyWatch v30</title>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&family=Poppins:wght@300;400;500;600&family=Nunito:wght@300;400;600;700&family=Manrope:wght@300;400;500;600&family=Figtree:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Sora:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&family=Lato:wght@300;400;700&family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;500;600&display=swap');
@@ -512,11 +512,11 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
         <button class="btn bg2" style="width:100%;justify-content:center;font-size:13px;color:var(--dn);border-color:var(--dn)" onclick="alRemoveLock()">🔓 Remove app lock</button>
       </div>
       <div class="divl"></div>
-      <div class="pst" style="margin-top:0">Income PIN lock</div>
-      <div class="tog-row"><label class="tw"><input type="checkbox" id="sltog" onchange="togIncLock()"><span class="tt"></span></label><div><div style="font-size:14px;font-weight:500">Protect income with 6-digit PIN</div><div style="font-size:12px;color:var(--tx3)">Hides income on Home and locks the Income tab</div></div></div>
+      <div class="pst" style="margin-top:0">Savings, Credits &amp; Income PIN lock</div>
+      <div class="tog-row"><label class="tw"><input type="checkbox" id="sltog" onchange="togIncLock()"><span class="tt"></span></label><div><div style="font-size:14px;font-weight:500">PIN-protect Savings, Credits &amp; Income</div><div style="font-size:12px;color:var(--tx3)">Requires a 6-digit PIN to access these three tabs</div></div></div>
       <div id="pin-setup-area" class="pin-setup-wrap">
         <div style="background:var(--surf2);border:1px solid var(--bd);border-radius:12px;padding:16px;margin-top:4px">
-          <div style="font-size:13px;font-weight:600;color:var(--tx2);margin-bottom:12px">🔢 Set income PIN</div>
+          <div style="font-size:13px;font-weight:600;color:var(--tx2);margin-bottom:12px">🔢 Set PIN for Savings, Credits &amp; Income</div>
           <div id="setup-step-lbl" style="font-size:13px;font-weight:500;color:var(--tx2);margin-bottom:12px">Enter a new 6-digit PIN:</div>
           <div class="pdots" id="setup-dots"><div class="pd" id="sd0"></div><div class="pd" id="sd1"></div><div class="pd" id="sd2"></div><div class="pd" id="sd3"></div><div class="pd" id="sd4"></div><div class="pd" id="sd5"></div></div>
           <div class="numpad" id="setup-numpad"></div>
@@ -576,13 +576,13 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
   <nav class="nav" style="margin-top:6px">
     <button class="nb" id="nb-list" onclick="go('list')"><span class="ico">📋</span>List</button>
     <button class="nb" id="nb-budget" onclick="go('budget')"><span class="ico">🎯</span>Budget</button>
-    <button class="nb" id="nb-savings" onclick="go('savings')"><span class="ico">🐷</span>Savings</button>
     <button class="nb" id="nb-summary" onclick="go('summary')"><span class="ico">📊</span>Summary</button>
     <button class="nb" id="nb-compare" onclick="go('compare')"><span class="ico">📈</span>Compare</button>
     <button class="nb" id="nb-cats" onclick="go('cats')"><span class="ico">🏷</span>Categories</button>
     <button class="nb" id="nb-wishlist" onclick="go('wishlist')"><span class="ico">🛒</span>Wishlist</button>
     <button class="nb" id="nb-bills" onclick="go('bills')"><span class="ico">🧾</span>Bills</button>
     <button class="nb" id="nb-credits" onclick="go('credits')"><span class="ico">💳</span>Credits</button>
+    <button class="nb" id="nb-savings" onclick="go('savings')"><span class="ico">🐷</span>Savings</button>
     <button class="nb" id="nb-income" onclick="go('income')"><span class="ico">💵</span>Income</button>
   </nav>
   <div class="add-fab-row"><button class="add-fab" onclick="openAddModal()" title="Add expense">＋</button></div>
@@ -1816,7 +1816,7 @@ function renderHome(){
     return`<div class="ei"><span class="edot" style="background:${catC(e.category)}"></span><div class="einfo"><div class="edesc">${label}</div><div class="emeta">${new Date(e.date+'T00:00:00').toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'})}${e.description&&e.shop?' · '+e.description:''}</div></div><div class="er2"><span class="eamt" style="color:var(--dn)">-${fa(e.amount)}</span>${bc?`<span class="bcat-pill" style="background:${bc.color}22;color:${bc.color}">${bc.icon} ${bc.name}</span>`:''}<span class="cpill">${e.category}</span></div></div>`;
   }).join(''):'<div class="empty">📭 No recent expenses</div>';
 }
-function revIncHome(){openPin('👁 View income','Enter your income PIN.',()=>{incUnlocked=true;renderHome();});}
+function revIncHome(){openPin('👁 View income','Enter your PIN to unlock Savings, Credits & Income.',()=>{incUnlocked=true;renderHome();});}
 
 // LIST
 // CALENDAR LIST VIEW
@@ -2184,7 +2184,7 @@ function togIncLock(){S.prefs.incLock=document.getElementById('sltog').checked;d
 
 // PIN
 function buildNP(cid,onD,onDel){const el=document.getElementById(cid);if(!el)return;el.innerHTML='';[1,2,3,4,5,6,7,8,9,'','0','⌫'].forEach(k=>{const b=document.createElement('button');b.className='npk'+(k==='⌫'?' dk':'');b.textContent=k===''?'':String(k);if(k===''){b.disabled=true;b.style.visibility='hidden';}else if(k==='⌫')b.onclick=onDel;else b.onclick=()=>onD(String(k));el.appendChild(b);});}
-function buildSetupNP(){buildNP('setup-numpad',d=>{if(setupBuf.length>=6)return;setupBuf+=d;updSD();if(setupBuf.length===6){setTimeout(()=>{if(setupStep==='new'){pinNew=setupBuf;setupBuf='';setupStep='confirm';document.getElementById('setup-step-lbl').textContent='Confirm your 6-digit PIN:';updSD();document.getElementById('setup-err').textContent='';}else{if(setupBuf===pinNew){S.prefs.incPIN=btoa(setupBuf);persist();setupBuf='';setupStep='new';pinNew='';document.getElementById('setup-step-lbl').textContent='Enter a new 6-digit PIN:';updSD();document.getElementById('setup-err').textContent='';showMsg('pmsg','Income PIN set!',true);}else{document.getElementById('setup-err').textContent='PINs do not match.';setTimeout(()=>{setupBuf='';pinNew='';setupStep='new';document.getElementById('setup-step-lbl').textContent='Enter a new 6-digit PIN:';updSD();},700);}}},180);}},()=>{if(setupBuf.length>0){setupBuf=setupBuf.slice(0,-1);updSD();}});}
+function buildSetupNP(){buildNP('setup-numpad',d=>{if(setupBuf.length>=6)return;setupBuf+=d;updSD();if(setupBuf.length===6){setTimeout(()=>{if(setupStep==='new'){pinNew=setupBuf;setupBuf='';setupStep='confirm';document.getElementById('setup-step-lbl').textContent='Confirm your 6-digit PIN:';updSD();document.getElementById('setup-err').textContent='';}else{if(setupBuf===pinNew){S.prefs.incPIN=btoa(setupBuf);persist();setupBuf='';setupStep='new';pinNew='';document.getElementById('setup-step-lbl').textContent='Enter a new 6-digit PIN:';updSD();document.getElementById('setup-err').textContent='';showMsg('pmsg','PIN set — Savings, Credits & Income are now protected.',true);}else{document.getElementById('setup-err').textContent='PINs do not match.';setTimeout(()=>{setupBuf='';pinNew='';setupStep='new';document.getElementById('setup-step-lbl').textContent='Enter a new 6-digit PIN:';updSD();},700);}}},180);}},()=>{if(setupBuf.length>0){setupBuf=setupBuf.slice(0,-1);updSD();}});}
 function updSD(){for(let i=0;i<6;i++){const d=document.getElementById('sd'+i);if(d)d.classList.toggle('filled',i<setupBuf.length);}}
 function openPin(title,sub,cb){pinBuf='';pinCB=cb;document.getElementById('pin-err').textContent='';document.getElementById('pin-title').textContent=title;document.getElementById('pin-sub').textContent=sub;updPD();document.getElementById('pin-overlay').classList.add('show');buildNP('pin-numpad',d=>{if(pinBuf.length>=6)return;pinBuf+=d;updPD();if(pinBuf.length===6){setTimeout(chkPin,180);}},()=>{if(pinBuf.length>0){pinBuf=pinBuf.slice(0,-1);updPD();}});}
 function updPD(){for(let i=0;i<6;i++){const d=document.getElementById('pd'+i);if(d)d.classList.toggle('filled',i<pinBuf.length);}}
@@ -2193,7 +2193,11 @@ function closePin(){document.getElementById('pin-overlay').classList.remove('sho
 
 // NAV
 function go(tab){
-  if(tab==='income'&&S.prefs.incLock&&S.prefs.incPIN&&!incUnlocked){openPin('🔒 Income PIN required','Enter your income 6-digit PIN.',()=>{incUnlocked=true;go('income');});return;}
+  const pinProtected=['income','savings','credits'];
+  if(pinProtected.includes(tab)&&S.prefs.incLock&&S.prefs.incPIN&&!incUnlocked){
+    const labels={income:'Income',savings:'Savings',credits:'Credits'};
+    openPin('🔒 '+labels[tab]+' PIN required','Enter your 6-digit PIN to access '+labels[tab]+'.',()=>{incUnlocked=true;go(tab);});return;
+  }
   AT=tab;
   // Home button
   const homeBtn=document.getElementById('home-btn');if(homeBtn)homeBtn.classList.toggle('on',tab==='home');
