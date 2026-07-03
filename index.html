@@ -9,7 +9,7 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>MoneyWatch v30</title>
+<title>MoneyWatch v30.1</title>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&family=Poppins:wght@300;400;500;600&family=Nunito:wght@300;400;600;700&family=Manrope:wght@300;400;500;600&family=Figtree:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Sora:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&family=Lato:wght@300;400;700&family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;500;600&display=swap');
@@ -1202,7 +1202,7 @@ function initSess(){
 }
 function sessNew(){S=JSON.parse(JSON.stringify(DS));document.getElementById('sess-overlay').classList.remove('show');finishInit();}
 function sessCont(){if(!localStorage.getItem('mw_v2'))return;try{const p=JSON.parse(localStorage.getItem('mw_v2')||'{}');['expenses','categories','budgetCats','savings','incomeData'].forEach(k=>{if(p[k])S[k]=p[k];});if(p.prefs)S.prefs=Object.assign(S.prefs,p.prefs);}catch(e){}document.getElementById('sess-overlay').classList.remove('show');finishInit();}
-function finishInit(){applyPrefs();go('home');if(S.prefs.incLock&&S.prefs.incPIN)buildSetupNP();}
+function finishInit(){applyPrefs();go('home');if(S.prefs.incLock&&S.prefs.incPIN)buildSetupNP();startIdleTimer();}
 
 function _applyLoadedData(d){
   ['expenses','categories','budgetCats','savings','incomeData','wishlists','utils','credits','paymentModes'].forEach(k=>{if(d[k])S[k]=d[k];});
@@ -2382,14 +2382,26 @@ function alSkip(){
 
 // ── LOCK (manual or idle) ────────────────────────────────
 function alLock(){
-  if(!alData.active||!alData.pin)return;// no PIN set — nothing to lock
-  stopIdleTimer();alUnlocked=false;
-  document.getElementById('app-lock').style.display='flex';
-  requestAnimationFrame(()=>document.getElementById('app-lock').classList.remove('hidden'));
-  alAttempts=0;alUnlockBuf='';document.getElementById('al-err').textContent='';document.getElementById('al-att').textContent='';
-  document.querySelectorAll('#al-numpad .npk').forEach(b=>{b.disabled=false;b.style.opacity='1';});
-  alShowPanel('alp-unlock');alInitUnlock();
-  document.getElementById('al-phrase-inp').value='';document.getElementById('al-phrase-err').textContent='';
+  stopIdleTimer();
+  hideIdleWarn();
+  // If full app-lock PIN is configured — show the lock screen
+  if(alData.active&&alData.pin){
+    alUnlocked=false;
+    incUnlocked=false;
+    document.getElementById('app-lock').style.display='flex';
+    requestAnimationFrame(()=>document.getElementById('app-lock').classList.remove('hidden'));
+    alAttempts=0;alUnlockBuf='';
+    if(document.getElementById('al-err'))document.getElementById('al-err').textContent='';
+    if(document.getElementById('al-att'))document.getElementById('al-att').textContent='';
+    document.querySelectorAll('#al-numpad .npk').forEach(b=>{b.disabled=false;b.style.opacity='1';});
+    alShowPanel('alp-unlock');alInitUnlock();
+    if(document.getElementById('al-phrase-inp'))document.getElementById('al-phrase-inp').value='';
+    if(document.getElementById('al-phrase-err'))document.getElementById('al-phrase-err').textContent='';
+    return;
+  }
+  // No app-lock PIN — soft lock: reset incUnlocked and reload to session picker
+  incUnlocked=false;
+  location.reload();
 }
 
 // ── CHANGE PIN FROM PREFS ────────────────────────────────
@@ -2413,10 +2425,12 @@ function alRemoveLock(){
 const IDLE_EVENTS=['mousemove','mousedown','keydown','touchstart','scroll','click'];
 function startIdleTimer(){
   stopIdleTimer();
-  const min=alData.autoLockMin||0;if(!alData.active||!alData.pin||min===0)return;
-  const totalMs=min*60*1000;const warnMs=Math.max(totalMs-60000,totalMs*0.9);// warn 60s before or at 90%
+  const min=alData.autoLockMin||0;
+  if(min===0)return; // "Never" selected
+  const totalMs=min*60*1000;
+  const warnMs=Math.max(totalMs-60000,Math.floor(totalMs*0.85));
   idleTimer=setTimeout(()=>alLock(),totalMs);
-  idleWarnTimer=setTimeout(()=>showIdleWarn(Math.round((totalMs-warnMs)/1000)),warnMs);
+  if(totalMs>70000)idleWarnTimer=setTimeout(()=>showIdleWarn(Math.round((totalMs-warnMs)/1000)),warnMs);
   IDLE_EVENTS.forEach(ev=>document.addEventListener(ev,resetIdleTimer,{passive:true}));
 }
 function stopIdleTimer(){
@@ -2428,9 +2442,9 @@ function stopIdleTimer(){
 function resetIdleTimer(){stopIdleTimer();startIdleTimer();}
 function showIdleWarn(secs){
   const warn=document.getElementById('idle-warn');const cd=document.getElementById('idle-countdown');
-  let remaining=secs;cd.textContent=remaining;warn.classList.add('show');
+  let remaining=secs;if(cd)cd.textContent=remaining;if(warn)warn.classList.add('show');
   clearInterval(idleCountInterval);
-  idleCountInterval=setInterval(()=>{remaining--;cd.textContent=remaining;if(remaining<=0){clearInterval(idleCountInterval);hideIdleWarn();}},1000);
+  idleCountInterval=setInterval(()=>{remaining--;if(cd)cd.textContent=remaining;if(remaining<=0){clearInterval(idleCountInterval);hideIdleWarn();}},1000);
 }
 function hideIdleWarn(){const w=document.getElementById('idle-warn');if(w)w.classList.remove('show');clearInterval(idleCountInterval);}
 
@@ -2466,7 +2480,7 @@ async function showSessionPicker(){
 function saveAutoLock(){
   const min=parseInt(document.getElementById('p-autolock').value)||0;
   alData.autoLockMin=min;alSaveData();
-  if(alUnlocked){stopIdleTimer();if(min>0)startIdleTimer();}
+  stopIdleTimer();if(min>0)startIdleTimer();
 }
 
 // ── Override savePrefs to also save autolock ─────────────
