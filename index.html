@@ -9,7 +9,7 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>MoneyWatch v30.1</title>
+<title>MoneyWatch v1.30.2</title>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&family=Poppins:wght@300;400;500;600&family=Nunito:wght@300;400;600;700&family=Manrope:wght@300;400;500;600&family=Figtree:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Sora:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&family=Lato:wght@300;400;700&family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;500;600&display=swap');
@@ -18,11 +18,11 @@
 [data-dk]{--bg:#0d1018;--surf:#161b2e;--surf2:#1c2240;--surf3:#232b52;--tx:#eaedf8;--tx2:#8890c8;--tx3:#4a527a;--tx4:#2e3558;--bd:#252e58;--bd2:#36407a;--acbg:#1a2050;--ok:#22c55e;--okbg:#052e16;--okdk:#4ade80;--dn:#f87171;--dnbg:#2d0a0a;--dndk:#fca5a5;--wn:#fbbf24;--wnbg:#2a1800;--sh:0 1px 12px rgba(0,0,0,.4);--sh2:0 4px 28px rgba(0,0,0,.55);}
 html,body{font-family:var(--f);background:var(--bg);color:var(--tx);font-size:var(--fs);font-weight:var(--fw);line-height:1.6;min-height:100vh}
 .app{max-width:880px;margin:0 auto;padding:20px 16px 120px}
-.hero{padding:16px 2px 14px}.hero h2{font-size:clamp(17px,3.5vw,22px);font-weight:600;letter-spacing:-.2px;color:var(--tx2)}.hero h2 .hi{color:var(--ac)}.hero-sub{font-size:13px;color:var(--tx3);margin-top:4px}
+.hero{padding:14px 2px 12px}.hero h2{font-size:clamp(15px,3vw,19px);font-weight:600;letter-spacing:-.2px;color:var(--tx2)}.hero h2 .hi{color:var(--ac)}.hero-sub{font-size:13px;color:var(--tx3);margin-top:4px;font-weight:700}
 .topbar{padding:10px 0 14px;border-top:1px solid var(--bd);margin-top:12px}
 .topbar-info{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;flex-wrap:wrap}
 .topbar-btns{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
-.brand{display:flex;align-items:center;gap:11px}.logo{width:38px;height:38px;background:linear-gradient(135deg,var(--ac),var(--ac2));border-radius:11px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;flex-shrink:0;box-shadow:var(--sh)}.brand-name{font-size:20px;font-weight:700;letter-spacing:-.3px;margin:0;line-height:1.2;color:var(--tx)}.brand-tag{font-size:11px;color:var(--tx3);margin-top:1px;font-style:italic}
+.brand{display:flex;align-items:center;gap:13px}.logo{width:46px;height:46px;background:linear-gradient(135deg,var(--ac),var(--ac2));border-radius:13px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px;flex-shrink:0;box-shadow:var(--sh)}.brand-name{font-size:32px;font-weight:800;letter-spacing:-.5px;margin:0;line-height:1.1;color:var(--tx)}.brand-tag{font-size:13px;color:var(--tx3);margin-top:3px;font-style:italic;font-weight:500}
 .tbr{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.clk{font-size:12px;color:var(--tx3);padding:5px 10px;background:var(--surf2);border-radius:8px;border:1px solid var(--bd);font-variant-numeric:tabular-nums}
 .ib{width:36px;height:36px;border-radius:10px;border:1px solid var(--bd);background:var(--surf);color:var(--tx2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;transition:all .18s;box-shadow:var(--sh)}.ib:hover{background:var(--surf2);border-color:var(--ac);color:var(--ac);transform:translateY(-1px)}.ib.on{border-color:var(--ac);color:var(--ac);background:var(--acbg)}
 .sflash{font-size:11px;color:var(--ok);opacity:0;transition:opacity .4s;font-weight:500}.sflash.show{opacity:1}
@@ -339,6 +339,8 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
 .bstat-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--tx3);margin-bottom:4px}
 .bstat-val{font-size:18px;font-weight:700;color:var(--tx)}
 .bstat-sub{font-size:11px;color:var(--tx3);margin-top:2px}
+/* ── VERSION BADGE ───────────────────────────────────── */
+.ver-badge{font-size:9px;font-weight:700;color:var(--tx4);letter-spacing:.4px;opacity:.55;user-select:none;padding:0 2px}
 </style>
 <body>
 
@@ -442,7 +444,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
 <div class="topbar">
   <!-- Row 1: Brand + Drive status + Clock -->
   <div class="topbar-info">
-    <div class="brand"><div class="logo">💰</div><div><h1 class="brand-name">MoneyWatch</h1><div class="brand-tag">Your money is watching you.</div></div></div>
+    <div class="brand"><div class="logo">💰</div><div><h1 class="brand-name">MoneyWatch</h1><div style="display:flex;align-items:center;gap:7px"><div class="brand-tag">Your money is watching you.</div><span class="ver-badge">v1.30.2</span></div></div></div>
     <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
       <span class="sflash" id="sfl">✓ Saved</span>
       <span class="clk" id="clk"></span>
@@ -559,6 +561,13 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
         </select></div>
       </div>
       <div id="pmsg" class="pmsg"></div>
+      <div style="text-align:center;padding:18px 0 6px;border-top:1px solid var(--bd);margin-top:8px">
+        <div style="font-size:22px;margin-bottom:6px">💰</div>
+        <div style="font-size:17px;font-weight:800;letter-spacing:-.3px;color:var(--tx)">MoneyWatch</div>
+        <div style="font-size:12px;color:var(--tx3);margin-top:3px;font-style:italic">Your money is watching you.</div>
+        <div style="font-size:12px;font-weight:700;color:var(--ac);margin-top:6px;letter-spacing:.3px">Version 1.30.2</div>
+        <div style="font-size:11px;color:var(--tx4);margin-top:4px">Built with 💙 · Single-file HTML app</div>
+      </div>
     </div>
   </div>
 </div>
@@ -1492,7 +1501,7 @@ function popCat(){const s=document.getElementById('mc-sel');if(!s)return;const p
 function popBcat(){const s=document.getElementById('mbcat');if(!s)return;s.innerHTML='<option value="">— No budget category —</option>'+S.budgetCats.map(b=>`<option value="${b.id}">${b.icon} ${b.name}</option>`).join('');}
 function updateClock(){try{const o={timeZone:S.prefs.tz,hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:S.prefs.cf==='12'};document.getElementById('clk').textContent=new Intl.DateTimeFormat('en-PH',o).format(new Date());}catch(e){}}
 setInterval(updateClock,1000);updateClock();
-function updateHero(){const h=new Date().getHours();const g=h<12?'Good morning':h<17?'Good afternoon':'Good evening';document.getElementById('hh').innerHTML=`${g}, <span class="hi">${S.prefs.name||'friend'}</span> 👋`;document.getElementById('hsub').textContent='Your financial overview for '+new Date().toLocaleDateString('en-PH',{weekday:'long',month:'long',day:'numeric',year:'numeric'})+'.';}
+function updateHero(){const h=new Date().getHours();const g=h<12?'Good morning':h<17?'Good afternoon':'Good evening';document.getElementById('hh').innerHTML=`${g}, <span class="hi">${S.prefs.name||'friend'}</span> 👋`;document.getElementById('hsub').innerHTML='<b>'+new Date().toLocaleDateString('en-PH',{weekday:'long',month:'long',day:'numeric',year:'numeric'})+'</b>';}
 
 // EDIT EXPENSE
 function openEditExp(idx){
