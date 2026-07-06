@@ -9,7 +9,7 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>MoneyWatch v1.30.2</title>
+<title>MoneyWatch v1.30.3</title>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&family=Poppins:wght@300;400;500;600&family=Nunito:wght@300;400;600;700&family=Manrope:wght@300;400;500;600&family=Figtree:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Sora:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&family=Lato:wght@300;400;700&family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;500;600&display=swap');
@@ -341,8 +341,53 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
 .bstat-sub{font-size:11px;color:var(--tx3);margin-top:2px}
 /* ── VERSION BADGE ───────────────────────────────────── */
 .ver-badge{font-size:9px;font-weight:700;color:var(--tx4);letter-spacing:.4px;opacity:.55;user-select:none;padding:0 2px}
+/* ── NOTIFICATIONS ───────────────────────────────────── */
+.notif-btn{position:relative;display:inline-flex;align-items:center;justify-content:center}
+.notif-badge{position:absolute;top:-3px;right:-3px;min-width:16px;height:16px;border-radius:100px;background:#ef4444;color:#fff;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 3px;pointer-events:none;line-height:1;box-shadow:0 1px 4px rgba(239,68,68,.5)}
+#notif-panel{position:fixed;top:0;right:0;bottom:0;width:min(380px,100vw);background:var(--surf);border-left:1px solid var(--bd);z-index:8000;transform:translateX(100%);transition:transform .25s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:-4px 0 24px rgba(0,0,0,.15)}
+#notif-panel.open{transform:translateX(0)}
+.notif-header{display:flex;align-items:center;justify-content:space-between;padding:18px 18px 14px;border-bottom:1px solid var(--bd);flex-shrink:0}
+.notif-title{font-size:18px;font-weight:700;color:var(--tx)}
+.notif-tabs{display:flex;gap:6px;padding:10px 14px;border-bottom:1px solid var(--bd);flex-shrink:0}
+.notif-tab{flex:1;padding:7px 10px;border-radius:9px;border:1.5px solid var(--bd);background:transparent;font-family:var(--f);font-size:12px;font-weight:600;color:var(--tx2);cursor:pointer;transition:all .18s;text-align:center;display:flex;align-items:center;justify-content:center;gap:5px}
+.notif-tab.on{background:var(--ac);border-color:var(--ac);color:#fff}
+.notif-body{flex:1;overflow-y:auto;padding:12px 14px}
+.notif-item{display:flex;align-items:flex-start;gap:10px;padding:11px 13px;border-radius:11px;border:1px solid var(--bd);margin-bottom:8px;background:var(--surf2);transition:all .18s}
+.notif-item.alert-overdue{background:var(--dnbg);border-color:rgba(220,38,38,.3)}
+.notif-item.alert-soon{background:var(--wnbg);border-color:rgba(217,119,6,.3)}
+.notif-item.alert-credit{background:var(--acbg);border-color:rgba(91,106,240,.25)}
+.notif-ico{font-size:20px;flex-shrink:0;line-height:1;margin-top:1px}
+.notif-content{flex:1;min-width:0}
+.notif-ctitle{font-size:13px;font-weight:600;color:var(--tx);line-height:1.3}
+.notif-csub{font-size:11px;color:var(--tx3);margin-top:3px;line-height:1.4}
+.notif-time{font-size:10px;color:var(--tx4);flex-shrink:0;margin-top:2px;white-space:nowrap}
+.notif-section-hdr{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--tx3);padding:6px 2px 5px;margin-bottom:4px}
+.notif-empty{text-align:center;padding:2.5rem 1rem;color:var(--tx3);font-size:13px}
+#notif-backdrop{position:fixed;inset:0;z-index:7999;background:rgba(0,0,0,.3);display:none;backdrop-filter:blur(2px)}
+#notif-backdrop.open{display:block}
 </style>
 <body>
+
+<!-- NOTIFICATION BACKDROP -->
+<div id="notif-backdrop" onclick="closeNotif()"></div>
+
+<!-- NOTIFICATION PANEL -->
+<div id="notif-panel">
+  <div class="notif-header">
+    <span class="notif-title">🔔 Notifications</span>
+    <div style="display:flex;gap:7px;align-items:center">
+      <button class="btn bg2" style="font-size:11px;padding:5px 10px" onclick="markAllRead()">Mark all read</button>
+      <button class="modal-close" onclick="closeNotif()">✕</button>
+    </div>
+  </div>
+  <div class="notif-tabs">
+    <button class="notif-tab on" id="ntab-alerts" onclick="setNotifTab('alerts')">
+      🚨 Alerts <span id="ntab-alerts-cnt" style="display:none;background:rgba(255,255,255,.3);border-radius:100px;padding:0 5px;font-size:10px"></span>
+    </button>
+    <button class="notif-tab" id="ntab-log" onclick="setNotifTab('log')">📋 Activity log</button>
+  </div>
+  <div class="notif-body" id="notif-body"></div>
+</div>
 
 <!-- RECEIPT LIGHTBOX -->
 <div id="rcpt-lightbox">
@@ -444,7 +489,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
 <div class="topbar">
   <!-- Row 1: Brand + Drive status + Clock -->
   <div class="topbar-info">
-    <div class="brand"><div class="logo">💰</div><div><h1 class="brand-name">MoneyWatch</h1><div style="display:flex;align-items:center;gap:7px"><div class="brand-tag">Your money is watching you.</div><span class="ver-badge">v1.30.2</span></div></div></div>
+    <div class="brand"><div class="logo">💰</div><div><h1 class="brand-name">MoneyWatch</h1><div style="display:flex;align-items:center;gap:7px"><div class="brand-tag">Your money is watching you.</div><span class="ver-badge">v1.30.3</span></div></div></div>
     <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
       <span class="sflash" id="sfl">✓ Saved</span>
       <span class="clk" id="clk"></span>
@@ -455,6 +500,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
     <button class="ib" id="load-btn" onclick="trigLoad()" title="Open local file">📂</button>
     <button class="ib" id="save-btn" onclick="saveFile()" title="Save">💾</button>
     <button class="ib" onclick="location.reload()" title="Refresh page">🔃</button>
+    <button class="ib notif-btn" id="notif-btn" onclick="openNotif()" title="Notifications & activity log">🔔<span id="notif-badge" class="notif-badge" style="display:none">0</span></button>
     <button class="ib" id="topbar-lock" onclick="alLock()" title="Lock app">🔒</button>
     <button class="ib on" id="pbtn" onclick="togPref()" title="Preferences">⚙</button>
   </div>
@@ -565,7 +611,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
         <div style="font-size:22px;margin-bottom:6px">💰</div>
         <div style="font-size:17px;font-weight:800;letter-spacing:-.3px;color:var(--tx)">MoneyWatch</div>
         <div style="font-size:12px;color:var(--tx3);margin-top:3px;font-style:italic">Your money is watching you.</div>
-        <div style="font-size:12px;font-weight:700;color:var(--ac);margin-top:6px;letter-spacing:.3px">Version 1.30.2</div>
+        <div style="font-size:12px;font-weight:700;color:var(--ac);margin-top:6px;letter-spacing:.3px">Version 1.30.3</div>
         <div style="font-size:11px;color:var(--tx4);margin-top:4px">Built with 💙 · Single-file HTML app</div>
       </div>
     </div>
@@ -1181,7 +1227,7 @@ const DEFBC=[
   {id:'personal',name:'Personal',icon:'👤',color:'#5b6af0',limit:0,desc:'Personal care, clothing, entertainment',locked:true},
   {id:'home',name:'Home',icon:'🏠',color:'#16a34a',limit:0,desc:'Rent, utilities, groceries, household',locked:true}
 ];
-const DS={expenses:[],categories:['Credit card','Grocery','School','Utilities','Transport'],budgetCats:JSON.parse(JSON.stringify(DEFBC)),savings:[],incomeData:{},wishlists:[],utils:[],credits:[],paymentModes:['Maya','GCash','Bank Transfer','OTC (Over the Counter)','Cash'],prefs:{name:'',currency:'₱',themeId:'indigo',cc:{},font:"'Inter',system-ui,sans-serif",fw:'400',fs:'15px',tz:'Asia/Manila',cf:'12',autosave:true,incLock:false,incPIN:''}};
+const DS={expenses:[],categories:['Credit card','Grocery','School','Utilities','Transport'],budgetCats:JSON.parse(JSON.stringify(DEFBC)),savings:[],incomeData:{},wishlists:[],utils:[],credits:[],paymentModes:['Maya','GCash','Bank Transfer','OTC (Over the Counter)','Cash'],activityLog:[],prefs:{name:'',currency:'₱',themeId:'indigo',cc:{},font:"'Inter',system-ui,sans-serif",fw:'400',fs:'15px',tz:'Asia/Manila',cf:'12',autosave:true,incLock:false,incPIN:''}};
 let S=JSON.parse(JSON.stringify(DS));
 let AT='home',SV='overview',VY=new Date().getFullYear(),VM=new Date().getMonth();
 let svCatGroup='default'; // 'default' | 'category' | 'date'
@@ -1211,10 +1257,16 @@ function initSess(){
 }
 function sessNew(){S=JSON.parse(JSON.stringify(DS));document.getElementById('sess-overlay').classList.remove('show');finishInit();}
 function sessCont(){if(!localStorage.getItem('mw_v2'))return;try{const p=JSON.parse(localStorage.getItem('mw_v2')||'{}');['expenses','categories','budgetCats','savings','incomeData'].forEach(k=>{if(p[k])S[k]=p[k];});if(p.prefs)S.prefs=Object.assign(S.prefs,p.prefs);}catch(e){}document.getElementById('sess-overlay').classList.remove('show');finishInit();}
-function finishInit(){applyPrefs();go('home');if(S.prefs.incLock&&S.prefs.incPIN)buildSetupNP();startIdleTimer();}
+function finishInit(){
+  _notifReadAt=parseInt(localStorage.getItem('mw_notif_read')||'0');
+  applyPrefs();go('home');
+  if(S.prefs.incLock&&S.prefs.incPIN)buildSetupNP();
+  startIdleTimer();
+  _refreshNotifBadge();
+}
 
 function _applyLoadedData(d){
-  ['expenses','categories','budgetCats','savings','incomeData','wishlists','utils','credits','paymentModes'].forEach(k=>{if(d[k])S[k]=d[k];});
+  ['expenses','categories','budgetCats','savings','incomeData','wishlists','utils','credits','paymentModes','activityLog'].forEach(k=>{if(d[k])S[k]=d[k];});
   if(d.bills&&d.bills.length&&(!S.utils||!S.utils.length)){
     S.utils=(d.bills||[]).map(b=>({id:'ut_'+b.id,name:b.name,icon:b.icon||'🧾',ref:'',desc:'',budgetCat:b.budgetCat||null,category:b.category||'',typicalAmt:b.amount,entries:b.paid?[{id:'be_'+b.id,due:b.due,amount:b.amount,period:'',remindDays:b.remindDays||3,notes:b.notes||'',paid:true,paidDate:b.paidDate,paidAmt:b.paidAmt||b.amount,shop:b.shop||''}]:[{id:'be_'+b.id,due:b.due,amount:b.amount,period:'',remindDays:b.remindDays||3,notes:b.notes||'',paid:false,paidDate:null,paidAmt:null,shop:''}]}));
   }
@@ -1526,6 +1578,7 @@ function saveEditExp(){
   if(!amt||amt<=0){showMsg('ee-msg','Enter a valid amount.',false);return;}if(!date){showMsg('ee-msg','Select a date.',false);return;}
   e.amount=amt;e.date=date;e.category=document.getElementById('ee-cat').value;e.budgetCat=document.getElementById('ee-bcat').value||null;e.shop=document.getElementById('ee-shop').value.trim();e.description=document.getElementById('ee-desc').value.trim();
   persist();closeEditExp();
+  logActivity('✏️','Expense updated',`${fa(amt)} · ${cat}${shop?' · '+shop:''} · ${date}`);
   if(AT==='home')renderHome();if(AT==='list'){renderList();if(calSelectedDate)renderDayPanel(calSelectedDate);}if(AT==='budget')renderBudget();
   // show brief toast
   const fl=document.getElementById('sfl');fl.textContent='✓ Updated';fl.classList.add('show');setTimeout(()=>{fl.classList.remove('show');setTimeout(()=>fl.textContent='✓ Saved',400);},1600);
@@ -1541,7 +1594,9 @@ function addExpModal(){
   const amt=parseFloat(document.getElementById('ma').value);const cat=document.getElementById('mc-sel').value;const date=document.getElementById('md').value;const shop=document.getElementById('mshop').value.trim();const desc=document.getElementById('mdesc').value.trim();const bcat=document.getElementById('mbcat').value;
   if(!amt||amt<=0){showMsg('mmsg','Enter a valid amount.',false);return;}if(!date){showMsg('mmsg','Select a date.',false);return;}if(!cat){showMsg('mmsg','Select an expense category.',false);return;}
   S.expenses.push({amount:amt,category:cat,date,shop:shop||'',description:desc,budgetCat:bcat||null});
-  persist();showMsg('mmsg','Expense added!',true);document.getElementById('ma').value='';document.getElementById('mdesc').value='';document.getElementById('mshop').value='';setTimeout(closeAddModal,800);if(AT==='home')renderHome();if(AT==='list')renderList();if(AT==='budget')renderBudget();
+  persist();showMsg('mmsg','Expense added!',true);
+  logActivity('💸','Expense added',`${S.prefs.currency||'₱'}${amt.toFixed(2)} · ${cat}${shop?' · '+shop:''} · ${date}`);
+  document.getElementById('ma').value='';document.getElementById('mdesc').value='';document.getElementById('mshop').value='';setTimeout(closeAddModal,800);if(AT==='home')renderHome();if(AT==='list')renderList();if(AT==='budget')renderBudget();
 }
 
 // BUDGET CATEGORIES
@@ -1759,6 +1814,7 @@ function saveSavEdit(){
   sv.name=newName;sv.amount=newAmt;sv.description=desc;sv.trail=sv.trail||[];
   sv.trail.push({ts:new Date().toISOString(),action:newAmt===from?'Updated':action,from,to:newAmt,note:note||'Updated'});
   persist();closeSavEdit();renderSavings();showMsg('smsg','Fund updated!',true);
+  logActivity('🐷','Savings updated',`${sv.name} · ${fa(newAmt)} (${newAmt>=from?'+':'-'}${fa(Math.abs(newAmt-from))})`);
 }
 function toggleTrail(id){const el=document.getElementById('tr-'+id);if(el)el.classList.toggle('open');}
 function renderSavings(){
@@ -2772,6 +2828,7 @@ function confirmWlBuy(){
   persist();
   closeWlBuy();
   renderWishlist();
+  logActivity('🛒','Wishlist item purchased',`${item.name}${item.qty>1?' ×'+item.qty:''} · ${fa(amt)}${shop?' · '+shop:''}`);
   // Show confirmation toast
   const fl=document.getElementById('sfl');
   fl.textContent='✓ Added to expenses';fl.classList.add('show');
@@ -3139,6 +3196,7 @@ function confirmBillPay(){
   if(orNo)descParts.push('OR# '+orNo);
   S.expenses.push({amount:amt,category:u.category||S.categories[0]||'',date,shop:shop||u.name,description:descParts.join(' · '),budgetCat:u.budgetCat||null});
   persist();closeBillPay();renderBills();
+  logActivity('🧾','Bill paid',`${u.name}${e.period?' · '+e.period:''} · ${fa(amt)}${mop?' via '+mop:''}${orNo?' OR#'+orNo:''}`);
   const fl=document.getElementById('sfl');fl.textContent='✓ Bill paid & expense added';fl.classList.add('show');
   setTimeout(()=>{fl.classList.remove('show');setTimeout(()=>fl.textContent='✓ Saved',400);},2200);
 }
@@ -3439,7 +3497,7 @@ function saveCreditModal(){
   if(!S.credits)S.credits=[];
   const eid=document.getElementById('crm-id').value;
   if(eid){const c=crById(eid);if(c)Object.assign(c,{date,amount,source,purpose,budgetCat,category});}
-  else{S.credits.push({id:'cr_'+Date.now(),date,amount,source,purpose,budgetCat,category,paid:false,paidDate:null,paidAmt:null,paidNotes:''});}
+  else{S.credits.push({id:'cr_'+Date.now(),date,amount,source,purpose,budgetCat,category,paid:false,paidDate:null,paidAmt:null,paidNotes:''});logActivity('💳','Credit added',`${source} · ${fa(amount)}${purpose?' · '+purpose.slice(0,40):''}`);}
   persist();closeCreditModal();renderCredits();
 }
 
@@ -3474,6 +3532,7 @@ function confirmCrPay(){
     S.expenses.push({amount:amt,category:c.category||S.categories[0]||'',date,shop:c.source,description:'Credit repayment: '+c.source+(c.purpose?' — '+c.purpose.slice(0,40):''),budgetCat:c.budgetCat||null});
   }
   persist();closeCrPay();renderCredits();
+  logActivity('💳','Credit paid',`${c.source} · ${fa(amt)}${addExp?' · expense added':''}`);
   const fl=document.getElementById('sfl');fl.textContent='✓ Credit marked paid'+(addExp?' & expense added':'');fl.classList.add('show');setTimeout(()=>{fl.classList.remove('show');setTimeout(()=>fl.textContent='✓ Saved',400);},2200);
 }
 function crUnpay(id){const c=crById(id);if(!c)return;if(!confirm('Mark this credit as unpaid? The expense entry already added remains.'))return;c.paid=false;c.paidDate=null;c.paidAmt=null;c.paidNotes='';persist();renderCredits();}
@@ -3580,6 +3639,155 @@ function rcptStorageKB(){
   const total=S.expenses.reduce((s,e)=>s+(e.receipt?e.receipt.length:0),0);
   return Math.round(total/1024);
 }
+
+// ══════════════════════════════════════════════════════
+// NOTIFICATIONS & ACTIVITY LOG  (v1.30.3)
+// ══════════════════════════════════════════════════════
+const _MAX_LOG=100;// keep last 100 activity entries
+let _notifTab='alerts';
+let _notifUnread=0;
+let _notifReadAt=0;// timestamp: entries newer than this are "unread"
+
+// ── Log an activity entry ─────────────────────────────
+function logActivity(icon,title,sub){
+  if(!S.activityLog)S.activityLog=[];
+  S.activityLog.unshift({id:'al_'+Date.now()+'_'+Math.random().toString(36).slice(2,5),icon,title,sub,ts:Date.now()});
+  if(S.activityLog.length>_MAX_LOG)S.activityLog.length=_MAX_LOG;
+  _refreshNotifBadge();
+}
+
+// ── Count unread & update badge ───────────────────────
+function _refreshNotifBadge(){
+  // Count alerts (overdue + due-soon bills, overdue credits)
+  const alertCount=_buildAlerts().length;
+  // Count unread log entries
+  const unreadLog=(S.activityLog||[]).filter(e=>e.ts>_notifReadAt).length;
+  const total=alertCount+unreadLog;
+  const badge=document.getElementById('notif-badge');
+  if(badge){
+    badge.textContent=total>99?'99+':total;
+    badge.style.display=total>0?'flex':'none';
+  }
+  _notifUnread=total;
+}
+
+// ── Build alert items from live data ─────────────────
+function _buildAlerts(){
+  const alerts=[];
+  const today=new Date().toISOString().slice(0,10);
+
+  // Bill overdue
+  (S.utils||[]).forEach(u=>{
+    (u.entries||[]).filter(e=>!e.paid).forEach(e=>{
+      const d=daysDiff(e.due);
+      if(d<0){alerts.push({type:'overdue',icon:'🔴',title:`${u.icon} ${u.name} OVERDUE`,sub:`Due ${new Date(e.due+'T00:00:00').toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'})} · ${fa(e.amount)}${e.period?' · '+e.period:''}`,id:`bill-${u.id}-${e.id}`,utilId:u.id,entryId:e.id,sortKey:-d});}
+      else if(d<=(e.remindDays||3)){alerts.push({type:'soon',icon:'🟡',title:`${u.icon} ${u.name} due soon`,sub:`Due in ${d===0?'TODAY':d+' day'+(d!==1?'s':'')} · ${fa(e.amount)}${e.period?' · '+e.period:''}`,id:`bill-${u.id}-${e.id}`,utilId:u.id,entryId:e.id,sortKey:d});}
+    });
+  });
+
+  // Credits unpaid
+  (S.credits||[]).filter(c=>!c.paid).forEach(c=>{
+    alerts.push({type:'credit',icon:'💳',title:`Unpaid credit: ${c.source}`,sub:`${fa(c.amount)} borrowed on ${new Date(c.date+'T00:00:00').toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'})}${c.purpose?' · '+c.purpose.slice(0,40):''}`,id:`cr-${c.id}`,creditId:c.id,sortKey:999});
+  });
+
+  // Wishlist items nearing budget (>90% spent)
+  (S.budgetCats||[]).forEach(bc=>{
+    if(!bc.limit||bc.limit<=0)return;
+    const now=new Date();
+    const spent=bcTotal(bc.id,now.getFullYear(),now.getMonth());
+    const pct=spent/bc.limit;
+    if(pct>=0.9&&pct<1){alerts.push({type:'soon',icon:'⚠️',title:`Budget "${bc.name}" nearly full`,sub:`${(pct*100).toFixed(0)}% used — ${fa(spent)} of ${fa(bc.limit)} limit`,id:`bcat-${bc.id}`,sortKey:500});}
+    else if(pct>=1){alerts.push({type:'overdue',icon:'🚫',title:`Budget "${bc.name}" exceeded`,sub:`${fa(spent)} spent — ${fa(spent-bc.limit)} over limit`,id:`bcat-${bc.id}`,sortKey:-500});}
+  });
+
+  // Sort: overdue first (negative sortKey), then soon, then credits
+  return alerts.sort((a,b)=>a.sortKey-b.sortKey);
+}
+
+// ── Format time ago ───────────────────────────────────
+function _timeAgo(ts){
+  const diff=Math.floor((Date.now()-ts)/1000);
+  if(diff<60)return'just now';
+  if(diff<3600)return Math.floor(diff/60)+'m ago';
+  if(diff<86400)return Math.floor(diff/3600)+'h ago';
+  if(diff<604800)return Math.floor(diff/86400)+'d ago';
+  return new Date(ts).toLocaleDateString('en-PH',{month:'short',day:'numeric'});
+}
+
+// ── Open / close panel ────────────────────────────────
+function openNotif(){
+  document.getElementById('notif-panel').classList.add('open');
+  document.getElementById('notif-backdrop').classList.add('open');
+  setNotifTab(_notifTab);
+}
+function closeNotif(){
+  document.getElementById('notif-panel').classList.remove('open');
+  document.getElementById('notif-backdrop').classList.remove('open');
+}
+function markAllRead(){
+  _notifReadAt=Date.now();
+  localStorage.setItem('mw_notif_read',_notifReadAt);
+  _refreshNotifBadge();
+  setNotifTab(_notifTab);
+}
+
+// ── Tab switching ─────────────────────────────────────
+function setNotifTab(tab){
+  _notifTab=tab;
+  document.getElementById('ntab-alerts').classList.toggle('on',tab==='alerts');
+  document.getElementById('ntab-log').classList.toggle('on',tab==='log');
+  const body=document.getElementById('notif-body');
+  if(tab==='alerts')_renderAlerts(body);
+  else _renderLog(body);
+}
+
+// ── Render alerts ─────────────────────────────────────
+function _renderAlerts(body){
+  const alerts=_buildAlerts();
+  // Update alerts badge count
+  const cntEl=document.getElementById('ntab-alerts-cnt');
+  if(cntEl){cntEl.textContent=alerts.length;cntEl.style.display=alerts.length?'inline':'none';}
+  if(!alerts.length){body.innerHTML='<div class="notif-empty">✅ All clear! No alerts right now.</div>';return;}
+  const overdueAlerts=alerts.filter(a=>a.type==='overdue');
+  const soonAlerts=alerts.filter(a=>a.type==='soon'||a.type==='credit');
+  let html='';
+  if(overdueAlerts.length){html+=`<div class="notif-section-hdr">🔴 Overdue (${overdueAlerts.length})</div>`+overdueAlerts.map(a=>_alertCard(a,'alert-overdue')).join('');}
+  if(soonAlerts.length){html+=`<div class="notif-section-hdr" style="margin-top:10px">⚠️ Attention needed (${soonAlerts.length})</div>`+soonAlerts.map(a=>_alertCard(a,a.type==='credit'?'alert-credit':'alert-soon')).join('');}
+  body.innerHTML=html;
+}
+function _alertCard(a,cls){
+  let action='';
+  if(a.utilId)action=`onclick="closeNotif();go('bills')" style="cursor:pointer"`;
+  else if(a.creditId)action=`onclick="closeNotif();go('credits')" style="cursor:pointer"`;
+  else if(a.bcatId)action=`onclick="closeNotif();go('budget')" style="cursor:pointer"`;
+  return`<div class="notif-item ${cls}" ${action}>
+    <span class="notif-ico">${a.icon}</span>
+    <div class="notif-content">
+      <div class="notif-ctitle">${a.title}</div>
+      <div class="notif-csub">${a.sub}</div>
+    </div>
+  </div>`;
+}
+
+// ── Render activity log ───────────────────────────────
+function _renderLog(body){
+  const log=S.activityLog||[];
+  if(!log.length){body.innerHTML='<div class="notif-empty">📋 No activity yet. Changes and transactions will appear here.</div>';return;}
+  body.innerHTML=log.map(e=>{
+    const isNew=e.ts>_notifReadAt;
+    return`<div class="notif-item" style="${isNew?'border-color:var(--ac);background:var(--acbg)':''}">
+      <span class="notif-ico">${e.icon}</span>
+      <div class="notif-content">
+        <div class="notif-ctitle">${isNew?'<span style="color:var(--ac);font-size:9px;font-weight:800;margin-right:5px">NEW</span>':''}${e.title}</div>
+        <div class="notif-csub">${e.sub||''}</div>
+      </div>
+      <span class="notif-time">${_timeAgo(e.ts)}</span>
+    </div>`;
+  }).join('');
+}
+
+// ── Close on Escape ───────────────────────────────────
+document.addEventListener('keydown',ev=>{if(ev.key==='Escape'&&document.getElementById('notif-panel').classList.contains('open'))closeNotif();});
 
 // INIT
 document.getElementById('wdate').value=new Date().toISOString().slice(0,10);
